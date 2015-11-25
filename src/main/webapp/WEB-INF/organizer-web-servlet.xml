@@ -1,0 +1,39 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd ">
+       
+    	<context:component-scan base-package="organizer.controllers"/>
+        
+        <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+            <property name="prefix"><value>/views/</value></property>
+            <property name="suffix"><value>.jsp</value></property>
+        </bean>
+        
+        <mvc:resources location="/resources/" mapping="/resources/**"/>
+       
+        <mvc:annotation-driven/>
+        
+        <bean id="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+            <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+            <property name="url" value="jdbc:oracle:thin:@//localhost:1521/xe"></property>
+            <property name="username" value="organizer"></property>
+            <property name="password" value="12345"></property>
+        </bean>
+        
+        <bean id="jdbct" class="org.springframework.jdbc.core.JdbcTemplate">
+            <property name="dataSource" ref="ds"></property>
+        </bean>
+        
+        <bean id="userDao" class="organizer.dao.impl.UserDao">
+            <property name="jdbcTemplate" ref="jdbct"></property>
+        </bean>
+        
+        </beans>
