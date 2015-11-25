@@ -8,9 +8,9 @@ import organizer.models.Task;
 
 public interface TaskIDao {
 	void setJdbcTemplate(JdbcTemplate jdbcTemplate);
-	void createTask();
-	void deleteTask();
-	void editTask();
-	Task getTask();
+	void create(Task task);
+	void delete();
+	void edit();
+	Task get();
 	ArrayList<Task> getSubTaskList();
 }
