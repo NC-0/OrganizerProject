@@ -4,40 +4,47 @@ CREATE SEQUENCE object_sequence START WITH 1 INCREMENT BY 1;
 -- <OBJTYPE> ------------------------------------------------------------------
 -- Add classes: User, Task, Subtask
 INSERT INTO OBJTYPE (OBJECT_TYPE_ID, PARENT_ID, CODE, NAME, DESCRIPTION) 
-VALUES (1, NULL, 'Task', 'Çàäà÷à', NULL);
+VALUES (1, NULL, 'Task', 'Задача', NULL);
 INSERT INTO OBJTYPE (OBJECT_TYPE_ID, PARENT_ID, CODE, NAME, DESCRIPTION) 
-VALUES (2, 1, 'Subtask', 'Ïîäçàäà÷à', NULL);
+VALUES (2, 1, 'Subtask', 'Подзадача', NULL);
 INSERT INTO OBJTYPE (OBJECT_TYPE_ID, PARENT_ID, CODE, NAME, DESCRIPTION) 
-VALUES (3, NULL, 'User', 'Ïîëüçîâàòåëü', NULL);
+VALUES (3, NULL, 'User', 'Пользователь', NULL);
 INSERT INTO OBJTYPE (OBJECT_TYPE_ID, PARENT_ID, CODE, NAME, DESCRIPTION) 
-VALUES (4, NULL, 'Category', 'Êàòåãîðèÿ', NULL);
+VALUES (4, NULL, 'Category', 'Категория', NULL);
 -- </OBJTYPE> ------------------------------------------------------------------
 
 
 -- <ATTRTYPE> ------------------------------------------------------------------
 -- Add Task attributes
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (1, 1, null, 'name', 'Íàçâàíèå');
+VALUES (1, 1, null, 'name', 'Название');
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (2, 1, null, 'date', 'Äàòà');
+VALUES (2, 1, null, 'date', 'Дата');
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (3, 1, null, 'priority', 'Ïðèîðèòåò');
+VALUES (3, 1, null, 'priority', 'Приоритет');
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (4, 1, null, 'category', 'Êàòåãîðèÿ');
+VALUES (4, 1, null, 'category', 'Категория');
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (5, 1, null, 'status', 'Ñòàòóñ');
+VALUES (5, 1, null, 'status', 'Статус');
 
 -- Add User attributes
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) 
-values(6, 1, NULL,'EMAIL','ÏÎ×ÒÎÂÛÉ ÀÄÐÅÑ');
+values(6, 1, NULL,'EMAIL','ПОЧТОВЫЙ АДРЕС');
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) 
-values(7, 1, NULL,'PASSWORD','ÏÀÐÎËÜ');
+values(7, 1, NULL,'PASSWORD','ПАРОЛЬ');
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) 
-values(8, 1, NULL,'NAME','ÈÌß');
+values(8, 1, NULL,'NAME','ИМЯ');
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) 
-values(9, 1, NULL,'SURNAME','ÔÀÌÈËÈß');
+values(9, 1, NULL,'SURNAME','ФАМИЛИЯ');
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (10, 3, 1, 'CREATE', 'Ñîçäàåò çàäà÷ó');
+VALUES (10, 3, 1, 'CREATE', 'Создает задачу');
+
+-- Add Category attrtype 
+INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME)
+values(12, 4, NULL,'name','Имя');
+INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME)
+values(13, 4, NULL,'position','Позиция');
+
 -- </ATTRTYPE> ------------------------------------------------------------------
 
 
