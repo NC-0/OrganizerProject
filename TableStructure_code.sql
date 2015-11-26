@@ -4,42 +4,40 @@ CREATE SEQUENCE object_sequence START WITH 1 INCREMENT BY 1;
 -- <OBJTYPE> ------------------------------------------------------------------
 -- Add classes: User, Task, Subtask
 INSERT INTO OBJTYPE (OBJECT_TYPE_ID, PARENT_ID, CODE, NAME, DESCRIPTION) 
-VALUES (1, NULL, 'Task', 'Задача', NULL);
+VALUES (1, NULL, 'Task', 'Г‡Г Г¤Г Г·Г ', NULL);
 INSERT INTO OBJTYPE (OBJECT_TYPE_ID, PARENT_ID, CODE, NAME, DESCRIPTION) 
-VALUES (2, 1, 'Subtask', 'Подзадача', NULL);
+VALUES (2, 1, 'Subtask', 'ГЏГ®Г¤Г§Г Г¤Г Г·Г ', NULL);
 INSERT INTO OBJTYPE (OBJECT_TYPE_ID, PARENT_ID, CODE, NAME, DESCRIPTION) 
-VALUES (3, NULL, 'User', 'Пользователь', NULL);
+VALUES (3, NULL, 'User', 'ГЏГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гј', NULL);
 INSERT INTO OBJTYPE (OBJECT_TYPE_ID, PARENT_ID, CODE, NAME, DESCRIPTION) 
-VALUES (4, NULL, 'Category', 'Категория', NULL);
+VALUES (4, NULL, 'Category', 'ГЉГ ГІГҐГЈГ®Г°ГЁГї', NULL);
 -- </OBJTYPE> ------------------------------------------------------------------
 
 
 -- <ATTRTYPE> ------------------------------------------------------------------
 -- Add Task attributes
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (1, 1, null, 'name', 'Название');
+VALUES (1, 1, null, 'name', 'ГЌГ Г§ГўГ Г­ГЁГҐ');
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (2, 1, null, 'date', 'Дата');
+VALUES (2, 1, null, 'date', 'Г„Г ГІГ ');
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (3, 1, null, 'priority', 'Приоритет');
+VALUES (3, 1, null, 'priority', 'ГЏГ°ГЁГ®Г°ГЁГІГҐГІ');
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (4, 1, null, 'category', 'Категория');
+VALUES (4, 1, null, 'category', 'ГЉГ ГІГҐГЈГ®Г°ГЁГї');
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (5, 1, null, 'status', 'Статус');
-INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (6, 1, null, 'subTaskList', 'Список подзадач');
+VALUES (5, 1, null, 'status', 'Г‘ГІГ ГІГіГ±');
 
 -- Add User attributes
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) 
-values(7, 1, NULL,'EMAIL','ПОЧТОВЫЙ АДРЕС');
+values(6, 1, NULL,'EMAIL','ГЏГЋГ—Г’ГЋГ‚Г›Г‰ ГЂГ„ГђГ…Г‘');
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) 
-values(8, 1, NULL,'PASSWORD','ПАРОЛЬ');
+values(7, 1, NULL,'PASSWORD','ГЏГЂГђГЋГ‹Гњ');
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) 
-values(9, 1, NULL,'NAME','ИМЯ');
+values(8, 1, NULL,'NAME','Г€ГЊГџ');
 INSERT INTO ATTRTYPE (ATTR_ID,OBJECT_TYPE_ID,OBJECT_TYPE_ID_REF,CODE,NAME) 
-values(10, 1, NULL,'SURNAME','ФАМИЛИЯ');
+values(9, 1, NULL,'SURNAME','Г”ГЂГЊГ€Г‹Г€Гџ');
 INSERT INTO ATTRTYPE (ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE, NAME)  
-VALUES (11, 3, 1, 'CREATE', 'Создает задачу');
+VALUES (10, 3, 1, 'CREATE', 'Г‘Г®Г§Г¤Г ГҐГІ Г§Г Г¤Г Г·Гі');
 -- </ATTRTYPE> ------------------------------------------------------------------
 
 
@@ -70,8 +68,8 @@ VALUES (6, 1, ?, NULL); /* subTaskList */
 -- </ATTRIBUTES> ------------------------------------------------------------------
 
 -- <OBJREFERENCE> ------------------------------------------------------------------
--- Установка ассоциативных связей
+-- Г“Г±ГІГ Г­Г®ГўГЄГ  Г Г±Г±Г®Г¶ГЁГ ГІГЁГўГ­Г»Гµ Г±ГўГїГ§ГҐГ©
 -- References between Attributes
 INSERT INTO OBJREFERENCE (ATTR_ID,  REFERENCE, OBJECT_ID)
-VALUES(11, 2, 1); /* (User1 = 2) -> (create = 11) -> (Task1 = 1) */
+VALUES(10, 2, 1); /* (User1 = 2) -> (create = 11) -> (Task1 = 1) */
 -- </OBJREFERENCE> ------------------------------------------------------------------
