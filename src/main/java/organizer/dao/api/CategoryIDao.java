@@ -4,9 +4,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import organizer.models.Category;
 
+import javax.sql.DataSource;
+
 public interface CategoryIDao {
-	void setJdbcTemplate(JdbcTemplate jdbcTemplate);
-	void createCategory();
+	void setDataSource(DataSource dataSource);
+	void createCategory(Category newCategory);
 	void deleteCategory();
 	void editCategory();
 	Category getCategory();

@@ -3,6 +3,10 @@ package organizer.models;
 public class Category {
 	private String name;
 	private int position;
+	public Category(String name, int position) {
+		this.name = name;
+		this.position = position;
+	}
 	public String getName() {
 		return name;
 	}
