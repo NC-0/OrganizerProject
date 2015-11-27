@@ -16,10 +16,8 @@ public class CategoryDao implements CategoryIDao {
 	}
 
 	public void createCategory(Category newCategory) {
-		Integer id = jdbcTemplate.queryForObject("select object_id.nextval from dual", Integer.class);
-		jdbcTemplate.execute("insert into objects values ("+id+",null,4,'"+newCategory.getName()+"',null)");
-		jdbcTemplate.execute("insert into attributes values (9,"+ id +","+ newCategory.getPosition()+",null)");
-
+		Integer id = jdbcTemplate.queryForObject("SELECT object_id.nextval FROM dual", Integer.class);
+		jdbcTemplate.execute("INSERT INTO objects VALUES ("+id+",NULL,4,'"+newCategory.getName()+"',NULL)");
 	}
 
 	public void deleteCategory() {
