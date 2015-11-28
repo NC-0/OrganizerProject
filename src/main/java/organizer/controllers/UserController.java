@@ -3,6 +3,7 @@ package organizer.controllers;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +18,13 @@ import organizer.models.User;
 public class UserController {
 
 	@Autowired
-	private ApplicationContext appContext;
+	@Qualifier("userDao")
+	private UserIDao userDao;
 	
 	@RequestMapping(value="/createuser",method=RequestMethod.GET)
 	public @ResponseBody String createUser(@RequestParam("email") String email,@RequestParam("password") String password,@RequestParam("name") String name,@RequestParam("surname") String surname){
 		Locale.setDefault(Locale.ENGLISH);
-		UserIDao userIDao = (UserIDao) appContext.getBean("userDao");
 		User user = new User(email,password,name,surname);
-		return userIDao.createUser(user);
+		return userDao.createUser(user);
 	}
 }

@@ -11,10 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HelloController {
-	
-	@Autowired
-	private ApplicationContext appContext;
-	
+		
 	@RequestMapping(value="/{msg}",method=RequestMethod.GET)
 	public ModelAndView hello(@PathVariable("msg") String msg){
 		ModelAndView model = new ModelAndView("hello");
