@@ -3,7 +3,6 @@ package organizer.dao.api;
 import java.util.ArrayList;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import organizer.models.Task;
