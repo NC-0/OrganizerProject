@@ -9,8 +9,8 @@ public interface UserIDao {
 	void setJdbcTemplate(JdbcTemplate jdbcTemplate);
 	void setTransactionTemplate(TransactionTemplate transactionTemplate);
 	int existUser(User user);
-	String createUser(User user);
-	String deleteUser(User user);
-	String editUser(User user);
-	User getUser();
+	String create(final User user);
+	String delete(User user);
+	String edit(User user);
+	User get(String userName);
 }

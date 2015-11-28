@@ -36,7 +36,7 @@ public class UserDao implements UserIDao {
 	}
 	
 	
-	public String createUser(final User user) {
+	public String create(final User user) {
 		if(existUser(user)==0){
 			transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 				@Override
@@ -53,18 +53,51 @@ public class UserDao implements UserIDao {
 		return "User already exist";
 	}
 
-	public String deleteUser(User user) {
+	public String delete(User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public String editUser(User user) {
+	public String edit(User user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public User getUser() {
-		// TODO Auto-generated method stub
+	public User get(String userName) {
+		String email, password, surname;
+		int userId;		
+
+		// log - method start
+		
+		try {
+			// get user object_id from OBJECTS
+			userId = jdbcTemplate.queryForObject("select OBJECT_ID from OBJECTS "
+					+ "where OBJECT_TYPE_ID = 3 " 	/* User = 3 */
+					+ "and NAME = ?", new Object[] { userName }, Integer.class); 	
+			
+			// get user email
+			email = jdbcTemplate.queryForObject("select VALUE from ATTRIBUTES "
+					+ "where OBJECT_ID = ? "		/* email = 6 */
+					+ "and ATTR_ID = 6", new Object[] { userId }, String.class); 
+			// get user password
+			password = jdbcTemplate.queryForObject("select VALUE from ATTRIBUTES "
+					+ "where OBJECT_ID = ? "		/* password = 7 */
+					+ "and ATTR_ID = 7", new Object[] { userId }, String.class); 		
+			// get user surname
+			surname = jdbcTemplate.queryForObject("select VALUE from ATTRIBUTES "
+					+ "where OBJECT_ID = ? "		/* surname = 8 */
+					+ "and ATTR_ID = 8", new Object[] { userId }, String.class);
+			
+			// create new user and fill attributes
+			User user = new User(userName, surname, password, email);
+			
+			// logg it
+			
+			return user;
+			
+		}  catch (DataAccessException ex) {
+	         // logg error ex
+		}
 		return null;
 	}
 	
