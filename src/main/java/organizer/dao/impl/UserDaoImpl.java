@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.CallableStatementCreator;
@@ -18,23 +20,18 @@ import organizer.logic.impl.SqlContent;
 import organizer.models.User;
 
 public class UserDaoImpl implements UserDao {
+	@Autowired
+	@Qualifier("jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
+	@Autowired
+	@Qualifier("transactionTemplate")
 	private TransactionTemplate transactionTemplate;
-
-	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate=jdbcTemplate;
-	}
-	
-	public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
-		this.transactionTemplate=transactionTemplate;
-	}
 
 	public int exist(User user) {
 		Integer userCount = 0;
 		userCount = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_COUNT,new Object[]{user.getEmail()},Integer.class);
 		return userCount;
 	}
-	
 	
 	public String create(final User user) {
 		if(exist(user)==0){
@@ -70,7 +67,6 @@ public class UserDaoImpl implements UserDao {
 	
 	private void createUserTransaction(User user) throws Exception{
 		Integer objectsCurrentValue = jdbcTemplate.queryForObject(SqlContent.SELECT_NEXT_OBJECT_ID_VALUE,Integer.class);
-		System.out.println(objectsCurrentValue);
 		jdbcTemplate.update(SqlContent.INSERT_USER_OBJECT,objectsCurrentValue,user.getName());
 		jdbcTemplate.update(SqlContent.INSERT_USER_EMAIL_ATTRIBUTE,objectsCurrentValue,user.getEmail());
 		jdbcTemplate.update(SqlContent.INSERT_USER_PASSWORD_ATTRIBUTE,objectsCurrentValue,user.getPassword());

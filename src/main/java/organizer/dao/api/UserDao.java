@@ -6,8 +6,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import organizer.models.User;
 
 public interface UserDao {
-	void setJdbcTemplate(JdbcTemplate jdbcTemplate);
-	void setTransactionTemplate(TransactionTemplate transactionTemplate);
 	int exist(User user);
 	String create(User user);
 	String delete(User user);

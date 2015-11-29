@@ -41,8 +41,6 @@
         </bean>
         
         <bean id="userDaoImpl" class="organizer.dao.impl.UserDaoImpl" scope="prototype">
-            <property name="jdbcTemplate" ref="jdbcTemplate"></property>
-            <property name="transactionTemplate" ref="transactionTemplate"></property>
         </bean>
         
          <bean id="taskDaoImpl" class="organizer.dao.impl.TaskDaoImpl" scope="prototype">
