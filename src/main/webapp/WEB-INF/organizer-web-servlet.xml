@@ -40,23 +40,20 @@
             <property name="dataSource" ref="dataSource"></property>
         </bean>
         
-        
-        <bean id="userDao" class="organizer.dao.impl.UserDao">
+        <bean id="userDaoImpl" class="organizer.dao.impl.UserDaoImpl" scope="prototype">
             <property name="jdbcTemplate" ref="jdbcTemplate"></property>
             <property name="transactionTemplate" ref="transactionTemplate"></property>
         </bean>
         
-         <bean id="taskDao" class="organizer.dao.impl.TaskDao">
+         <bean id="taskDaoImpl" class="organizer.dao.impl.TaskDaoImpl" scope="prototype">
             <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+            <property name="transactionTemplate" ref="transactionTemplate"></property>
         </bean>
         
-             
+        <bean id="categoryDaoImpl" class="organizer.dao.impl.CategoryDaoImpl" scope="prototype">
+            <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+            <property name="transactionTemplate" ref="transactionTemplate"></property>
+        </bean>   
           
-         
-         
-          <bean id="objectDao"
-          class="organizer.dao.impl.CategoryDao">
-        <property name="dataSource" ref="dataSource"/>
-   		 </bean>
         
         </beans>

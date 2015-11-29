@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import organizer.dao.api.UserIDao;
+import organizer.dao.api.UserDao;
 import organizer.models.User;
 
 @Controller
 public class UserController {
 
 	@Autowired
-	@Qualifier("userDao")
-	private UserIDao userDao;
+	@Qualifier("userDaoImpl")
+	private UserDao userDaoImpl;
 	
 	@RequestMapping(value="/createuser",method=RequestMethod.GET)
 	public @ResponseBody String createUser(@RequestParam("email") String email,@RequestParam("password") String password,@RequestParam("name") String name,@RequestParam("surname") String surname){
 		Locale.setDefault(Locale.ENGLISH);
 		User user = new User(email,password,name,surname);
-		return userDao.createUser(user);
+		return userDaoImpl.create(user);
 	}
 }
