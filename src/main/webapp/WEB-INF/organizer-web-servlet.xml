@@ -49,9 +49,7 @@
         </bean>
         
         <bean id="categoryDaoImpl" class="organizer.dao.impl.CategoryDaoImpl" scope="prototype">
-            <property name="jdbcTemplate" ref="jdbcTemplate"></property>
-            <property name="transactionTemplate" ref="transactionTemplate"></property>
-        </bean>   
+        </bean>
           
         
         </beans>
