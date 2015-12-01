@@ -27,14 +27,13 @@ public class UserDaoImpl implements UserDao {
 	@Qualifier("transactionTemplate")
 	private TransactionTemplate transactionTemplate;
 
-	public int exist(User user) {
-		Integer userCount = 0;
-		userCount = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_COUNT,new Object[]{user.getEmail()},Integer.class);
-		return userCount;
+	public boolean exist(String email) {
+		boolean exist = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_COUNT,new Object[]{email},Integer.class)!=0;
+		return exist;
 	}
 	
 	public String create(final User user) {
-		if(exist(user)==0){
+		if(!exist(user.getEmail())){
 			transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 				@Override
 				protected void doInTransactionWithoutResult(TransactionStatus status) {
@@ -50,7 +49,7 @@ public class UserDaoImpl implements UserDao {
 		return "User already exist";
 	}
 
-	public String delete(User user) {
+	public String delete(String email) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -60,7 +59,7 @@ public class UserDaoImpl implements UserDao {
 		return null;
 	}
 
-	public User get() {
+	public User get(final String email) {
 		// TODO Auto-generated method stub
 		return null;
 	}

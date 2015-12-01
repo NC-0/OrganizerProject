@@ -6,9 +6,9 @@ import org.springframework.transaction.support.TransactionTemplate;
 import organizer.models.User;
 
 public interface UserDao {
-	int exist(User user);
+	boolean exist(String email);
 	String create(User user);
-	String delete(User user);
+	String delete(String email);
 	String edit(User user);
-	User get();
+	User get(String email);
 }
