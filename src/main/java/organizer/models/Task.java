@@ -1,14 +1,33 @@
 package organizer.models;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 public class Task {
+	private Integer id;
 	private String name;
 	private java.sql.Date date;
 	private int priority;
 	private String category;
 	private boolean completed;
 	private ArrayList<Task> subTaskList;
+
+	public Task(Integer id, String name, Date date, int priority, String category, boolean completed, ArrayList<Task> subTaskList) {
+		this.id = id;
+		this.name = name;
+		this.date = date;
+		this.priority = priority;
+		this.category = category;
+		this.completed = completed;
+		this.subTaskList = subTaskList;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}
