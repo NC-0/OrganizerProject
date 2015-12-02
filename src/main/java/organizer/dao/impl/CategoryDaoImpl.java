@@ -9,52 +9,46 @@ import org.springframework.transaction.support.TransactionTemplate;
 import organizer.dao.api.CategoryDao;
 import organizer.logic.impl.SqlContent;
 import organizer.models.Category;
-import organizer.models.User;
+
 
 public class CategoryDaoImpl implements CategoryDao {
-    @Autowired
-    @Qualifier("jdbcTemplate")
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    @Qualifier("transactionTemplate")
-    private TransactionTemplate transactionTemplate;
+	@Autowired
+	@Qualifier("jdbcTemplate")
+	private JdbcTemplate jdbcTemplate;
+	@Autowired
+	@Qualifier("transactionTemplate")
+	private TransactionTemplate transactionTemplate;
 
-    public void create(Category category){
-        throw new UnsupportedOperationException("Need realization session and then we may get user in session.");
-    }
-    public void create(final User user,final Category category) {
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
-                 createCategory(user,category);
-                } catch (Exception e) {
-                    status.setRollbackOnly();
-                }
-            }
-        });
-    }
-
-    private void createCategory(User user, Category category) throws Exception {
-        Integer userId = jdbcTemplate.queryForObject(SqlContent.GET_OBJECT_ID_BY_EMAIL, new Object[]{user.getEmail()}, Integer.class);
-        if (userId != 0) {
-            Integer categoryId = jdbcTemplate.queryForObject(SqlContent.SELECT_NEXT_OBJECT_ID_VALUE, Integer.class);
-            jdbcTemplate.update(SqlContent.INSERT_CATEGORY_OBJECT, categoryId, category.getName());
-            jdbcTemplate.update(SqlContent.INSERT_USER_TO_CATEGORY_REFERENCE,userId,categoryId);
-        }
-    }
+	public boolean create(final Category category) {
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+				try {
+					createCategory(category);
+				} catch (Exception e) {
+					status.setRollbackOnly();
+				}
+			}
+		});
+		return true;
+	}
+	private void createCategory(Category category) throws Exception{
+		Integer id = jdbcTemplate.queryForObject(SqlContent.SELECT_NEXT_OBJECT_ID_VALUE, Integer.class);
+		jdbcTemplate.update(SqlContent.INSERT_CATEGORY_OBJECT,id,category.getName());
+	}
 
 
-    public void delete() {
+	public void delete() {
 
-    }
+	}
 
-    public void edit() {
+	public void edit() {
 
-    }
+	}
 
-    public Category get() {
-        return null;
-    }
+	public Category get() {
+		return null;
+	}
+
 
 }
