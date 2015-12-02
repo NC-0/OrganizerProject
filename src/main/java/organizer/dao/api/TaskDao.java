@@ -9,11 +9,9 @@ import organizer.models.Task;
 import organizer.models.User;
 
 public interface TaskDao {
-	void setJdbcTemplate(JdbcTemplate jdbcTemplate);
-	void setTransactionTemplate(TransactionTemplate transactionTemplate);
 	void create(User user, Task task);
 	void delete();
-	void edit();
+	void edit(Task task);
 	Task get();
 	ArrayList<Task> getSubTaskList();
 }

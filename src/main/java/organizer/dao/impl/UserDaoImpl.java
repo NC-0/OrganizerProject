@@ -1,20 +1,11 @@
 package organizer.dao.impl;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Types;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.CallableStatementCallback;
-import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
-
 import organizer.dao.api.UserDao;
 import organizer.logic.impl.SqlContent;
 import organizer.models.User;
@@ -49,8 +40,19 @@ public class UserDaoImpl implements UserDao {
 		return "User already exist";
 	}
 
-	public String delete(String email) {
-		// TODO Auto-generated method stub
+	public String delete(final String email) {
+		if(exist(email)){
+			transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+				@Override
+				protected void doInTransactionWithoutResult(TransactionStatus status) {
+					try {
+						deleteUser(email);
+					} catch (Exception e) {
+						status.setRollbackOnly();
+					}
+				}
+			});
+		}
 		return null;
 	}
 
@@ -70,6 +72,16 @@ public class UserDaoImpl implements UserDao {
 		jdbcTemplate.update(SqlContent.INSERT_USER_EMAIL_ATTRIBUTE,objectsCurrentValue,user.getEmail());
 		jdbcTemplate.update(SqlContent.INSERT_USER_PASSWORD_ATTRIBUTE,objectsCurrentValue,user.getPassword());
 		jdbcTemplate.update(SqlContent.INSERT_USER_SURNAME_ATTRIBUTE,objectsCurrentValue,user.getSurname());
+	}
+
+	private void deleteUser(String email){
+		Integer id = jdbcTemplate.queryForObject(SqlContent.GET_OBJECT_ID_BY_EMAIL ,new Object[]{email},Integer.class);
+
+// 		TODO uncommented after realization
+//		taskDao.deleteByUserId(id);
+//		categoryDao.deleteByUserId(id);
+		jdbcTemplate.update(SqlContent.DELETE_USER_ATTRIBUTES,id);
+		jdbcTemplate.update(SqlContent.DELETE_USER_OBJECT,id);
 	}
 
 }
