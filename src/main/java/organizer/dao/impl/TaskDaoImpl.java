@@ -18,9 +18,6 @@ class TaskDaoImpl implements TaskDao {
     @Autowired
     @Qualifier("jdbcTemplate")
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    @Qualifier("transactionTemplate")
-    private TransactionTemplate transactionTemplate;
 
     public boolean isExist(Task task) {
         boolean exist = jdbcTemplate.update(SqlContent.SELECT_TASK_BY_OBJECT_ID, task.getId()) > 0;
@@ -32,10 +29,7 @@ class TaskDaoImpl implements TaskDao {
         // log - method start
 
         // transaction
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
+
                     // get last row index from OBJECTS
                     int currentId = jdbcTemplate.queryForObject("SELECT object_id.nextval FROM dual", Integer.class);
 
@@ -61,14 +55,6 @@ class TaskDaoImpl implements TaskDao {
                             + "VALUES (4, ?, ?, NULL)", currentId, task.isCompleted()); 	/* add status */
 
 
-                } catch (DataAccessException ex) {
-                    // rollback transaction
-                    status.setRollbackOnly();
-                    // logg error
-                }
-            }
-        });
-        return;
     }
 
     public void delete() {
@@ -76,17 +62,15 @@ class TaskDaoImpl implements TaskDao {
 
     }
 
-    public void edit(final Task task) {
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-            @Override
-            protected void doInTransactionWithoutResult(TransactionStatus status) {
-                try {
-                    updateTask(task);
-                } catch (Exception e) {
-                    status.setRollbackOnly();
-                }
-            }
-        });
+    public void edit(Task task) {
+    	 if (isExist(task)) {
+             updateSubTask(task);
+             jdbcTemplate.update(SqlContent.UPDATE_TASK_NAME, task.getName(), task.getId());
+             jdbcTemplate.update(SqlContent.UPDATE_TASK_DATE, task.getDate(), task.getId());
+             jdbcTemplate.update(SqlContent.UPDATE_TASK_PRIORITY, task.getPriority(), task.getId());
+             jdbcTemplate.update(SqlContent.UPDATE_TASK_CATEGORY, task.getCategory(), task.getId());
+             jdbcTemplate.update(SqlContent.UPDATE_TASK_STATUS, task.isCompleted(), task.getId());
+         }
     }
 
     private void updateSubTask(Task task) {
@@ -94,17 +78,6 @@ class TaskDaoImpl implements TaskDao {
             for (Task subTask : task.getSubTaskList()) {
                 jdbcTemplate.update(SqlContent.UPDATE_SUBTASK_NAME, subTask.getName(), subTask.getId());
             }
-    }
-
-    private void updateTask(Task task) {
-        if (isExist(task)) {
-            updateSubTask(task);
-            jdbcTemplate.update(SqlContent.UPDATE_TASK_NAME, task.getName(), task.getId());
-            jdbcTemplate.update(SqlContent.UPDATE_TASK_DATE, task.getDate(), task.getId());
-            jdbcTemplate.update(SqlContent.UPDATE_TASK_PRIORITY, task.getPriority(), task.getId());
-            jdbcTemplate.update(SqlContent.UPDATE_TASK_CATEGORY, task.getCategory(), task.getId());
-            jdbcTemplate.update(SqlContent.UPDATE_TASK_STATUS, task.isCompleted(), task.getId());
-        }
     }
 
     public Task get() {

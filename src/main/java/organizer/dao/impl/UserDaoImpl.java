@@ -14,30 +14,23 @@ public class UserDaoImpl implements UserDao {
 	@Autowired
 	@Qualifier("jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
-	@Autowired
-	@Qualifier("transactionTemplate")
-	private TransactionTemplate transactionTemplate;
 
 	public boolean exist(String email) {
 		boolean exist = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_COUNT,new Object[]{email},Integer.class)!=0;
 		return exist;
 	}
 	
-	public String create(final User user) {
+	public String create(User user) {
 		if(!exist(user.getEmail())){
-			transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-				@Override
-				protected void doInTransactionWithoutResult(TransactionStatus status) {
-					try {
-						createUserTransaction(user);
-					} catch (Exception e) {
-						status.setRollbackOnly();
-					}
-				}
-			});	
-			return "User created";
+			if(!exist(user.getEmail())){
+			Integer objectsCurrentValue = jdbcTemplate.queryForObject(SqlContent.SELECT_NEXT_OBJECT_ID_VALUE,Integer.class);
+			jdbcTemplate.update(SqlContent.INSERT_USER_OBJECT,objectsCurrentValue,user.getName());
+			jdbcTemplate.update(SqlContent.INSERT_USER_EMAIL_ATTRIBUTE,objectsCurrentValue,user.getEmail());
+			jdbcTemplate.update(SqlContent.INSERT_USER_PASSWORD_ATTRIBUTE,objectsCurrentValue,user.getPassword());
+			jdbcTemplate.update(SqlContent.INSERT_USER_SURNAME_ATTRIBUTE,objectsCurrentValue,user.getSurname());
+			return String.format(MessageContent.USER_CREATED, user.getEmail());
 		}
-		return "User already exist";
+		return String.format(MessageContent.USER_ALREADY_EXIST, user.getEmail());
 	}
 
 	public String delete(final String email) {
@@ -61,17 +54,9 @@ public class UserDaoImpl implements UserDao {
 		return null;
 	}
 
-	public User get(final String email) {
+	public User get(String email) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	private void createUserTransaction(User user) throws Exception{
-		Integer objectsCurrentValue = jdbcTemplate.queryForObject(SqlContent.SELECT_NEXT_OBJECT_ID_VALUE,Integer.class);
-		jdbcTemplate.update(SqlContent.INSERT_USER_OBJECT,objectsCurrentValue,user.getName());
-		jdbcTemplate.update(SqlContent.INSERT_USER_EMAIL_ATTRIBUTE,objectsCurrentValue,user.getEmail());
-		jdbcTemplate.update(SqlContent.INSERT_USER_PASSWORD_ATTRIBUTE,objectsCurrentValue,user.getPassword());
-		jdbcTemplate.update(SqlContent.INSERT_USER_SURNAME_ATTRIBUTE,objectsCurrentValue,user.getSurname());
 	}
 
 	private void deleteUser(String email){
