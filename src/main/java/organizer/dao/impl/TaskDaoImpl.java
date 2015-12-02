@@ -25,35 +25,24 @@ class TaskDaoImpl implements TaskDao {
     }
 
 
-    public void create(final User user, final Task task) {
-        // log - method start
-
-        // transaction
-
-                    // get last row index from OBJECTS
-                    int currentId = jdbcTemplate.queryForObject("SELECT object_id.nextval FROM dual", Integer.class);
-
-                    // ! get user id from OBJECTS
-                    int userId = jdbcTemplate.queryForObject("SELECT object_id FROM objects WHERE name = ?",
-                            new Object[]{user.getName()}, Integer.class);
-
-                    // Add Task object
-                    jdbcTemplate.update("INSERT INTO OBJECTS (OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION) "
-                            + "VALUES (?, ?, 1, ?, NULL)", currentId, userId, task.getName()); 	/* task obj_type_id=1 */
-
-                    // Task Object - Fill all task attributes
-                    jdbcTemplate.update("INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE) "
-                            + "VALUES (1, ?, NULL, ?)", currentId, task.getDate()); 		/* add date */
-
-                    jdbcTemplate.update("INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE) "
-                            + "VALUES (2, ?, ?, NULL)", currentId, task.getPriority()); 	/* add priority */
-
-                    jdbcTemplate.update("INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE)"
-                            + "VALUES (3, ?, ?, NULL)", currentId, task.getCategory()); 	/* add category */
-
-                    jdbcTemplate.update("INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE) "
-                            + "VALUES (4, ?, ?, NULL)", currentId, task.isCompleted()); 	/* add status */
-
+	public void create(User user, Task task) {
+    	// get last row index from OBJECTS
+		int currentId = jdbcTemplate.queryForObject(SqlContent.SELECT_NEXT_OBJECT_ID_VALUE, Integer.class);
+		
+		// ! get user id from OBJECTS
+		int userId = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_ID, new Object[] { user.getName() }, Integer.class);
+		
+		// Add Task object 	
+		jdbcTemplate.update(SqlContent.INSERT_TASK, currentId, userId, task.getName() ); 		
+		
+		// Task Object - Fill all task attributes
+		jdbcTemplate.update(SqlContent.INSERT_TASK_DATE, userId, task.getDate()); 
+		
+		jdbcTemplate.update(SqlContent.INSERT_TASK_PRIORITY, userId, task.getPriority()); 
+		
+		jdbcTemplate.update(SqlContent.INSERT_TASK_CATEGORY, userId, task.getCategory()); 
+		
+		jdbcTemplate.update(SqlContent.INSERT_TASK_STATUS, userId, task.isCompleted()); 
 
     }
 
