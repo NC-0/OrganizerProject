@@ -54,8 +54,23 @@ public class UserDaoImpl implements UserDao {
 		return null;
 	}
 
-	public User get(String email) {
-		// TODO Auto-generated method stub
+	public User get(String email) {	
+		// check if user exists 
+		if (exist(email)) {
+			// get user object_id from OBJECTS
+			int userId = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_OBJECT_ID_BY_EMAIL, new Object[] { email }, Integer.class); 	
+			
+			// get user name
+			String userName = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_NAME, new Object[] { userId }, String.class); 
+			// get user password
+			String password = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_PASS, new Object[] { userId }, String.class); 		
+			// get user surname
+			String surname = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_SURNAME, new Object[] { userId }, String.class);
+			
+			// create new user and fill attributes
+			return new User(userName, surname, password, email);
+		}
+		// if user not exists
 		return null;
 	}
 
