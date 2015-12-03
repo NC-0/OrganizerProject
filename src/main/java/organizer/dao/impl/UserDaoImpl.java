@@ -3,9 +3,6 @@ package organizer.dao.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
 import organizer.dao.api.UserDao;
 import organizer.logic.impl.SqlContent;
 import organizer.models.User;
@@ -22,7 +19,6 @@ public class UserDaoImpl implements UserDao {
 	
 	public String create(User user) {
 		if(!exist(user.getEmail())){
-			if(!exist(user.getEmail())){
 			Integer objectsCurrentValue = jdbcTemplate.queryForObject(SqlContent.SELECT_NEXT_OBJECT_ID_VALUE,Integer.class);
 			jdbcTemplate.update(SqlContent.INSERT_USER_OBJECT,objectsCurrentValue,user.getName());
 			jdbcTemplate.update(SqlContent.INSERT_USER_EMAIL_ATTRIBUTE,objectsCurrentValue,user.getEmail());

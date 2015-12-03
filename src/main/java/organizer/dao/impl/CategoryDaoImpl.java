@@ -3,9 +3,6 @@ package organizer.dao.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-import org.springframework.transaction.support.TransactionTemplate;
 import organizer.dao.api.CategoryDao;
 import organizer.logic.impl.SqlContent;
 import organizer.models.Category;
@@ -15,9 +12,6 @@ public class CategoryDaoImpl implements CategoryDao {
 	@Autowired
 	@Qualifier("jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
-	@Autowired
-	@Qualifier("transactionTemplate")
-	private TransactionTemplate transactionTemplate;
 
 	public void create(Category category){
 		throw new UnsupportedOperationException("Need realization session and then we may get user in session.");
