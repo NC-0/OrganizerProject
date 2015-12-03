@@ -61,20 +61,18 @@ public class SqlContent {
 
 	// Subtask requests --------------------------------------------------------------------------------------------------
 	
-	public static final String SELECT_SUBTASKS_BY_TASK_ID = "SELECT object_id, o.name as SubtaskName, a.value as Status FROM objects o "
-														+ "LEFT JOIN attributes a ON (o.object_id=a.object_id) WHERE parent_id = ?";
-	
 	public static final String UPDATE_SUBTASK_NAME = "UPDATE objects SET name = ? WHERE object_id = ?";
 
 	// Category requests -------------------------------------------------------------------------------------------------
-
+	
 	public final static String SELECT_CATEGORY_ID_BY_NAME = "SELECT object_id FROM objects WHERE name = ?";
 	
 	public final static String UPDATE_CATEGORY_NAME = "UPDATE objects set NAME = ? where object_id = ?";
 	
 	public final static String INSERT_CATEGORY_OBJECT = "INSERT INTO objects(object_id,parent_id,object_type_id,name,description) VALUES (?,NULL,4,?,NULL)";
 
-	public final static String INSERT_USER_TO_CATEGORY_REFERENCE = "INSERT INTO objreference (attr_id,object_id,reference) VALUES (9,?,?)";
+	public final static String INSERT_USER_TO_CATEGORY_REFERENCE = "INSERT INTO objreference (attr_id,object_id,reference) VALUES (9,?,?)"; //INSERT INTO OBJREFERENCE(ATTR_ID,OBJECT_ID,REFERENCE) VALUES (9,65,67) 65-user object, 67-category object
+	
+	public final static String SELECT_USER_CATEGORIES = "SELECT cat_obj.NAME FROM OBJECTS cat_obj,OBJECTS usr_obj,OBJREFERENCE usr_cat_ref WHERE usr_cat_ref.ATTR_ID=9 AND cat_obj.OBJECT_ID=usr_cat_ref.REFERENCE AND usr_obj.OBJECT_ID=usr_cat_ref.OBJECT_ID AND usr_obj.OBJECT_ID=?";
 
-	;
 }

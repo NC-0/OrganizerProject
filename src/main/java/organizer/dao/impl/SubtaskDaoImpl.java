@@ -38,17 +38,7 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	
 	@Override
 	public ArrayList<Subtask> get(Task task) {
-		ArrayList<Subtask> subtaskList = new ArrayList<>();
-		
-		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(SqlContent.SELECT_SUBTASKS_BY_TASK_ID);
-		for (Map<String, Object> curMap : resultList) {
-			Subtask subtask = new Subtask(
-						(String) curMap.get("SubtaskName"),
-						(Boolean) curMap.get("Status")
-					);
-			subtaskList.add(subtask);
-		}
-		return subtaskList;
+
 	}
 	
 }
