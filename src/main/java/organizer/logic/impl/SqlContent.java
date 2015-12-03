@@ -65,6 +65,10 @@ public class SqlContent {
 
 	// Category requests -------------------------------------------------------------------------------------------------
 	
+	public final static String SELECT_CATEGORY_ID_BY_NAME = "SELECT object_id FROM objects WHERE name = ?";
+	
+	public final static String UPDATE_CATEGORY_NAME = "UPDATE objects set NAME = ? where object_id = ?";
+	
 	public final static String INSERT_CATEGORY_OBJECT = "INSERT INTO objects(object_id,parent_id,object_type_id,name,description) VALUES (?,NULL,4,?,NULL)";
 
 	public final static String INSERT_USER_TO_CATEGORY_REFERENCE = "INSERT INTO objreference (attr_id,object_id,reference) VALUES (9,?,?)";

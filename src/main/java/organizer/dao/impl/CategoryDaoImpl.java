@@ -49,8 +49,13 @@ public class CategoryDaoImpl implements CategoryDao {
 
 	}
 
-	public void edit() {
-
+	public void edit(Category category) {
+		// get category Id 
+		int categoryId = jdbcTemplate.queryForObject(SqlContent.SELECT_CATEGORY_ID_BY_NAME, 
+				new Object[] { category.getName() }, Integer.class);
+      	
+		// update category in db
+		jdbcTemplate.update(SqlContent.UPDATE_CATEGORY_NAME, category.getName(), categoryId);
 	}
 
 	public Category get() {
