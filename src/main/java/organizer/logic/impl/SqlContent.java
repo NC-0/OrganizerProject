@@ -60,6 +60,9 @@ public class SqlContent {
 	public final static String UPDATE_TASK_STATUS ="UPDATE attributes SET value = ? WHERE attr_id = 4 and object_id = ?";
 
 	// Subtask requests --------------------------------------------------------------------------------------------------
+		
+	public static final String SELECT_SUBTASKS_BY_TASK_ID = "SELECT object_id, o.name as SubtaskName, a.value as Status FROM objects o "
+														+ "LEFT JOIN attributes a ON (o.object_id=a.object_id) WHERE parent_id = ?";
 	
 	public static final String UPDATE_SUBTASK_NAME = "UPDATE objects SET name = ? WHERE object_id = ?";
 
