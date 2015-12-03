@@ -58,8 +58,14 @@ public class CategoryDaoImpl implements CategoryDao {
 		jdbcTemplate.update(SqlContent.UPDATE_CATEGORY_NAME, category.getName(), categoryId);
 	}
 
-	public Category get() {
-		return null;
+	public ArrayList<Category> get(int userId) {
+		ArrayList<Category> categories = (ArrayList<Category>) jdbcTemplate.query(SqlContent.SELECT_USER_CATEGORIES,new Object[]{userId},new RowMapper<Category>() {
+			public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Category category = new Category(rs.getString("NAME"));
+				return category;
+			}
+		});
+		return categories;
 	}
 
 }

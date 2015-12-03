@@ -8,5 +8,5 @@ public interface CategoryDao {
 	void create(User user, Category category);
 	void delete();
 	void edit(Category category);
-	Category get();
+	ArrayList<Category> get(int userId);
 }
