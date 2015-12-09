@@ -59,12 +59,6 @@ class TaskDaoImpl implements TaskDao {
          }
     }
 
-    private void updateSubTask(Task task) {
-        if (task.getSubTaskList() != null)
-            for (Task subTask : task.getSubTaskList()) {
-                jdbcTemplate.update(SqlContent.UPDATE_SUBTASK_NAME, subTask.getName(), subTask.getId());
-            }
-    }
 
     public Task get() {
         // TODO Auto-generated method stub

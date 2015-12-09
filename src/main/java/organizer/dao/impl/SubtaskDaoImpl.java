@@ -18,25 +18,21 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	@Qualifier("jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 	
-	@Override
 	public void create(Subtask subtask, Task task) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void delete(Subtask subtask) {
-		// TODO Auto-generated method stub
-		
+	public void delete(int id) {
+		jdbcTemplate.update(SubtaskDao.DELETE_SUBTASK_OBJECT,id);
 	}
 
-	@Override
 	public void edit(Subtask subtask) {
-		// TODO Auto-generated method stub
+		jdbcTemplate.update(SqlContent.UPDATE_TASK_NAME, subtask.getName(), subtask.getId());
+		jdbcTemplate.update(SqlContent.UPDATE_TASK_STATUS, subtask.isCompleted(), subtask.getId());
 		
 	}
 	
-	@Override
 	public ArrayList<Subtask> get(Task task) {
 		ArrayList<Subtask> subtaskList = new ArrayList<>();
 		

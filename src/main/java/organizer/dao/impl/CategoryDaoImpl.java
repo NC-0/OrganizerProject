@@ -53,7 +53,7 @@ public class CategoryDaoImpl implements CategoryDao {
 	}
 
 	public ArrayList<Category> get(int userId) {
-		ArrayList<Category> categories = (ArrayList<Category>) jdbcTemplate.query(SqlContent.SELECT_USER_CATEGORIES,new Object[]{userId},new RowMapper<Category>() {
+		ArrayList<Category> categories = (ArrayList<Category>) jdbcTemplate.query(CategoryDao.SELECT_USER_CATEGORIES,new Object[]{userId},new RowMapper<Category>() {
 			public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Category category = new Category(rs.getString("NAME"));
 				return category;

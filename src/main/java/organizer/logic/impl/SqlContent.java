@@ -64,6 +64,4 @@ public class SqlContent {
 
 	public final static String INSERT_USER_TO_CATEGORY_REFERENCE = "INSERT INTO objreference (attr_id,object_id,reference) VALUES (9,?,?)"; //INSERT INTO OBJREFERENCE(ATTR_ID,OBJECT_ID,REFERENCE) VALUES (9,65,67) 65-user object, 67-category object
 	
-	public final static String SELECT_USER_CATEGORIES = "SELECT cat_obj.NAME FROM OBJECTS cat_obj,OBJECTS usr_obj,OBJREFERENCE usr_cat_ref WHERE usr_cat_ref.ATTR_ID=9 AND cat_obj.OBJECT_ID=usr_cat_ref.REFERENCE AND usr_obj.OBJECT_ID=usr_cat_ref.OBJECT_ID AND usr_obj.OBJECT_ID=?";
-
 }
