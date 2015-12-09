@@ -19,11 +19,11 @@ public class UserDaoImpl implements UserDao {
 	
 	public String create(User user) {
 		if(!exist(user.getEmail())){
-			Integer objectsCurrentValue = jdbcTemplate.queryForObject(SqlContent.SELECT_NEXT_OBJECT_ID_VALUE,Integer.class);
-			jdbcTemplate.update(SqlContent.INSERT_USER_OBJECT,objectsCurrentValue,user.getName());
-			jdbcTemplate.update(SqlContent.INSERT_USER_EMAIL_ATTRIBUTE,objectsCurrentValue,user.getEmail());
-			jdbcTemplate.update(SqlContent.INSERT_USER_PASSWORD_ATTRIBUTE,objectsCurrentValue,user.getPassword());
-			jdbcTemplate.update(SqlContent.INSERT_USER_SURNAME_ATTRIBUTE,objectsCurrentValue,user.getSurname());
+			jdbcTemplate.update(UserDao.INSERT_USER_OBJECT,user.getName());
+			Integer objectsCurrentValue = jdbcTemplate.queryForObject(UserDao.SELECT_CURR_OBJECT_ID_VALUE,Integer.class);
+			jdbcTemplate.update(UserDao.INSERT_USER_EMAIL_ATTRIBUTE,objectsCurrentValue,user.getEmail());
+			jdbcTemplate.update(UserDao.INSERT_USER_PASSWORD_ATTRIBUTE,objectsCurrentValue,user.getPassword());
+			jdbcTemplate.update(UserDao.INSERT_USER_SURNAME_ATTRIBUTE,objectsCurrentValue,user.getSurname());
 			return String.format(MessageContent.USER_CREATED, user.getEmail());
 		}
 		return String.format(MessageContent.USER_ALREADY_EXIST, user.getEmail());
