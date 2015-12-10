@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import organizer.dao.api.UserDao;
+import organizer.logic.impl.MessageContent;
 import organizer.logic.impl.SqlContent;
 import organizer.models.User;
 
@@ -13,7 +14,7 @@ public class UserDaoImpl implements UserDao {
 	private JdbcTemplate jdbcTemplate;
 
 	public boolean exist(String email) {
-		boolean exist = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_COUNT,new Object[]{email},Integer.class)!=0;
+		boolean exist = jdbcTemplate.queryForObject(UserDao.SELECT_USER_COUNT,new Object[]{email},Integer.class)!=0;
 		return exist;
 	}
 	
@@ -54,14 +55,14 @@ public class UserDaoImpl implements UserDao {
 		// check if user exists 
 		if (exist(email)) {
 			// get user object_id from OBJECTS
-			int userId = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_OBJECT_ID_BY_EMAIL, new Object[] { email }, Integer.class); 	
+			int userId = jdbcTemplate.queryForObject(UserDao.SELECT_USER_OBJECT_ID_BY_EMAIL, new Object[] { email }, Integer.class); 	
 			
 			// get user name
-			String userName = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_NAME, new Object[] { userId }, String.class); 
+			String userName = jdbcTemplate.queryForObject(UserDao.SELECT_USER_NAME, new Object[] { userId }, String.class); 
 			// get user password
-			String password = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_PASS, new Object[] { userId }, String.class); 		
+			String password = jdbcTemplate.queryForObject(UserDao.SELECT_USER_PASS, new Object[] { userId }, String.class); 		
 			// get user surname
-			String surname = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_SURNAME, new Object[] { userId }, String.class);
+			String surname = jdbcTemplate.queryForObject(UserDao.SELECT_USER_SURNAME, new Object[] { userId }, String.class);
 			
 			// create new user and fill attributes
 			return new User(userName, surname, password, email);

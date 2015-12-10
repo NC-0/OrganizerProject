@@ -5,7 +5,7 @@ public class Subtask {
 	private boolean completed;
 	private int id;
 		
-	public Subtask(int id,String name, boolean completed) {
+	public Subtask(int id, String name, boolean completed) {
 		this.name = name;
 		this.completed = completed;
 		this.id=id;

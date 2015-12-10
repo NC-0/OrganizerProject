@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import organizer.dao.api.TaskDao;
+import organizer.dao.api.UserDao;
 import organizer.logic.impl.SqlContent;
 import organizer.models.Task;
 import organizer.models.User;
@@ -22,25 +23,22 @@ class TaskDaoImpl implements TaskDao {
     }
 
 
-	public void create(User user, Task task) {
-    	// get last row index from OBJECTS
-		int currentId = jdbcTemplate.queryForObject(SqlContent.SELECT_NEXT_OBJECT_ID_VALUE, Integer.class);
-		
-		// ! get user id from OBJECTS
-		int userId = jdbcTemplate.queryForObject(SqlContent.SELECT_USER_ID, new Object[] { user.getName() }, Integer.class);
-		
+	public void create(int userId, Task task) {
 		// Add Task object 	
-		jdbcTemplate.update(SqlContent.INSERT_TASK, currentId, userId, task.getName() ); 		
+		jdbcTemplate.update(TaskDao.INSERT_TASK, userId, task.getName() ); 
+		
+		// get current task object_id from OBJECTS and set it
+		int taskId = jdbcTemplate.queryForObject(UserDao.SELECT_CURR_OBJECT_ID_VALUE, Integer.class);
+		task.setId(taskId);
 		
 		// Task Object - Fill all task attributes
-		jdbcTemplate.update(SqlContent.INSERT_TASK_DATE, userId, task.getDate()); 
+		jdbcTemplate.update(TaskDao.INSERT_TASK_DATE, taskId, task.getDate()); 
+		jdbcTemplate.update(TaskDao.INSERT_TASK_PRIORITY, taskId, task.getPriority()); 
+		jdbcTemplate.update(TaskDao.INSERT_TASK_CATEGORY, taskId, task.getCategory()); 
+		jdbcTemplate.update(TaskDao.INSERT_TASK_STATUS, taskId, task.isCompleted()); 
 		
-		jdbcTemplate.update(SqlContent.INSERT_TASK_PRIORITY, userId, task.getPriority()); 
-		
-		jdbcTemplate.update(SqlContent.INSERT_TASK_CATEGORY, userId, task.getCategory()); 
-		
-		jdbcTemplate.update(SqlContent.INSERT_TASK_STATUS, userId, task.isCompleted()); 
-
+		// Add reference between Task and User
+		jdbcTemplate.update(TaskDao.INSERT_TASK_REF_USER, taskId, userId);
     }
 
     public void delete() {

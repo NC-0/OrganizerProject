@@ -18,4 +18,10 @@ public interface UserDao {
 	final static String INSERT_USER_EMAIL_ATTRIBUTE = "INSERT INTO attributes(attr_id,object_id,value,date_value) VALUES(6,?,?,null)";
 	final static String INSERT_USER_PASSWORD_ATTRIBUTE = "INSERT INTO attributes(attr_id,object_id,value,date_value) VALUES(7,?,?,null)";
 	final static String INSERT_USER_SURNAME_ATTRIBUTE = "INSERT INTO attributes(attr_id,object_id,value,date_value) VALUES(8,?,?,null)";
+	
+	final static String SELECT_USER_OBJECT_ID_BY_EMAIL = "select OBJECT_ID from ATTRIBUTES where ATTR_ID = 6 and NAME = ?"; /* email = 6 */	
+	final static String SELECT_USER_ID = "SELECT object_id FROM objects WHERE name = ?";
+	final static String SELECT_USER_NAME = "select NAME from OBJECTS where OBJECT_ID = ?";			 
+	final static String SELECT_USER_PASS = "select VALUE from ATTRIBUTES where OBJECT_ID = ? and ATTR_ID = 7";	/* password = 7 */ 		
+	final static String SELECT_USER_SURNAME = "select VALUE from ATTRIBUTES where OBJECT_ID = ? and ATTR_ID = 8"; /* surname = 8 */
 }
