@@ -15,8 +15,7 @@ public interface TaskDao {
 	ArrayList<Task> getSubTaskList();
 	
 	// Create Task requests
-	final static String INSERT_TASK = "INSERT INTO OBJECTS (OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION) "
-									+ "VALUES (0, NULL, 1, ?, NULL)"; /* 0-trigger will changed it to nextval before insert operation, task obj_type_id = 1 */
+	final static String INSERT_TASK = "INSERT INTO OBJECTS (PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION) VALUES (NULL, 1, ?, NULL)"; /* task obj_type_id = 1 */
 	final static String INSERT_TASK_DATE = "INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE) VALUES (1, ?, NULL, ?)"; /* date = 1 */
 	final static String INSERT_TASK_PRIORITY = "INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE) VALUES (2, ?, ?, NULL)"; /* priority = 2 */
 	final static String INSERT_TASK_CATEGORY = "INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE) VALUES (3, ?, ?, NULL)"; /* category = 3 */
