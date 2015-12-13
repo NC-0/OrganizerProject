@@ -4,13 +4,17 @@ public class Subtask {
 	private String name;
 	private boolean completed;
 	private int id;
-		
+
 	public Subtask(int id, String name, boolean completed) {
 		this.name = name;
 		this.completed = completed;
-		this.id=id;
+		this.id = id;
 	}
-	
+
+	public int getId() {
+		return id;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -25,13 +29,5 @@ public class Subtask {
 	
 	public void setCompleted(boolean completed) {
 		this.completed = completed;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 }
