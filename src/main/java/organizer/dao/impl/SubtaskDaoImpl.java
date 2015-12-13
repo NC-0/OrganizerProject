@@ -24,7 +24,7 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	}
 
 	public void delete(int id) {
-		jdbcTemplate.update(SubtaskDao.DELETE_SUBTASK_OBJECT,id);
+		jdbcTemplate.update(SubtaskDao.DELETE, id);
 	}
 
 	public void edit(Subtask subtask) {
@@ -39,9 +39,9 @@ public class SubtaskDaoImpl implements SubtaskDao {
 		List<Map<String, Object>> resultList = jdbcTemplate.queryForList(SqlContent.SELECT_SUBTASKS_BY_TASK_ID);
 		for (Map<String, Object> curMap : resultList) {
 			Subtask subtask = new Subtask(
-						(String) curMap.get("SubtaskName"),
-						(Boolean) curMap.get("Status")
-					);
+				(String) curMap.get("SubtaskName"),
+				(Boolean) curMap.get("Status")
+			);
 			subtaskList.add(subtask);
 		}
 		return subtaskList;

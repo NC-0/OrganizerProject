@@ -1,8 +1,5 @@
 package organizer.dao.api;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.support.TransactionTemplate;
-
 import organizer.models.User;
 
 public interface UserDao {
@@ -12,16 +9,21 @@ public interface UserDao {
 	String edit(User user);
 	User get(String email);
 
-	final static String SELECT_USER_COUNT = "SELECT count(*) FROM ATTRIBUTES USR_ATTR WHERE USR_ATTR.ATTR_ID=6 AND USR_ATTR.VALUE=?";
-	final static String SELECT_CURR_OBJECT_ID_VALUE = "SELECT object_id.currval FROM dual";
-	final static String INSERT_USER_OBJECT = "INSERT INTO objects(parent_id,object_type_id,name,description) VALUES(NULL,3,?,NULL)";
-	final static String INSERT_USER_EMAIL_ATTRIBUTE = "INSERT INTO attributes(attr_id,object_id,value,date_value) VALUES(6,?,?,null)";
-	final static String INSERT_USER_PASSWORD_ATTRIBUTE = "INSERT INTO attributes(attr_id,object_id,value,date_value) VALUES(7,?,?,null)";
-	final static String INSERT_USER_SURNAME_ATTRIBUTE = "INSERT INTO attributes(attr_id,object_id,value,date_value) VALUES(8,?,?,null)";
+	int OBJ_TYPE      = 3;
+	int EMAIL_ATTR    = 6;
+	int PASSWORD_ATTR = 7;
+	int SURNAME_ATTR  = 8;
+
+	String SELECT_COUNT = "SELECT COUNT(*) FROM attributes usr_attr WHERE usr_attr.attr_id = 6 AND usr_attr.value = ?";
+	String SELECT_ID    = "SELECT object_id.CURRVAL FROM dual";
+
+	String INSERT          = "INSERT INTO objects (parent_id, object_type_id, name, description) VALUES (NULL, " + OBJ_TYPE + ", ?,NULL)";
+	String INSERT_EMAIL    = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + EMAIL_ATTR + ", ?, ?, NULL)";
+	String INSERT_PASSWORD = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + PASSWORD_ATTR + ", ?, ?, NULL)";
+	String INSERT_SURNAME  = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + SURNAME_ATTR + ", ?, ?, NULL)";
 	
-	final static String SELECT_USER_OBJECT_ID_BY_EMAIL = "select OBJECT_ID from ATTRIBUTES where ATTR_ID = 6 and NAME = ?"; /* email = 6 */	
-	final static String SELECT_USER_ID = "SELECT object_id FROM objects WHERE name = ?";
-	final static String SELECT_USER_NAME = "select NAME from OBJECTS where OBJECT_ID = ?";			 
-	final static String SELECT_USER_PASS = "select VALUE from ATTRIBUTES where OBJECT_ID = ? and ATTR_ID = 7";	/* password = 7 */ 		
-	final static String SELECT_USER_SURNAME = "select VALUE from ATTRIBUTES where OBJECT_ID = ? and ATTR_ID = 8"; /* surname = 8 */
+	String SELECT_ID_BY_EMAIL = "SELECT object_ID FROM attributes WHERE attr_id = " + EMAIL_ATTR + " AND name = ?";
+	String SELECT_NAME        = "SELECT name FROM objects WHERE object_id = ?";
+	String SELECT_PASSWORD    = "SELECT value FROM attributes WHERE object_id = ? AND attr_id = " + PASSWORD_ATTR;
+	String SELECT_SURNAME     = "SELECT value FROM attributes WHERE object_id = ? AND attr_id = " + SURNAME_ATTR;
 }
