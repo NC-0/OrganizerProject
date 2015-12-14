@@ -24,13 +24,16 @@ public interface TaskDao {
 	String INSERT_PRIORITY = "INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE) VALUES (" + PRIORITY_ATTR + ", ?, ?, NULL)";
 	String INSERT_CATEGORY = "INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE) VALUES (" + CATEGORY_ATTR + ", ?, ?, NULL)";
 	String INSERT_STATUS   = "INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE) VALUES (" + STATUS_ATTR + ", ?, ?, NULL)";
-	String INSERT_REF_USER = "INSERT INTO OBJREFERENCE (ATTR_ID,  REFERENCE, OBJECT_ID) VALUES (" + USER_REF_ATTR + ", ?, ?);";
+	String INSERT_REF_USER = "INSERT INTO OBJREFERENCE (ATTR_ID,  REFERENCE, OBJECT_ID) VALUES (" + USER_REF_ATTR + ", ?, ?)";
 	
 	// Delete Task requests
 	String DELETE = "DELETE FROM objects WHERE object_id = ?";
 
 	// Update Task requests
 
-	
-	// Get Task requests
+	// Get Task requests	
+	String SELECT_DATE 		= "SELECT date_value FROM ATTRIBUTES WHERE attr_id = "+ DATE_ATTR +" AND object_id=?";
+	String SELECT_PRIORITY 	= "SELECT value FROM ATTRIBUTES WHERE attr_id= "+ PRIORITY_ATTR +" AND object_id=?";
+	String SELECT_CATEGORY 	= "SELECT value FROM ATTRIBUTES WHERE attr_id = "+ CATEGORY_ATTR +" AND object_id = ?";
+	String SELECT_STATUS 	= "SELECT value FROM ATTRIBUTES WHERE attr_id = "+ STATUS_ATTR +" AND object_id=?";
 }
