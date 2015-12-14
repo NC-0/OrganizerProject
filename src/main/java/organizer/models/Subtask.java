@@ -3,14 +3,22 @@ package organizer.models;
 public class Subtask {
 	private String name;
 	private boolean completed;
-	
-	public Subtask() {}
-	
-	public Subtask(String name, boolean completed) {
+	private int id;
+
+	public Subtask(int id, String name, boolean completed) {
 		this.name = name;
 		this.completed = completed;
+		this.id = id;
 	}
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}

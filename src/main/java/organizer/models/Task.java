@@ -1,67 +1,80 @@
 package organizer.models;
 
-import java.sql.Date;
-import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class Task {
-	private Integer id;
+	private int id;
 	private String name;
 	private Date date;
 	private int priority;
-	private String category;
+	private Category category;
 	private boolean completed;
-	private ArrayList<Task> subTaskList;
+	private List<Task> subtasks;
 
-	public Task(Integer id, String name, Date date, int priority, String category, boolean completed, ArrayList<Task> subTaskList) {
+	public Task(int id, String name, Date date, int priority, Category category, boolean completed, List<Task> subtasks) {
 		this.id = id;
 		this.name = name;
 		this.date = date;
 		this.priority = priority;
 		this.category = category;
 		this.completed = completed;
-		this.subTaskList = subTaskList;
+		this.subtasks = subtasks;
 	}
-	public Integer getId() {
+
+	public int getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+
+	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	public java.sql.Date getDate() {
+
+	public Date getDate() {
 		return date;
 	}
-	public void setDate(java.sql.Date date) {
+
+	public void setDate(Date date) {
 		this.date = date;
 	}
+
 	public int getPriority() {
 		return priority;
 	}
+
 	public void setPriority(int priority) {
 		this.priority = priority;
 	}
-	public String getCategory() {
+
+	public Category getCategory() {
 		return category;
 	}
-	public void setCategory(String category) {
+
+	public void setCategory(Category category) {
 		this.category = category;
 	}
+
 	public boolean isCompleted() {
 		return completed;
 	}
+
 	public void setCompleted(boolean completed) {
 		this.completed = completed;
 	}
-	public ArrayList<Task> getSubTaskList() {
-		return subTaskList;
-	}
-	public void setSubTaskList(ArrayList<Task> subTaskList) {
-		this.subTaskList = subTaskList;
+
+	public List<Task> getSubtasks() {
+		return subtasks;
 	}
 
+	public void setSubtasks(List<Task> subtasks) {
+		this.subtasks = subtasks;
+	}
 }
