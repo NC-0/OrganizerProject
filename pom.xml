@@ -64,6 +64,13 @@
 			<version>${servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+            		<groupId>org.apache.tomcat</groupId>
+            		<artifactId>tomcat-servlet-api</artifactId>
+            		<version>7.0.21</version>
+            		<scope>provided</scope>
+        	</dependency>
 	  
 	  	<!-- Logger -->
 		<dependency>
@@ -114,6 +121,12 @@
 			<artifactId>spring-aop</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+
+		<dependency>
+            		<groupId>org.springframework</groupId>
+            		<artifactId>spring-webmvc-portlet</artifactId>
+            		<version>4.1.7.RELEASE</version>
+        	</dependency>
 		
 		<dependency>
 			<groupId>org.aspectj</groupId>
