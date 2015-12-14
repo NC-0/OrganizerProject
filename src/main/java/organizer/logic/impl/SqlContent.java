@@ -58,6 +58,14 @@ public class SqlContent {
 	public final static String UPDATE_TASK_CATEGORY ="UPDATE attributes SET value = ? WHERE attr_id = 3 and object_id = ?";
 
 	public final static String UPDATE_TASK_STATUS ="UPDATE attributes SET value = ? WHERE attr_id = 4 and object_id = ?";
+	
+	
+	public final static String SELECT_TASK_OBJECT_BY_DATE = "SELECT object_id FROM ATTRIBUTES WHERE attr_id = 1  AND date_value = to_date(?, 'dd.mm.yyyy')";
+	public final static String SELECT_TASK_NAME = "SELECT name FROM objects WHERE object_type_id = 1 AND object_id = ?";
+	public final static String SELECT_TASK_PRIORITY = "SELECT value FROM attributes WHERE attr_id = 2 AND object_id = ?";
+	public final static String SELECT_TASK_CATEGORY = "SELECT value FROM attributes WHERE attr_id = 3 AND object_id = ?";
+	public final static String SELECT_TASK_STATUS = "SELECT value FROM attributes WHERE attr_id = 4 AND object_id = ?";
+	
 
 	// Subtask requests --------------------------------------------------------------------------------------------------
 		
