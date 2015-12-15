@@ -11,6 +11,7 @@ public interface UserDao {
 
 	int OBJ_TYPE      = 3;
 	int EMAIL_ATTR    = 6;
+	int ENABLED_ATTR  = 11;
 	int PASSWORD_ATTR = 7;
 	int SURNAME_ATTR  = 8;
 
@@ -19,6 +20,7 @@ public interface UserDao {
 
 	String INSERT          = "INSERT INTO objects (parent_id, object_type_id, name, description) VALUES (NULL, " + OBJ_TYPE + ", ?,NULL)";
 	String INSERT_EMAIL    = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + EMAIL_ATTR + ", ?, ?, NULL)";
+	String INSERT_ENABLED  = "INSERT INTO attributes (attr_id,object_id,value,date_value) VALUES (" + ENABLED_ATTR + ", ?, ?, NULL)";
 	String INSERT_PASSWORD = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + PASSWORD_ATTR + ", ?, ?, NULL)";
 	String INSERT_SURNAME  = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + SURNAME_ATTR + ", ?, ?, NULL)";
 	

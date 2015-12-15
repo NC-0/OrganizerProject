@@ -27,6 +27,7 @@ public class UserDaoImpl implements UserDao {
 			jdbcTemplate.update(UserDao.INSERT_EMAIL, objectsCurrentValue, user.getEmail());
 			jdbcTemplate.update(UserDao.INSERT_PASSWORD, objectsCurrentValue, user.getPassword());
 			jdbcTemplate.update(UserDao.INSERT_SURNAME, objectsCurrentValue, user.getSurname());
+			jdbcTemplate.update(UserDao.INSERT_ENABLED, objectsCurrentValue, 1);//1-enabled
 			return String.format(MessageContent.USER_CREATED, user.getEmail());
 		}
 		return String.format(MessageContent.USER_ALREADY_EXIST, user.getEmail());

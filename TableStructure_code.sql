@@ -88,6 +88,8 @@ INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
   VALUES(7, 3, NULL,'Password','Пароль');
 INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
   VALUES(8, 3, NULL,'Surname','Фамилия');
+INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
+  VALUES(11, 3, NULL,'Enabled','Подтвержден');
   
 -- Add References
 INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
