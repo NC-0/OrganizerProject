@@ -12,6 +12,7 @@ public interface TaskDao {
 	List<Task> getSubtaskList();
 
 	int OBJ_TYPE      = 1;
+	int OBJ_TYPE_SUBTASKS = 2;
 	int DATE_ATTR     = 1;
 	int PRIORITY_ATTR = 2;
 	int CATEGORY_ATTR = 3;
@@ -31,9 +32,11 @@ public interface TaskDao {
 
 	// Update Task requests
 
-	// Get Task requests	
-	String SELECT_DATE 		= "SELECT date_value FROM ATTRIBUTES WHERE attr_id = "+ DATE_ATTR +" AND object_id=?";
-	String SELECT_PRIORITY 	= "SELECT value FROM ATTRIBUTES WHERE attr_id= "+ PRIORITY_ATTR +" AND object_id=?";
-	String SELECT_CATEGORY 	= "SELECT value FROM ATTRIBUTES WHERE attr_id = "+ CATEGORY_ATTR +" AND object_id = ?";
-	String SELECT_STATUS 	= "SELECT value FROM ATTRIBUTES WHERE attr_id = "+ STATUS_ATTR +" AND object_id=?";
+	// Get Task requests
+	String SELECT_NAME = "SELECT name FROM objects WHERE object_type_id =" + OBJ_TYPE + " AND object_id=?";
+	String SELECT_DATE 	= "SELECT date_value FROM ATTRIBUTES WHERE attr_id = " + DATE_ATTR + " AND object_id=?";
+	String SELECT_PRIORITY 	= "SELECT value FROM ATTRIBUTES WHERE attr_id = " + PRIORITY_ATTR + " AND object_id=?";
+	String SELECT_CATEGORY 	= "SELECT value FROM ATTRIBUTES WHERE attr_id = " + CATEGORY_ATTR + " AND object_id = ?";
+	String SELECT_STATUS 	= "SELECT value FROM ATTRIBUTES WHERE attr_id = " + STATUS_ATTR +" AND object_id=?";
+	String SELECT_SUBTASKS_NAMES = "SELECT name FROM objects WHERE object_type_id = "+ OBJ_TYPE_SUBTASKS +" AND parent_id=?";
 }
