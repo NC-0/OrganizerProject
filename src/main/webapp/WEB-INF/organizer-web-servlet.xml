@@ -17,6 +17,7 @@
         http://www.springframework.org/schema/aop/spring-aop.xsd">
        
     	<context:component-scan base-package="organizer.controllers"/>
+	<context:component-scan base-package="organizer.logic.impl.security"/>
         
         <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
             <property name="prefix"><value>/views/</value></property>
