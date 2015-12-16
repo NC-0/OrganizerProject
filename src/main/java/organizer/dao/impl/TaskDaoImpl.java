@@ -3,12 +3,19 @@ package organizer.dao.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
 import organizer.dao.api.TaskDao;
 import organizer.dao.api.UserDao;
 import organizer.logic.impl.SqlContent;
+import organizer.models.Category;
 import organizer.models.Task;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class TaskDaoImpl implements TaskDao {
 	@Autowired
@@ -53,8 +60,22 @@ public class TaskDaoImpl implements TaskDao {
 		}
 	}
 
-	public Task get() {
-		// To be done very soon
+	
+	
+	public List <Task> get(int userId) {
+		List<Task>tasks = (ArrayList<Task>)jdbcTemplate.query(TaskDao.SELECT_LIST_OF_USER_TASKS, 
+				new Object[]{userId}, new RowMapper<Task>(){
+
+			@Override
+			public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
+				
+				Task task = new Task(rs.getInt("REFERENCE"),rs.getString("Name"),rs.getDate("DATE_VALUE"),
+						rs.getInt("PRIORITY"), new Category(), new Boolean(rs.getString("Status")),null);
+				
+			return task;
+			}
+		});
+		return tasks;
 	}
 
 	public ArrayList<Task> getSubtaskList() {

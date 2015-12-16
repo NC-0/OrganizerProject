@@ -8,7 +8,7 @@ public interface TaskDao {
 	void create(int userId, Task task);
 	void delete(int id);
 	void edit(Task task);
-	Task get();
+	List<Task> get(int userId);
 	List<Task> getSubtaskList();
 
 	int OBJ_TYPE      = 1;
@@ -33,10 +33,11 @@ public interface TaskDao {
 	// Update Task requests
 
 	// Get Task requests
-	String SELECT_NAME = "SELECT name FROM objects WHERE object_type_id =" + OBJ_TYPE + " AND object_id=?";
-	String SELECT_DATE 	= "SELECT date_value FROM ATTRIBUTES WHERE attr_id = " + DATE_ATTR + " AND object_id=?";
-	String SELECT_PRIORITY 	= "SELECT value FROM ATTRIBUTES WHERE attr_id = " + PRIORITY_ATTR + " AND object_id=?";
-	String SELECT_CATEGORY 	= "SELECT value FROM ATTRIBUTES WHERE attr_id = " + CATEGORY_ATTR + " AND object_id = ?";
-	String SELECT_STATUS 	= "SELECT value FROM ATTRIBUTES WHERE attr_id = " + STATUS_ATTR +" AND object_id=?";
-	String SELECT_SUBTASKS_NAMES = "SELECT name FROM objects WHERE object_type_id = "+ OBJ_TYPE_SUBTASKS +" AND parent_id=?";
+	final static String SELECT_LIST_OF_USER_TASKS = "Select objreference.reference, objects.NAME, a1.date_value, a2.value as priority, a3.value as category,a4.value as status from objreference"
+			+ " join objects on objreference.REFERENCE=objects.object_id, attributes a1, ATTRIBUTES a2, "
+			+ "attributes a3 , attributes a4 where  a1.date_value is not null "
+			+ "and a1.attr_id=1 and a1.object_id=objects.object_id and a2.VALUE is not null "
+			+ "and a2.attr_id=2 and a2.object_id = objects.object_id and a3.VALUE is not null "
+			+ "and a3.attr_id =3 and a3.object_id=objects.object_id and a4.VALUE is not null "
+			+ "and a4.attr_id =4 and a4.object_id=objects.object_id and objreference.attr_id = " + USER_REF_ATTR + " and objreference.object_id=? ";
 }
