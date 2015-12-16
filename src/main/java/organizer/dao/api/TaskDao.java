@@ -33,7 +33,7 @@ public interface TaskDao {
 	// Update Task requests
 
 	// Get Task requests
-	final static String SELECT_LIST_OF_USER_TASKS = "Select objreference.reference, objects.NAME, a1.date_value, a2.value as priority, a3.value as category,a4.value as status from objreference"
+	String SELECT_LIST_OF_USER_TASKS = "Select objreference.reference, objects.NAME, a1.date_value, a2.value as priority, a3.value as category,a4.value as status from objreference"
 			+ " join objects on objreference.REFERENCE=objects.object_id, attributes a1, ATTRIBUTES a2, "
 			+ "attributes a3 , attributes a4 where  a1.date_value is not null "
 			+ "and a1.attr_id=1 and a1.object_id=objects.object_id and a2.VALUE is not null "

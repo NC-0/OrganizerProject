@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import organizer.dao.api.CategoryDao;
+import organizer.dao.api.SubtaskDao;
 import organizer.logic.impl.SqlContent;
 import organizer.models.Category;
 import organizer.models.User;
@@ -48,9 +49,8 @@ public class CategoryDaoImpl implements CategoryDao {
 		}
 	}
 
-
-	public void delete() {
-
+	public void delete(int id) {
+		jdbcTemplate.update(CategoryDao.DELETE, id);
 	}
 
 	public void edit(Category category) {
