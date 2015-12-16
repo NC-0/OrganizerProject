@@ -28,7 +28,7 @@ public interface TaskDao {
 	String INSERT_REF_USER = "INSERT INTO OBJREFERENCE (ATTR_ID,  REFERENCE, OBJECT_ID) VALUES (" + USER_REF_ATTR + ", ?, ?)";
 	
 	// Delete Task requests
-	String DELETE = "DELETE FROM objects WHERE object_id = ?";
+	String DELETE = "DELETE FROM objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
 
 	// Update Task requests
 

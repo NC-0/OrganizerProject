@@ -11,5 +11,7 @@ public interface SubtaskDao {
 	void edit(Subtask subtask);
 	List<Subtask> get(Task task);
 
-	String DELETE = "DELETE FROM objects WHERE object_id = ?";
+	int OBJ_TYPE = 2;
+
+	String DELETE = "DELETE FROM objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
 }
