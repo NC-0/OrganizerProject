@@ -1,17 +1,18 @@
 package organizer.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-
 import organizer.dao.api.SubtaskDao;
+import organizer.dao.api.TaskDao;
+import organizer.dao.api.UserDao;
 import organizer.logic.impl.SqlContent;
 import organizer.models.Subtask;
 import organizer.models.Task;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class SubtaskDaoImpl implements SubtaskDao {
 	@Autowired
@@ -19,7 +20,12 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	private JdbcTemplate jdbcTemplate;
 	
 	public void create(Subtask subtask, Task task) {
-		// TODO Auto-generated method stub
+		jdbcTemplate.update(SubtaskDao.INSERT, task.getId(), subtask.getName());
+
+		int subtaskId = jdbcTemplate.queryForObject(SubtaskDao.SELECT_ID, Integer.class);
+		task.setId(subtaskId);
+
+		jdbcTemplate.update(SubtaskDao.INSERT_COMPLETED, subtaskId, task.isCompleted());
 		
 	}
 
