@@ -24,7 +24,7 @@ public interface UserDao {
 	String INSERT_PASSWORD = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + PASSWORD_ATTR + ", ?, ?, NULL)";
 	String INSERT_SURNAME  = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + SURNAME_ATTR + ", ?, ?, NULL)";
 	
-	String SELECT_ID_BY_EMAIL = "SELECT object_ID FROM attributes WHERE attr_id = " + EMAIL_ATTR + " AND name = ?";
+	String SELECT_ID_BY_EMAIL = "SELECT object_ID FROM attributes WHERE attr_id = " + EMAIL_ATTR + " AND value = ?";
 	String SELECT_NAME        = "SELECT name FROM objects WHERE object_id = ?";
 	String SELECT_PASSWORD    = "SELECT value FROM attributes WHERE object_id = ? AND attr_id = " + PASSWORD_ATTR;
 	String SELECT_SURNAME     = "SELECT value FROM attributes WHERE object_id = ? AND attr_id = " + SURNAME_ATTR;
