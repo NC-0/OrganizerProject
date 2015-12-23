@@ -6,12 +6,30 @@ public class User {
 	private String password;
 	private String name;
 	private String surname;
+	private String role;
+	private boolean enabled;
 
 	public User(String email, String password, String name, String surname) {
 		this.email = email;
 		this.password = password;
 		this.name = name;
 		this.surname = surname;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public int getId() {
