@@ -24,8 +24,29 @@ public interface UserDao {
 	String INSERT_PASSWORD = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + PASSWORD_ATTR + ", ?, ?, NULL)";
 	String INSERT_SURNAME  = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + SURNAME_ATTR + ", ?, ?, NULL)";
 	
-	String SELECT_ID_BY_EMAIL = "SELECT object_ID FROM attributes WHERE attr_id = " + EMAIL_ATTR + " AND value = ?";
-	String SELECT_NAME        = "SELECT name FROM objects WHERE object_id = ?";
-	String SELECT_PASSWORD    = "SELECT value FROM attributes WHERE object_id = ? AND attr_id = " + PASSWORD_ATTR;
-	String SELECT_SURNAME     = "SELECT value FROM attributes WHERE object_id = ? AND attr_id = " + SURNAME_ATTR;
+//	String SELECT_ID_BY_EMAIL = "SELECT object_ID FROM attributes WHERE attr_id = " + EMAIL_ATTR + " AND value = ?";
+//	String SELECT_NAME        = "SELECT name FROM objects WHERE object_id = ?";
+//	String SELECT_PASSWORD    = "SELECT value FROM attributes WHERE object_id = ? AND attr_id = " + PASSWORD_ATTR;
+//	String SELECT_SURNAME     = "SELECT value FROM attributes WHERE object_id = ? AND attr_id = " + SURNAME_ATTR;
+	
+	String GET_USER_INFO = "SELECT " +
+			"obj.OBJECT_ID as userid, " +		// user id 
+			"obj.NAME as username, " + 			// user name
+			"pass_attr.VALUE as password, " +	// password
+			"surname_attr.VALUE as surname, " +	// surname
+			"enable_attr.VALUE as enabled " +	// enabled
+		"FROM  attributes email_attr, " +
+			"attributes pass_attr, " +
+			"attributes enable_attr, " +
+			"objects obj " +
+		"WHERE " +
+			"email_attr.attr_id = " + EMAIL_ATTR + " AND " +
+			"pass_attr.attr_id = " + PASSWORD_ATTR + " AND " +
+			"surname_attr.attr_id = " + SURNAME_ATTR + " AND " +
+			"enable_attr.attr_id = " + ENABLED_ATTR + " AND " +
+			"email_attr.value = ? AND " +
+			"obj.object_id = email_attr.OBJECT_ID AND " +
+			"pass_attr.OBJECT_ID = email_attr.OBJECT_ID AND " +
+			"surname_attr.object_id = email_attr.OBJECT_ID AND " +
+			"enable_attr.object_id = email_attr.OBJECT_ID";
 }

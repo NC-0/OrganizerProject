@@ -1,10 +1,14 @@
 package organizer.dao.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+
 import organizer.dao.api.UserDao;
 import organizer.logic.impl.MessageContent;
 import organizer.logic.impl.SqlContent;
@@ -58,18 +62,21 @@ public class UserDaoImpl implements UserDao {
 	public User get(String email) {
 		// check if user exists 
 		if (exist(email)) {
-			// get user object_id from OBJECTS
-			int userId = jdbcTemplate.queryForObject(UserDao.SELECT_ID_BY_EMAIL, new Object[]{email}, Integer.class);
+			String userName, password, surname, enabled;
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(UserDao.GET_USER_INFO, new Object[]{email});
 			
-			// get user name
-			String userName = jdbcTemplate.queryForObject(UserDao.SELECT_NAME, new Object[]{userId}, String.class);
-			// get user password
-			String password = jdbcTemplate.queryForObject(UserDao.SELECT_PASSWORD, new Object[]{userId}, String.class);
-			// get user surname
-			String surname = jdbcTemplate.queryForObject(UserDao.SELECT_SURNAME, new Object[]{userId}, String.class);
-			
+			int userId = (int) list.get(0).get("userid");
+			userName = (String) list.get(1).get("username");
+			password = (String) list.get(2).get("password");
+			surname = (String) list.get(3).get("surname");
+			enabled = (String) list.get(4).get("enabled");
+
 			// create new user and fill attributes
-			return new User(userId, userName, surname, password, email);
+			User user = new User(email, password, userName, surname);
+			user.setId(userId);
+			user.setRole("USER_ROLE");
+			user.setEnabled(Boolean.valueOf(enabled));
+			return user;
 		}
 		// if user not exists
 		return null;
