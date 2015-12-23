@@ -30,23 +30,25 @@ public interface UserDao {
 //	String SELECT_SURNAME     = "SELECT value FROM attributes WHERE object_id = ? AND attr_id = " + SURNAME_ATTR;
 	
 	String GET_USER_INFO = "SELECT " +
-			"obj.OBJECT_ID as userid, " +		// user id 
-			"obj.NAME as username, " + 			// user name
-			"pass_attr.VALUE as password, " +	// password
-			"surname_attr.VALUE as surname, " +	// surname
-			"enable_attr.VALUE as enabled " +	// enabled
+		"obj.OBJECT_ID as userid, " +		// user id
+		"obj.NAME as username, " + 		// user name
+		"pass_attr.VALUE as password, " +	// password
+		"email_attr.VALUE as email, "+		// email
+		"surname_attr.VALUE as surname, " +	// surname
+		"enable_attr.VALUE as enabled " +	// enabled
 		"FROM  attributes email_attr, " +
-			"attributes pass_attr, " +
-			"attributes enable_attr, " +
-			"objects obj " +
+		"attributes pass_attr, " +
+		"attributes surname_attr, " +
+		"attributes enable_attr, " +
+		"objects obj " +
 		"WHERE " +
-			"email_attr.attr_id = " + EMAIL_ATTR + " AND " +
-			"pass_attr.attr_id = " + PASSWORD_ATTR + " AND " +
-			"surname_attr.attr_id = " + SURNAME_ATTR + " AND " +
-			"enable_attr.attr_id = " + ENABLED_ATTR + " AND " +
-			"email_attr.value = ? AND " +
-			"obj.object_id = email_attr.OBJECT_ID AND " +
-			"pass_attr.OBJECT_ID = email_attr.OBJECT_ID AND " +
-			"surname_attr.object_id = email_attr.OBJECT_ID AND " +
-			"enable_attr.object_id = email_attr.OBJECT_ID";
+		"email_attr.attr_id = " + EMAIL_ATTR + " AND " +
+		"pass_attr.attr_id = " + PASSWORD_ATTR + " AND " +
+		"surname_attr.attr_id = " + SURNAME_ATTR + " AND " +
+		"enable_attr.attr_id = " + ENABLED_ATTR + " AND " +
+		"email_attr.value = ? AND " +
+		"obj.object_id = email_attr.OBJECT_ID AND " +
+		"pass_attr.OBJECT_ID = email_attr.OBJECT_ID AND " +
+		"surname_attr.object_id = email_attr.OBJECT_ID AND " +
+		"enable_attr.object_id = email_attr.OBJECT_ID";
 }

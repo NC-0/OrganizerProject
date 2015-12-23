@@ -42,10 +42,9 @@ public class UserController {
 	}
 
 	@RequestMapping(value="/protected",method=RequestMethod.GET)
-	public @ResponseBody String protectedMethod(){
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String name = auth.getName();
-		return "protected or not?" + name;
+	public @ResponseBody String protectedMethod(Authentication authentication){
+		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
+		return "protected or not?" + authorizedUser.getId()+";"+authorizedUser.getUsername();
 	}
 
 	@RequestMapping(value="/createuser",method=RequestMethod.POST)

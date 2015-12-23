@@ -1,18 +1,18 @@
 package organizer.dao.impl;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
-
 import organizer.dao.api.UserDao;
 import organizer.logic.impl.MessageContent;
 import organizer.logic.impl.SqlContent;
 import organizer.models.User;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDaoImpl implements UserDao {
 	@Autowired
@@ -62,20 +62,15 @@ public class UserDaoImpl implements UserDao {
 	public User get(String email) {
 		// check if user exists 
 		if (exist(email)) {
-			String userName, password, surname, enabled;
-			List<Map<String, Object>> list = jdbcTemplate.queryForList(UserDao.GET_USER_INFO, new Object[]{email});
-			
-			int userId = (int) list.get(0).get("userid");
-			userName = (String) list.get(1).get("username");
-			password = (String) list.get(2).get("password");
-			surname = (String) list.get(3).get("surname");
-			enabled = (String) list.get(4).get("enabled");
-
-			// create new user and fill attributes
-			User user = new User(email, password, userName, surname);
-			user.setId(userId);
-			user.setRole("USER_ROLE");
-			user.setEnabled(Boolean.valueOf(enabled));
+			User user = jdbcTemplate.queryForObject(UserDao.GET_USER_INFO, new Object[]{email}, new RowMapper<User>() {
+				public User mapRow(ResultSet resultSet, int i) throws SQLException {
+					User user = new User(resultSet.getString("email"),resultSet.getString("password"),resultSet.getString("username"),resultSet.getString("surname"));
+					user.setRole("USER_ROLE");
+					user.setId(Integer.valueOf(resultSet.getString("userid")));
+					user.setEnabled(Boolean.valueOf(resultSet.getString("enabled")));
+					return user;
+				}
+			});
 			return user;
 		}
 		// if user not exists
