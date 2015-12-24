@@ -19,5 +19,8 @@ public interface SubtaskDao {
 	String INSERT           = "INSERT INTO objects (parent_id, object_type_id, name, description) VALUES (?, " + OBJ_TYPE + ", ?, NULL)";
 	String INSERT_COMPLETED = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + IS_COMPLETED_ATTR + ", ?, FALSE, NULL)";
 
+	String UPDATE_NAME = "UPDATE objects SET name = ? WHERE object_id = ?";
+	String UPDATE_STATUS ="UPDATE attributes SET value = ? WHERE attr_id = "+IS_COMPLETED_ATTR+" and object_id = ?";
+
 	String DELETE = "DELETE FROM objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
 }
