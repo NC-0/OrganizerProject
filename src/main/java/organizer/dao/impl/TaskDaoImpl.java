@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+
 import organizer.dao.api.TaskDao;
 import organizer.dao.api.UserDao;
 import organizer.models.Category;
+import organizer.models.Subtask;
 import organizer.models.Task;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,15 +60,27 @@ public class TaskDaoImpl implements TaskDao {
 			public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Task task = new Task(rs.getInt("REFERENCE"),rs.getString("Name"),rs.getDate("DATE_VALUE"),
 						rs.getInt("PRIORITY"), new Category(rs.getInt("CATEGORY_ID"), rs.getString("CATEGORY_NAME")),
-						new Boolean(rs.getString("Status")), null);
+						new Boolean(rs.getString("Status")), getSubtasks(rs.getInt("REFERENCE")));
 			return task;
 			}
 		});
 		return tasks;
 	}
+	
+	public List <Subtask> getSubtasks (int taskId){
+		List <Subtask> subtasks = (ArrayList<Subtask>)jdbcTemplate.query(TaskDao.SELECT_SUBTASKS_BY_TASK_ID, new Object[]{taskId},
+				new RowMapper <Subtask>(){
 
-	public ArrayList<Task> getSubtaskList() {
-		// TODO Auto-generated method stub
-		return null;
+					@Override
+					public Subtask mapRow(ResultSet rs, int rowNum)
+							throws SQLException {
+						Subtask subtask = new Subtask(rs.getInt("OBJECT_ID"), rs.getString("NAME"), new Boolean(rs.getString("VALUE")));
+						return subtask;
+					}
+			
+		});
+		return (ArrayList<Subtask>) subtasks;
 	}
+
+
 }

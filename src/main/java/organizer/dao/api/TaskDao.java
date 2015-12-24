@@ -1,5 +1,6 @@
 package organizer.dao.api;
 
+import organizer.models.Subtask;
 import organizer.models.Task;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public interface TaskDao {
 	void delete(int id);
 	void edit(Task task);
 	List<Task> get(int userId);
-	List<Task> getSubtaskList();
+	List <Subtask> getSubtasks (int taskId);
 
 	int OBJ_TYPE      = 1;
 	int OBJ_TYPE_SUBTASKS = 2;
