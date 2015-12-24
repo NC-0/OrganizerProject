@@ -10,9 +10,9 @@ public class Task {
 	private int priority;
 	private Category category;
 	private boolean completed;
-	private List<Task> subtasks;
+	private List<Subtask> subtasks;
 
-	public Task(int id, String name, Date date, int priority, Category category, boolean completed, List<Task> subtasks) {
+	public Task(int id, String name, Date date, int priority, Category category, boolean completed, List<Subtask> subtasks) {
 		this.id = id;
 		this.name = name;
 		this.date = date;
@@ -70,11 +70,11 @@ public class Task {
 		this.completed = completed;
 	}
 
-	public List<Task> getSubtasks() {
+	public List<Subtask> getSubtasks() {
 		return subtasks;
 	}
 
-	public void setSubtasks(List<Task> subtasks) {
+	public void setSubtasks(List<Subtask> subtasks) {
 		this.subtasks = subtasks;
 	}
 }
