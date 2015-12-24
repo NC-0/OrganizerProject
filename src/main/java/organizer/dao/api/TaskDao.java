@@ -41,11 +41,15 @@ public interface TaskDao {
 
 
 	// Get Task requests
-	String SELECT_LIST_OF_USER_TASKS = "Select objreference.reference, objects.NAME, a1.date_value, a2.value as priority, a3.value as category,a4.value as status from objreference"
-			+ " join objects on objreference.REFERENCE=objects.object_id, attributes a1, ATTRIBUTES a2, "
-			+ "attributes a3 , attributes a4 where  a1.date_value is not null "
-			+ "and a1.attr_id=1 and a1.object_id=objects.object_id and a2.VALUE is not null "
-			+ "and a2.attr_id=2 and a2.object_id = objects.object_id and a3.VALUE is not null "
-			+ "and a3.attr_id =3 and a3.object_id=objects.object_id and a4.VALUE is not null "
-			+ "and a4.attr_id =4 and a4.object_id=objects.object_id and objreference.attr_id = " + USER_REF_ATTR + " and objreference.object_id=? ";
+	String SELECT_LIST_OF_USER_TASKS = "SELECT oref1.REFERENCE, obj1.NAME, a1.date_value, a2.VALUE AS priority, "
+			+ "a4.VALUE AS status , oref2.REFERENCE AS category_id, obj2.NAME category_name FROM objreference oref1 "
+			+ "JOIN objects obj1 ON oref1.REFERENCE=obj1.object_id, "
+			+ "ATTRIBUTES a1, ATTRIBUTES a2, objreference oref2, objects obj2, ATTRIBUTES a4 WHERE  a1.date_value IS NOT NULL AND "
+			+ "a1.attr_id=1 AND a1.object_id=obj1.object_id AND a2.VALUE IS NOT NULL AND "
+			+ "a2.attr_id=2 AND a2.object_id = obj1.object_id AND "
+			+ "oref2.attr_id=12 AND oref2.object_id=oref1.REFERENCE AND "
+			+ "obj2.object_id = (SELECT oref3.REFERENCE FROM objreference oref3 "
+			+ "WHERE oref3.attr_id=12 AND oref3.object_id=oref1.REFERENCE) "
+			+ "AND obj2.object_type_id = 4 AND "
+			+ "a4.attr_id =4 AND a4.object_id=obj1.object_id AND oref1.attr_id=10 AND oref1.object_id = ? ";
 }
