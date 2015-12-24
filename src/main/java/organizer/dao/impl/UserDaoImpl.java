@@ -4,13 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import organizer.dao.api.UserDao;
 import organizer.logic.impl.MessageContent;
-import organizer.logic.impl.SqlContent;
 import organizer.models.User;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -37,21 +33,9 @@ public class UserDaoImpl implements UserDao {
 		return String.format(MessageContent.USER_ALREADY_EXIST, user.getEmail());
 	}
 
-	public String delete(final String email) {
-		if (exist(email)) {
-			transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-				@Override
-				protected void doInTransactionWithoutResult(TransactionStatus status) {
-					try {
-						deleteUser(email);
-					}
-					catch (Exception e) {
-						status.setRollbackOnly();
-					}
-				}
-			});
-		}
-		return null;
+	public void delete(int id) {
+		jdbcTemplate.update(DELETE_OBJECTS_REF_T0_USER, id);
+		jdbcTemplate.update(DELETE_OBJECT, id);
 	}
 
 	public String edit(User user) {
@@ -76,15 +60,4 @@ public class UserDaoImpl implements UserDao {
 		// if user not exists
 		return null;
 	}
-
-	private void deleteUser(String email) {
-		Integer id = jdbcTemplate.queryForObject(SqlContent.GET_OBJECT_ID_BY_EMAIL, new Object[]{email}, Integer.class);
-
-// 		TODO uncommented after realization
-//		taskDao.deleteByUserId(id);
-//		categoryDao.deleteByUserId(id);
-		jdbcTemplate.update(SqlContent.DELETE_USER_ATTRIBUTES, id);
-		jdbcTemplate.update(SqlContent.DELETE_USER_OBJECT, id);
-	}
-
 }

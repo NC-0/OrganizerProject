@@ -5,7 +5,7 @@ import organizer.models.User;
 public interface UserDao {
 	boolean exist(String email);
 	String create(User user);
-	String delete(String email);
+	void delete(int id);
 	String edit(User user);
 	User get(String email);
 
@@ -23,7 +23,10 @@ public interface UserDao {
 	String INSERT_ENABLED  = "INSERT INTO attributes (attr_id,object_id,value,date_value) VALUES (" + ENABLED_ATTR + ", ?, ?, NULL)";
 	String INSERT_PASSWORD = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + PASSWORD_ATTR + ", ?, ?, NULL)";
 	String INSERT_SURNAME  = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + SURNAME_ATTR + ", ?, ?, NULL)";
-	
+
+	String DELETE_OBJECT = "DELETE objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
+	String DELETE_OBJECTS_REF_T0_USER = "DELETE objects WHERE object_id IN (SELECT reference FROM objreference WHERE object_id = ?)";
+
 //	String SELECT_ID_BY_EMAIL = "SELECT object_ID FROM attributes WHERE attr_id = " + EMAIL_ATTR + " AND value = ?";
 //	String SELECT_NAME        = "SELECT name FROM objects WHERE object_id = ?";
 //	String SELECT_PASSWORD    = "SELECT value FROM attributes WHERE object_id = ? AND attr_id = " + PASSWORD_ATTR;
