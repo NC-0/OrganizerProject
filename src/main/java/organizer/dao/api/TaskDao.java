@@ -1,10 +1,22 @@
 package organizer.dao.api;
 
+
+
+
+
+
+
 import organizer.models.Subtask;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import organizer.models.Task;
 
 import java.util.List;
 
+@Component
+@Scope("prototype")
 public interface TaskDao {
 	void create(int userId, Task task);
 	void delete(int id);
