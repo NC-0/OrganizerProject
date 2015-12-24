@@ -1,10 +1,14 @@
 package organizer.dao.api;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import organizer.models.Subtask;
 import organizer.models.Task;
 
 import java.util.List;
 
+@Component
+@Scope("prototype")
 public interface SubtaskDao {
 	void create(Subtask subtask, Task task);
 	void delete(int id);

@@ -1,10 +1,14 @@
 package organizer.dao.api;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import organizer.models.Category;
 import organizer.models.User;
 
 import java.util.List;
 
+@Component
+@Scope("prototype")
 public interface CategoryDao {
 	void create(Category category);
 	void create(User user, Category category);

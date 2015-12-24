@@ -15,47 +15,58 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd">
-       
+
+    <!--Implemented-->
     	<context:component-scan base-package="organizer.controllers"/>
 	<context:component-scan base-package="organizer.logic.impl.security"/>
-        
+
+    <!--Implemented-->
         <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
             <property name="prefix"><value>/views/</value></property>
             <property name="suffix"><value>.jsp</value></property>
         </bean>
         
         <mvc:resources location="/resources/" mapping="/resources/**"/>
-       
+
+    <!--Implemented-->
         <mvc:annotation-driven/>
-        
+
+    <!--Implemented-->
         <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
             <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
             <property name="url" value="jdbc:oracle:thin:@//localhost:1521/xe"></property>
             <property name="username" value="organizer"></property>
             <property name="password" value="12345"></property>
         </bean>
-        
+
+    <!--In progress-->
          <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
             <property name="dataSource" ref="dataSource"></property>
         </bean>
-        
+
+    <!--Implemented-->
         <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
             <property name="dataSource" ref="dataSource"></property>
         </bean>
-        
+
+    <!--Implemented-->
         <bean id="userDaoImpl" class="organizer.dao.impl.UserDaoImpl" scope="prototype"></bean>
-        
+
+    <!--Implemented-->
          <bean id="taskDaoImpl" class="organizer.dao.impl.TaskDaoImpl" scope="prototype"></bean>
-        
+
+    <!--Implemented-->
         <bean id="categoryDaoImpl" class="organizer.dao.impl.CategoryDaoImpl" scope="prototype"></bean>   
-          
+
+    <!--In progress -->
         <tx:advice id="transactionAdvice" transaction-manager="transactionManager" >
             <tx:attributes>
                 <tx:method name="get*" read-only="true"/>
                 <tx:method name="*" rollback-for="Throwable"/>
             </tx:attributes>
         </tx:advice>
-        
+
+    <!--Not implemented-->
         <aop:config>
             <aop:pointcut expression="execution(* organizer.dao.api.*.*(..))" id="daoTransactionalOperations"/>
             <aop:advisor advice-ref="transactionAdvice" pointcut-ref="daoTransactionalOperations"/>

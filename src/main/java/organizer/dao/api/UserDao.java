@@ -1,7 +1,11 @@
 package organizer.dao.api;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import organizer.models.User;
 
+@Component
+@Scope("prototype")
 public interface UserDao {
 	boolean exist(String email);
 	String create(User user);
