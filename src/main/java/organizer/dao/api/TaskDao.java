@@ -31,6 +31,14 @@ public interface TaskDao {
 	String DELETE = "DELETE FROM objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
 
 	// Update Task requests
+	String UPDATE_NAME = "UPDATE objects SET name = ? WHERE object_id = ?";
+	String UPDATE_DATE = "UPDATE attributes SET date_value = ? WHERE attr_id = " + DATE_ATTR +" and object_id = ?";
+	String UPDATE_PRIORITY = "UPDATE attributes SET value = ? WHERE attr_id = " + PRIORITY_ATTR +" and object_id = ?";
+	String UPDATE_CATEGORY = "UPDATE attributes SET value = ? WHERE attr_id = " + CATEGORY_ATTR +" and object_id = ?";
+	String UPDATE_STATUS = "UPDATE attributes SET value = ? WHERE attr_id = " + STATUS_ATTR +" and object_id = ?";
+	String UPDATE_SUBTASK_STATUS = "UPDATE attributes SET value = 1 WHERE attr_id =" + SubtaskDao.IS_COMPLETED_ATTR +
+			" AND object_id IN (SELECT object_id FROM objects WHERE parent_id = ?)";
+
 
 	// Get Task requests
 	String SELECT_LIST_OF_USER_TASKS = "Select objreference.reference, objects.NAME, a1.date_value, a2.value as priority, a3.value as category,a4.value as status from objreference"
