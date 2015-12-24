@@ -1,1 +1,33 @@
-/target/
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+### Eclipse specific git ignore ###
+
+.metadata
+
+bin/**
+tmp/**
+*.tmp
+*.bak
+*.swp
+
+.settings/
+*target*
+.classpath
+.project
+
+.loadpath
+*.launch
+####################################
+
+/bin/
