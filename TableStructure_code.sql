@@ -96,6 +96,8 @@ INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
   VALUES (9, 3, 4,'Create Category','Создание категории');
 INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
   VALUES (10, 3, 1,'Create Task','Создание задачи');
+INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
+  VALUES (12, 1, 4,'Assign Category','Присвоение категории');  
 
 -- Objects trigger
 CREATE OR REPLACE TRIGGER object_id_generate_trigger
