@@ -1,28 +1,20 @@
 package organizer.controllers;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Locale;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import organizer.dao.api.TaskDao;
+import org.springframework.web.servlet.ModelAndView;
 import organizer.dao.api.UserDao;
 import organizer.logic.impl.MessageContent;
-import organizer.models.Task;
 import organizer.models.User;
 
 @Controller
@@ -32,31 +24,33 @@ public class UserController {
 	@Qualifier("userDaoImpl")
 	private UserDao userDaoImpl;
 
-	public UserController(){
-		Locale.setDefault(Locale.ENGLISH);
-	}
-
-	@RequestMapping(value="/createuserform",method=RequestMethod.GET)
-	public String createUserForm(){
+	@RequestMapping(value="/registration",method=RequestMethod.GET)
+	public String createUserForm(Authentication authentication){
+		if(authentication!=null)
+			return "redirect:/protected";
 		return "createuser";
 	}
 
-	@RequestMapping(value="/protected",method=RequestMethod.GET)
-	public @ResponseBody String protectedMethod(Authentication authentication){
-		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
-		return "protected or not?" + authorizedUser.getId()+";"+authorizedUser.getUsername();
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public ModelAndView login(Authentication authentication,@RequestParam(value = "error", required = false) String error) {
+		ModelAndView model = new ModelAndView();
+		if (error != null) {
+			model.addObject("error", MessageContent.USER_INVALID_LOGIN);
+		}
+		model.setViewName("login");
+		if(authentication!=null)
+			model = new ModelAndView("redirect:/protected");
+		return model;
 	}
 
 	@RequestMapping(value="/createuser",method=RequestMethod.POST)
 	public @ResponseBody String createUser(HttpServletRequest request){
 		String email =	request.getParameter("email");
 		String password =  request.getParameter("password");
-
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		String hashedPass = bCryptPasswordEncoder.encode(password);
-
 		String name =  request.getParameter("name");
 		String surname = request.getParameter("surname");
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		String hashedPass = bCryptPasswordEncoder.encode(password);
 		User user = new User(email,hashedPass,name,surname);
 		String message = MessageContent.ERROR;
 		try{

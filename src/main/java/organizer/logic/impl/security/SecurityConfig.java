@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 @Configuration
@@ -22,8 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.formLogin()
-				.defaultSuccessUrl("/",false)
-//				.loginPage("login")
+				.defaultSuccessUrl("/protected",false)
+				.loginPage("/login")
+				.loginProcessingUrl("/j_spring_security_check")
 			.and()
 			.authorizeRequests()
 				.antMatchers("/protected").authenticated()
@@ -31,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest().permitAll()
 			.and()
 			.requiresChannel()//https
-				.antMatchers("/createuserform").requiresSecure()
+				.antMatchers("/registration").requiresSecure()
 				.antMatchers("/createuser").requiresSecure()
 				.antMatchers("/").requiresInsecure()
 			.and()
@@ -43,11 +45,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.key("OrganizerApplicationPrivateKey")
 			.and()
 			.logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/j_spring_security_logout"))
 				.logoutSuccessUrl("/")
 				.invalidateHttpSession(true)
 			.and()
-			.csrf()
-				.disable();
+			.csrf();
 
 	}
 

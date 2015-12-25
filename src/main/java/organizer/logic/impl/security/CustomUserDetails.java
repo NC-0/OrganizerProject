@@ -2,33 +2,45 @@ package organizer.logic.impl.security;
 
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import organizer.models.User;
 
 import java.util.Collection;
 
 public final class CustomUserDetails extends org.springframework.security.core.userdetails.User implements UserDetails{
 
-	private int id;
-	private String firstname;
-	private String lastname;
+	private User user;
 
-	public CustomUserDetails(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities, int id, String firstname, String lastname) {
+	public CustomUserDetails(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities,User user) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-		this.id = id;
-		this.firstname = firstname;
-		this.lastname = lastname;
+		this.user=user;
 	}
 
-	public int getId() {
-		return id;
+	public int getId(){
+		return user.getId();
 	}
 
-	public String getFirstname() {
-		return firstname;
+	public String getName(){
+		return user.getName();
 	}
 
-	public String getLastname() {
-		return lastname;
+	public String getEmail(){
+		return user.getEmail();
+	}
+
+	public String getSurname(){
+		return user.getSurname();
+	}
+
+	public void setPassword(String password){
+		user.setPassword(password);
+	}
+
+	public void setName(String name){
+		user.setName(name);
+	}
+
+	public void setSurname(String surname){
+		user.setSurname(surname);
 	}
 }

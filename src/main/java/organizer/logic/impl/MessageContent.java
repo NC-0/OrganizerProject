@@ -9,4 +9,6 @@ public class MessageContent {
 	
 	public final static String ERROR = "Something bad happens, sorry";
 
+	public final static String USER_INVALID_LOGIN = "Invalid username and password!";
+
 }
