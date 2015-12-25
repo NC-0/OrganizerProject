@@ -6,9 +6,9 @@ import organizer.models.Task;
 import java.util.List;
 
 public interface SubtaskDao {
-	void create(Subtask subtask, Task task);
-	void delete(int id);
-	void edit(Subtask subtask);
+	void create(Subtask subtask);
+	void delete(Subtask subtask);
+	void update(Subtask subtask);
 	List<Subtask> get(Task task);
 
 	int OBJ_TYPE          = 2;

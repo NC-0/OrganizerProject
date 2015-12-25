@@ -19,10 +19,10 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	@Qualifier("jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 	
-	public void create(Subtask subtask, Task task) {
+	public void create(Subtask subtask) {
 		jdbcTemplate.update(
 			SubtaskDao.INSERT,
-			task.getId(),
+			subtask.getTask().getId(),
 			subtask.getName()
 		);
 
@@ -36,15 +36,15 @@ public class SubtaskDaoImpl implements SubtaskDao {
 		jdbcTemplate.update(
 			SubtaskDao.INSERT_COMPLETED,
 			subtaskId,
-			task.isCompleted()
+			subtask.isCompleted()
 		);
 	}
 
-	public void delete(int id) {
-		jdbcTemplate.update(SubtaskDao.DELETE, id);
+	public void delete(Subtask subtask) {
+		jdbcTemplate.update(SubtaskDao.DELETE, subtask);
 	}
 
-	public void edit(Subtask subtask) {
+	public void update(Subtask subtask) {
 		jdbcTemplate.update(
 			UPDATE_NAME,
 			subtask.getName(),
