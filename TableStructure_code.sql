@@ -104,3 +104,14 @@ FOR EACH ROW
 BEGIN
   :NEW.object_id:=object_id.nextval;
 END;
+/
+
+--Logon trigger
+--plsql>grant create trigger,administer database trigger,create session to organizer;
+CREATE OR REPLACE TRIGGER after_logon_trigger 
+AFTER LOGON ON DATABASE
+begin
+  EXECUTE IMMEDIATE 'ALTER SESSION SET NLS_Language=''||american';
+  EXECUTE IMMEDIATE 'SELECT my_sequence.nextval FROM dual';
+end;
+/
