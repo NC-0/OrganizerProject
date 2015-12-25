@@ -12,6 +12,7 @@ public interface UserDao {
 	void delete(int id);
 	String edit(User user);
 	User get(String email);
+	User get(int id);
 
 	int OBJ_TYPE      = 3;
 	int EMAIL_ATTR    = 6;

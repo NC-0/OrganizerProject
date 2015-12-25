@@ -60,4 +60,10 @@ public class UserDaoImpl implements UserDao {
 		// if user not exists
 		return null;
 	}
+
+	// TODO: Implement get user by id method
+	@Override
+	public User get(int id) {
+		throw new UnsupportedOperationException();
+	}
 }
