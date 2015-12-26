@@ -1,13 +1,12 @@
 package organizer.dao.mappers;
 
-import org.springframework.jdbc.core.RowMapper;
 import organizer.models.Category;
 import organizer.models.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CategoryRowMapper implements RowMapper<Category> {
+public class CategoryRowMapper extends CachedRowMapper<Category> {
 	private User user;
 
 	public CategoryRowMapper(User user) {
@@ -15,9 +14,9 @@ public class CategoryRowMapper implements RowMapper<Category> {
 	}
 
 	@Override
-	public Category mapRow(ResultSet resultSet, int i) throws SQLException {
+	public Category createObject(int id, ResultSet resultSet, int i) throws SQLException {
 		return new Category(
-			resultSet.getInt("id"),
+			id,
 			resultSet.getString("name"),
 			user
 		);

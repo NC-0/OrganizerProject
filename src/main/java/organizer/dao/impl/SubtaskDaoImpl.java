@@ -62,17 +62,17 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	public List<Subtask> get(Task task) {
 		return jdbcTemplate.query(
 			SubtaskDao.SELECT_BY_TASK_ID,
-			new SubtaskRowMapper(),
+			new SubtaskRowMapper(task),
 			task.getId()
 		);
 	}
 
-	// Get a single subtask by id
-	public Subtask get(int subtaskId) {
-		return jdbcTemplate.queryForObject(
-			SubtaskDao.SELECT,
-			new SubtaskRowMapper(),
-			subtaskId
-		);
-	}
+	// Get a single subtask by id [NOT IMPLEMENTED]
+//	public Subtask get(int subtaskId) {
+//		return jdbcTemplate.queryForObject(
+//			SubtaskDao.SELECT,
+//			new SubtaskRowMapper(),
+//			subtaskId
+//		);
+//	}
 }
