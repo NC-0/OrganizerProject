@@ -1,19 +1,26 @@
 package organizer.dao.mappers;
 
-import org.springframework.jdbc.core.RowMapper;
 import organizer.models.Subtask;
+import organizer.models.Task;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SubtaskRowMapper implements RowMapper<Subtask> {
-	// FLYWEIGHT cache will be implemented
+public class SubtaskRowMapper extends CachedRowMapper<Subtask> {
+
+	private Task task;
+
+	public SubtaskRowMapper(Task task) {
+		this.task = task;
+	}
+
 	@Override
-	public Subtask mapRow(ResultSet resultSet, int i) throws SQLException {
+	public Subtask createObject(int id, ResultSet resultSet, int i) throws SQLException {
 		return new Subtask(
-			resultSet.getInt("id"),
+			id,
 			resultSet.getString("name"),
-			resultSet.getBoolean("completed")
+			resultSet.getBoolean("completed"),
+			task
 		);
 	}
 }
