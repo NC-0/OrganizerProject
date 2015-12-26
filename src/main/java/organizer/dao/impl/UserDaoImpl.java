@@ -70,7 +70,7 @@ public class UserDaoImpl implements UserDao {
 			id);
 	}
 
-	public String edit(User user) {
+	public void edit(User user) {
 		jdbcTemplate.update(
 			UPDATE_NAME,
 			user.getName(),
@@ -79,11 +79,13 @@ public class UserDaoImpl implements UserDao {
 			UPDATE_SURNAME,
 			user.getSurname(),
 			user.getId());
+	}
+
+	public void editPassword(User user) {
 		jdbcTemplate.update(
 			UPDATE_PASSWORD,
 			user.getPassword(),
 			user.getId());
-		return null;
 	}
 
 	public User get(String email) {

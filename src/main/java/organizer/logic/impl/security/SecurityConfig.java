@@ -30,11 +30,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers("/protected").authenticated()
 				.antMatchers(HttpMethod.POST,"/protected").authenticated()
+				.antMatchers("/updateprofile").authenticated()
+				.antMatchers(HttpMethod.POST,"/edituser").authenticated()
 				.anyRequest().permitAll()
 			.and()
 			.requiresChannel()//https
 				.antMatchers("/registration").requiresSecure()
 				.antMatchers("/createuser").requiresSecure()
+				.antMatchers("/updateprofile").requiresSecure()
+				.antMatchers("/edituser").requiresSecure()
 				.antMatchers("/").requiresInsecure()
 			.and()
 			.portMapper()
@@ -49,8 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutSuccessUrl("/")
 				.invalidateHttpSession(true)
 			.and()
-			.csrf();
-
+			.csrf()
+				.disable();
 	}
 
 	@Override

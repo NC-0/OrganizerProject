@@ -4,12 +4,15 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import organizer.models.User;
 
+@Component
+@Scope("prototype")
 public interface UserDao {
 	boolean exist(String email);
 	boolean exist(int id);
 	String create(User user);
 	void delete(int id);
-	String edit(User user);
+	void edit(User user);
+	void editPassword(User user);
 	User get(String email);
 	User get(int id);
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import organizer.dao.api.UserDao;
 import organizer.logic.impl.MessageContent;
+import organizer.logic.impl.security.CustomUserDetails;
 import organizer.models.User;
 
 @Controller
@@ -29,6 +30,16 @@ public class UserController {
 		if(authentication!=null)
 			return "redirect:/protected";
 		return "createuser";
+	}
+
+	@RequestMapping(value="/updateprofile",method=RequestMethod.GET)
+	public ModelAndView editUserForm(Authentication authentication){
+		ModelAndView modelAndView = new ModelAndView("edituser");
+		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
+		modelAndView.addObject("email",authorizedUser.getEmail());
+		modelAndView.addObject("surname",authorizedUser.getSurname());
+		modelAndView.addObject("name",authorizedUser.getName());
+		return modelAndView;
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -59,5 +70,29 @@ public class UserController {
 			e.printStackTrace();
 		}
 		return message;
+	}
+
+	@RequestMapping(value="/edituser",method=RequestMethod.POST)
+	public @ResponseBody String editUser(HttpServletRequest request,Authentication authentication){
+		String email =	request.getParameter("email");
+		String password =  request.getParameter("password");
+		String retryPassword =  request.getParameter("retrypassword");
+		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
+		if(!password.equals(retryPassword)){
+			return MessageContent.PASSWORD_ERROR;
+		}
+		String name =  request.getParameter("name");
+		String surname = request.getParameter("surname");
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		String hashedPass = bCryptPasswordEncoder.encode(password);
+		User user = new User(email,hashedPass,name,surname);
+		user.setId(authorizedUser.getId());
+		authorizedUser.setName(name);
+		authorizedUser.setSurname(surname);
+		userDaoImpl.edit(user);
+		if(!password.equals("")){
+			userDaoImpl.editPassword(user);
+		}
+		return MessageContent.USER_UPDATED;
 	}
 }
