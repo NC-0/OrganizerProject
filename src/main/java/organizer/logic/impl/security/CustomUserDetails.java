@@ -32,10 +32,6 @@ public final class CustomUserDetails extends org.springframework.security.core.u
 		return user.getSurname();
 	}
 
-	public void setPassword(String password){
-		user.setPassword(password);
-	}
-
 	public void setName(String name){
 		user.setName(name);
 	}

@@ -8,11 +8,13 @@
     <p>retry password:<input type="password" id="retrypassword" name="retrypassword" ></p>
     <p>name:<input type="text" id="name" value="${name}" name="name"></p>
     <p>surname:<input type="text" id="surname" value="${surname}" name="surname"></p>
+    <p><input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /></p>
     <p><input type="submit" value="update"><input type="reset" value="reset"></p>
 </form>
 <form action="deleteuser" method="post">
     <p>Delete user:<input type="checkbox" name="deletecheckbox">Yes, i agree.</p>
-    <p><input type="submit" value="update"></p>
+    <p><input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /></p>
+    <p><input type="submit" value="delete"></p>
 </form>
 
 </body>

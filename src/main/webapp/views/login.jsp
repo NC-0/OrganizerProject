@@ -36,17 +36,12 @@
 </head>
 <body onload='document.loginForm.username.focus();'>
 
-<h1>Spring Security Custom Login Form (Annotation)</h1>
-
 <div id="login-box">
 
     <h2>Login with Username and Password</h2>
 
     <c:if test="${not empty error}">
         <div class="error">${error}</div>
-    </c:if>
-    <c:if test="${not empty msg}">
-        <div class="msg">${msg}</div>
     </c:if>
 
     <form name='loginForm'
