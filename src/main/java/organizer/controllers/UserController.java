@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.comparator.BooleanComparator;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -94,5 +95,16 @@ public class UserController {
 			userDaoImpl.editPassword(user);
 		}
 		return MessageContent.USER_UPDATED;
+	}
+
+	@RequestMapping(value = "/deleteuser",method = RequestMethod.POST)
+	public String deleteUser(HttpServletRequest request,Authentication authentication,@RequestParam(value = "deletecheckbox", required = false) boolean checkDelete){
+		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
+		if(!checkDelete)
+			return "redirect:/updateprofile";
+		else {
+			userDaoImpl.delete(authorizedUser.getId());
+			return "redirect:/j_spring_security_logout";
+		}
 	}
 }

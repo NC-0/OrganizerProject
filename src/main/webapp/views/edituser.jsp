@@ -10,5 +10,10 @@
     <p>surname:<input type="text" id="surname" value="${surname}" name="surname"></p>
     <p><input type="submit" value="update"><input type="reset" value="reset"></p>
 </form>
+<form action="deleteuser" method="post">
+    <p>Delete user:<input type="checkbox" name="deletecheckbox">Yes, i agree.</p>
+    <p><input type="submit" value="update"></p>
+</form>
+
 </body>
 </html>

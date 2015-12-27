@@ -11,4 +11,8 @@ public class MessageContent {
 
 	public final static String USER_INVALID_LOGIN = "Invalid username and password!";
 
+	public final static String USER_UPDATED = "You profile has been updated!";
+
+	public final static String PASSWORD_ERROR = "Passwords doesn't match";
+
 }
