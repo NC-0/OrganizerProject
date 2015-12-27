@@ -1,177 +1,172 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
 	  http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>web.organizer</groupId>
-	<artifactId>organizer-app</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
-	<name>organizer</name>
-	<description>organizer</description>
-  
-	<properties>
-		<jdk.version>1.7</jdk.version>
-		<log4j.version>1.2.17</log4j.version>
-	    <spring.version>4.2.2.RELEASE</spring.version>
-	    <aspectj.version>1.6.4</aspectj.version>
-	    <oracle.version>11.2.0.3</oracle.version>
-	    <servlet.version>3.1.0</servlet.version>
-	</properties>
-		
-	<build>
-		<finalName>Organizer</finalName>
-	   	
-	   	<plugins>
-	   
-			<!-- Set JDK Compiler Level -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>${jdk.version}</source>
-					<target>${jdk.version}</target>
-				</configuration>
-			</plugin>
-			
-			<!-- War plugin -->
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<warSourceDirectory>WebOrganizer</warSourceDirectory>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>
-			
-		</plugins>
-	</build>
-	
-	
-	<dependencies>
-		<!-- Oracle jdbc driver -->
-	    <dependency>
-	        <groupId>com.oracle</groupId>
-	        <artifactId>ojdbc6</artifactId>
-	        <version>${oracle.version}</version>
-	    </dependency>
-	    
-	    <!-- Servlet api -->
-	   	<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>${servlet.version}</version>
-			<scope>provided</scope>
-		</dependency>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>web.organizer</groupId>
+    <artifactId>organizer-app</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
+    <name>organizer</name>
+    <description>organizer</description>
 
-		<dependency>
-            		<groupId>org.apache.tomcat</groupId>
-            		<artifactId>tomcat-servlet-api</artifactId>
-            		<version>7.0.21</version>
-            		<scope>provided</scope>
-        	</dependency>
-	  
-	  	<!-- Logger -->
-		<dependency>
-		    <groupId>log4j</groupId>
-		    <artifactId>log4j</artifactId>
-		    <version>${log4j.version}</version>
-		</dependency>
-	 	
-	   	<!-- Spring framework -->
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-core</artifactId>
-		    <version>${spring.version}</version>
-		    <!-- <exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>  -->
-		</dependency>
-	
-	    <dependency>
-	        <groupId>org.springframework</groupId>
-	        <artifactId>spring-context</artifactId>
-	        <version>${spring.version}</version>
-	    </dependency>
-	
-	    <dependency>
-	        <groupId>org.springframework</groupId>
-	        <artifactId>spring-jdbc</artifactId>
-	        <version>${spring.version}</version>
-	    </dependency>
-	       
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-	
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-	
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
+    <properties>
+        <jdk.version>1.7</jdk.version>
+        <log4j.version>1.2.17</log4j.version>
+        <spring.version>4.2.2.RELEASE</spring.version>
+        <aspectj.version>1.6.4</aspectj.version>
+        <oracle.version>11.2.0.3</oracle.version>
+        <servlet.version>3.1.0</servlet.version>
+        <jstl.version>1.2</jstl.version>
+    </properties>
 
-		<dependency>
-            		<groupId>org.springframework</groupId>
-            		<artifactId>spring-webmvc-portlet</artifactId>
-            		<version>4.1.7.RELEASE</version>
-        	</dependency>
-		
-		 <dependency>
-            		<groupId>org.springframework.security</groupId>
-            		<artifactId>spring-security-config</artifactId>
-            		<version>3.2.7.RELEASE</version>
-        	</dependency>
+    <build>
+        <finalName>Organizer</finalName>
 
-        	<dependency>
-           	 	<groupId>org.springframework.security</groupId>
-            		<artifactId>spring-security-core</artifactId>
-            		<version>3.2.7.RELEASE</version>
-        	</dependency>
+        <plugins>
 
-        	<dependency>
-            		<groupId>org.springframework.security</groupId>
-            		<artifactId>spring-security-web</artifactId>
-            		<version>3.2.7.RELEASE</version>
-        	</dependency>
+            <!-- Set JDK Compiler Level -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
 
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<version>${aspectj.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>${aspectj.version}</version>
-		</dependency>
-	</dependencies>
-	  
-	<repositories>
-		<repository>
-		    <id>central</id>
-		    <url>https://repo1.maven.org/maven2</url>
-		    <releases>
-		        <enabled>true</enabled>
-		    </releases>
-		</repository>
-		
-		<repository>
-		    <id>codelds</id>
-		    <url>https://code.lds.org/nexus/content/groups/main-repo</url>
-		</repository>
-	</repositories>
-    
+            <!-- War plugin -->
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <warSourceDirectory>WebOrganizer</warSourceDirectory>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+    <dependencies>
+        <!-- Oracle jdbc driver -->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>${oracle.version}</version>
+        </dependency>
+
+        <!-- Servlet api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-servlet-api</artifactId>
+            <version>7.0.21</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Logger -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <!-- Spring framework -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc-portlet</artifactId>
+            <version>4.1.7.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>3.2.7.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>3.2.7.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>3.2.7.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.version}</version>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+
+        <repository>
+            <id>codelds</id>
+            <url>https://code.lds.org/nexus/content/groups/main-repo</url>
+        </repository>
+    </repositories>
+
 </project>
