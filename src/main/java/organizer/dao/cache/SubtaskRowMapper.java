@@ -1,4 +1,4 @@
-package organizer.dao.mappers;
+package organizer.dao.cache;
 
 import organizer.models.Subtask;
 import organizer.models.Task;
@@ -15,7 +15,7 @@ public class SubtaskRowMapper extends CachedRowMapper<Subtask> {
 	}
 
 	@Override
-	public Subtask createObject(int id, ResultSet resultSet, int i) throws SQLException {
+	public Subtask createObject(int id, ResultSet resultSet) throws SQLException {
 		return new Subtask(
 			id,
 			resultSet.getString("name"),

@@ -9,7 +9,8 @@ public class User {
 	private String role;
 	private boolean enabled;
 
-	public User(String email, String password, String name, String surname) {
+	public User(int id, String email, String password, String name, String surname) {
+		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.name = name;

@@ -4,11 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import organizer.dao.api.CategoryDao;
-import organizer.dao.api.SubtaskDao;
-import organizer.dao.mappers.CategoryRowMapper;
-import organizer.dao.mappers.SubtaskRowMapper;
+import organizer.dao.cache.CategoryRowMapper;
 import organizer.models.Category;
-import organizer.models.Subtask;
 import organizer.models.User;
 
 import java.util.List;

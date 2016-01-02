@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import organizer.dao.api.UserDao;
-import organizer.dao.mappers.UserRowMapper;
+import organizer.dao.cache.UserRowMapper;
 import organizer.logic.impl.MessageContent;
 import organizer.models.User;
 

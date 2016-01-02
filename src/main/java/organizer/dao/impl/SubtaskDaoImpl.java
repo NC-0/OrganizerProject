@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import organizer.dao.api.SubtaskDao;
-import organizer.dao.mappers.SubtaskRowMapper;
+import organizer.dao.cache.SubtaskRowMapper;
 import organizer.models.Subtask;
 import organizer.models.Task;
 

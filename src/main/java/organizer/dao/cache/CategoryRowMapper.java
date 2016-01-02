@@ -1,4 +1,4 @@
-package organizer.dao.mappers;
+package organizer.dao.cache;
 
 import organizer.models.Category;
 import organizer.models.User;
@@ -14,7 +14,7 @@ public class CategoryRowMapper extends CachedRowMapper<Category> {
 	}
 
 	@Override
-	public Category createObject(int id, ResultSet resultSet, int i) throws SQLException {
+	public Category createObject(int id, ResultSet resultSet) throws SQLException {
 		return new Category(
 			id,
 			resultSet.getString("name"),
