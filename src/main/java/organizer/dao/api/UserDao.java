@@ -40,7 +40,7 @@ public interface UserDao {
 	String DELETE_OBJECTS_REF_T0_USER	= "DELETE objects WHERE object_id IN (SELECT reference FROM objreference WHERE object_id = ?)";
 
 	String SELECT_USER_BY_EMAIL = "SELECT " +
-		"obj.OBJECT_ID as userid, " +		// user id
+		"obj.OBJECT_ID as id, " +		// user id
 		"obj.NAME as username, " + 		// user name
 		"pass_attr.VALUE as password, " +	// password
 		"email_attr.VALUE as email, "+		// email
@@ -63,7 +63,7 @@ public interface UserDao {
 		"enable_attr.object_id = email_attr.OBJECT_ID";
 
 	String SELECT_USER_BY_ID = "SELECT " +
-		"obj.OBJECT_ID as userid, "+
+		"obj.OBJECT_ID as id, "+
 		"obj.NAME as username, " +
 		"pass_attr.VALUE as password, " +
 		"email_attr.VALUE as email, " +

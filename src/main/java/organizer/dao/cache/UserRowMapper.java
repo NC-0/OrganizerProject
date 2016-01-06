@@ -9,14 +9,13 @@ public class UserRowMapper extends CachedRowMapper<User> {
 	@Override
 	public User createObject(int id, ResultSet resultSet) throws SQLException {
 		User user = new User(
-			id,
 			resultSet.getString("email"),
 			resultSet.getString("password"),
 			resultSet.getString("username"),
 			resultSet.getString("surname")
 		);
 		user.setRole("USER_ROLE");
-		user.setId(Integer.valueOf(resultSet.getString("userid")));
+		user.setId(Integer.valueOf(resultSet.getString("id")));
 		user.setEnabled(Boolean.valueOf(resultSet.getString("enabled")));
 		return user;
 	}
