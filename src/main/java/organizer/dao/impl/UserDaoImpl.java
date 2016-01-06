@@ -58,7 +58,7 @@ public class UserDaoImpl implements UserDao {
 				1);//1-enabled
 			return String.format(MessageContent.USER_CREATED, user.getEmail());
 		}
-		return String.format(MessageContent.USER_ALREADY_EXIST, user.getEmail());
+		throw new UnsupportedOperationException();
 	}
 
 	public void delete(int id) {

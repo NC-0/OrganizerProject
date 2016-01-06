@@ -11,13 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HelloController {
-		
-	@RequestMapping(value="/{msg}",method=RequestMethod.GET)
-	public ModelAndView hello(@PathVariable("msg") String msg){
-		ModelAndView model = new ModelAndView("hello");
-		model.addObject("message",msg);
-		return model;
-	}
 	
 	@RequestMapping(value="/",method=RequestMethod.GET)
 	public String helloStatic(){

@@ -1,5 +1,6 @@
 package organizer.controllers;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import organizer.dao.api.UserDao;
 import organizer.logic.impl.MessageContent;
+import organizer.logic.impl.email.MailSender;
 import organizer.logic.impl.security.CustomUserDetails;
 import organizer.models.User;
 
@@ -25,6 +27,10 @@ public class UserController {
 	@Autowired
 	@Qualifier("userDaoImpl")
 	private UserDao userDaoImpl;
+
+	@Autowired
+	@Qualifier("mailSender")
+	private MailSender mailSender;
 
 	@RequestMapping(value="/registration",method=RequestMethod.GET)
 	public String createUserForm(Authentication authentication){
@@ -64,11 +70,18 @@ public class UserController {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		String hashedPass = bCryptPasswordEncoder.encode(password);
 		User user = new User(email,hashedPass,name,surname);
-		String message = MessageContent.ERROR;
+		String message;
 		try{
 			message = userDaoImpl.create(user);
+			//insert verificationId into db not implemented
+			String verificationId = bCryptPasswordEncoder.encode(email+"superorganizer.com"+name+surname);
+			try {
+				mailSender.sendMail(user,verificationId);
+			}catch (MessagingException e) {
+				e.printStackTrace();
+			}
 		}catch(Exception e){
-			e.printStackTrace();
+			return MessageContent.ERROR;
 		}
 		return message;
 	}

@@ -18,7 +18,7 @@
         
     <!--Implemented-->
     	<context:component-scan base-package="organizer.controllers"/>
-	<context:component-scan base-package="organizer.logic.impl.security"/>
+	<context:component-scan base-package="organizer.logic.impl"/>
         
     <!--Implemented-->
         <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -30,6 +30,7 @@
         
     <!--Implemented-->
         <mvc:annotation-driven/>
+	<task:annotation-driven executor="mailExecutor"/>
         
     <!--Implemented-->
         <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -57,6 +58,21 @@
         
     <!--Implemented-->
         <bean id="categoryDaoImpl" class="organizer.dao.impl.CategoryDaoImpl" scope="prototype"></bean>   
+
+	<bean id="simpleMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+            <property name="host" value="smtp-mail.outlook.com" />
+            <property name="port" value="587" />
+            <property name="username" value="user@outlook.com" />
+            <property name="password" value="password" />
+            <property name="javaMailProperties">
+                <props>
+                    <prop key="mail.smtp.auth">true</prop>
+                    <prop key="mail.smtp.starttls.enable">true</prop>
+                </props>
+            </property>
+        </bean>
+
+        <task:executor id="mailExecutor" pool-size="5-20" queue-capacity="100"/>
         
     <!--In progress -->
         <tx:advice id="transactionAdvice" transaction-manager="transactionManager" >
