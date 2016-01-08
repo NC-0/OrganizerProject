@@ -1,13 +1,34 @@
 package organizer.models;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+import organizer.logic.api.PasswordMatcher;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+@PasswordMatcher(message = "Passwords don't match")
 public class User {
 	private int id;
+	@Email
+	@NotEmpty(message = "Enter email")
+	@Size(min = 6, max = 40)
 	private String email;
+	@NotEmpty
+	@Size(min = 5, max = 20, message = "Your password must between 5 and 20 characters")
 	private String password;
+	private String matchingPassword;
+	@NotNull
+	@Size(min = 6, max = 20)
 	private String name;
+	@NotNull
+	@Size(min = 6, max = 20)
 	private String surname;
 	private String role;
 	private boolean enabled;
+
+	public User() {
+	}
 
 	public User(String email, String password, String name, String surname) {
 		this.email = email;
@@ -70,5 +91,13 @@ public class User {
 
 	public void setSurname(String surname) {
 		this.surname = surname;
+	}
+
+	public String getMatchingPassword() {
+		return matchingPassword;
+	}
+
+	public void setMatchingPassword(String matchingPassword) {
+		this.matchingPassword = matchingPassword;
 	}
 }

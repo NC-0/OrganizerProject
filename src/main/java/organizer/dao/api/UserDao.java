@@ -4,8 +4,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import organizer.models.User;
 
-@Component
-@Scope("prototype")
 public interface UserDao {
 	boolean exist(String email);
 	boolean exist(int id);
@@ -35,6 +33,7 @@ public interface UserDao {
 	String UPDATE_NAME		= "UPDATE objects usr_obj SET usr_obj.name = ? WHERE usr_obj.object_id = ?";
 	String UPDATE_SURNAME 	= "UPDATE attributes usr_attr SET usr_attr.value = ? WHERE usr_attr.attr_id = " + SURNAME_ATTR + "  and usr_attr.object_id = ?";
 	String UPDATE_PASSWORD 	= "UPDATE attributes usr_attr SET usr_attr.value = ? WHERE usr_attr.attr_id = " + PASSWORD_ATTR + "  and usr_attr.object_id = ?";
+	String UPDATE_ENABLED	= "UPDATE attributes usr_attr SET usr_attr.value = ? WHERE usr_attr.attr_id = " + ENABLED_ATTR + "  and usr_attr.object_id = ?";
 
 	String DELETE_OBJECT 					= "DELETE objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
 	String DELETE_OBJECTS_REF_T0_USER	= "DELETE objects WHERE object_id IN (SELECT reference FROM objreference WHERE object_id = ?)";

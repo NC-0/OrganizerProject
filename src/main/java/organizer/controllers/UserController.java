@@ -1,25 +1,35 @@
 package organizer.controllers;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.comparator.BooleanComparator;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.servlet.ModelAndView;
 import organizer.dao.api.UserDao;
 import organizer.logic.impl.MessageContent;
 import organizer.logic.impl.email.MailSender;
 import organizer.logic.impl.security.CustomUserDetails;
+import organizer.logic.impl.security.UserAuthenticationService;
 import organizer.models.User;
+
+import java.util.Arrays;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -33,85 +43,132 @@ public class UserController {
 	private MailSender mailSender;
 
 	@RequestMapping(value="/registration",method=RequestMethod.GET)
-	public String createUserForm(Authentication authentication){
+	public String createUserForm(Authentication authentication,Map<String, Object> model){
 		if(authentication!=null)
 			return "redirect:/protected";
+		User user = new User();
+		model.put("userForm",user);
 		return "createuser";
 	}
 
 	@RequestMapping(value="/updateprofile",method=RequestMethod.GET)
-	public ModelAndView editUserForm(Authentication authentication){
-		ModelAndView modelAndView = new ModelAndView("edituser");
+	public String editUserForm(Authentication authentication,Map<String, Object> model){
 		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
-		modelAndView.addObject("email",authorizedUser.getEmail());
-		modelAndView.addObject("surname",authorizedUser.getSurname());
-		modelAndView.addObject("name",authorizedUser.getName());
-		return modelAndView;
+		User user = new User(authorizedUser.getEmail(),
+			authorizedUser.getPassword(),
+			authorizedUser.getName(),
+			authorizedUser.getSurname());
+		model.put("userForm",user);
+		return "edituser";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView login(Authentication authentication,@RequestParam(value = "error", required = false) String error) {
+	public ModelAndView login(Authentication authentication,
+									  @RequestParam(value = "error", required = false) String error) {
 		ModelAndView model = new ModelAndView();
 		if (error != null) {
 			model.addObject("error", MessageContent.USER_INVALID_LOGIN);
 		}
 		model.setViewName("login");
-		if(authentication!=null)
+		if(authentication!=null) {
+			System.out.println("a"+authentication.getName());
 			model = new ModelAndView("redirect:/protected");
+		}
 		return model;
 	}
 
+	@RequestMapping(value = "/verification",method = RequestMethod.GET)
+	public String validate(HttpServletRequest request,Authentication authentication,
+								  @CookieValue(value = "verificationId",
+									  defaultValue = "undefined") String cookieVerify	){
+		String message=MessageContent.VERIFY_LOGIN;
+		System.out.println(cookieVerify);
+		if(authentication!=null){
+			message = MessageContent.VERIFY_ERROR;
+			if(!cookieVerify.equals("undefined")) {
+				CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
+				message = String.format(MessageContent.VERIFY_ENABLED, authorizedUser.getEmail());
+				if(!authorizedUser.getEnabled()) {
+					String verifyId = request.getParameter("verific");
+					if(verifyId.equals(cookieVerify)) {
+						message = MessageContent.VERIFY_SUCCESSFULL;
+						User user = new User(authorizedUser.getEmail(),
+							authorizedUser.getPassword(),
+							authorizedUser.getName(),
+							authorizedUser.getSurname());
+						user.setEnabled(true);
+						user.setRole("USER_ROLE");
+						user.setId(authorizedUser.getId());
+						GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
+						authentication = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
+							authentication.getCredentials(),
+							Arrays.asList(authority));
+						SecurityContextHolder.getContext().setAuthentication(authentication);
+						userDaoImpl.edit(user);
+					}
+				}
+			}
+		}
+		request.setAttribute("message",message);
+		return "hello";
+	}
+
 	@RequestMapping(value="/createuser",method=RequestMethod.POST)
-	public @ResponseBody String createUser(HttpServletRequest request){
-		String email =	request.getParameter("email");
-		String password =  request.getParameter("password");
-		String name =  request.getParameter("name");
-		String surname = request.getParameter("surname");
+	public String createUser(HttpServletResponse response,
+									 @Valid @ModelAttribute("userForm") User userForm,
+									 BindingResult result,
+									 Map<String, Object> model){
+		if (result.hasErrors()) {
+			return "createuser";
+		}
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		String hashedPass = bCryptPasswordEncoder.encode(password);
-		User user = new User(email,hashedPass,name,surname);
+		String hashedPass = bCryptPasswordEncoder.encode(userForm.getPassword());
+		userForm.setPassword(hashedPass);
 		String message;
 		try{
-			message = userDaoImpl.create(user);
-			//insert verificationId into db not implemented
-			String verificationId = bCryptPasswordEncoder.encode(email+"superorganizer.com"+name+surname);
+			message = userDaoImpl.create(userForm);
+			String verificationId = bCryptPasswordEncoder.encode(userForm.getEmail()+MessageContent.MAIL+userForm.getName()+userForm.getSurname());
+			Cookie cookieVerify = new Cookie("verificationId", verificationId);
+			cookieVerify.setMaxAge(7*24*60*60);
+			response.addCookie(cookieVerify);
 			try {
-				mailSender.sendMail(user,verificationId);
+				mailSender.sendMail(userForm,verificationId);
 			}catch (MessagingException e) {
-				e.printStackTrace();
+				model.put("message",message);
+				return "createuser";
 			}
 		}catch(Exception e){
-			return MessageContent.ERROR;
+			model.put("message",String.format(MessageContent.USER_ALREADY_EXIST, userForm.getEmail()));
+			return "createuser";
 		}
-		return message;
+		return "redirect:/";
 	}
 
 	@RequestMapping(value="/edituser",method=RequestMethod.POST)
-	public @ResponseBody String editUser(HttpServletRequest request,Authentication authentication){
-		String email =	request.getParameter("email");
-		String password =  request.getParameter("password");
-		String retryPassword =  request.getParameter("retrypassword");
+	public String editUser(HttpServletResponse response,
+								  @Valid @ModelAttribute("userForm") User userForm,
+								  BindingResult result, Map<String, Object> model,
+								  Authentication authentication){
+		if (result.hasErrors()) {
+			return "edituser";
+		}
 		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
-		if(!password.equals(retryPassword)){
-			return MessageContent.PASSWORD_ERROR;
-		}
-		String name =  request.getParameter("name");
-		String surname = request.getParameter("surname");
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		String hashedPass = bCryptPasswordEncoder.encode(password);
-		User user = new User(email,hashedPass,name,surname);
-		user.setId(authorizedUser.getId());
-		authorizedUser.setName(name);
-		authorizedUser.setSurname(surname);
-		userDaoImpl.edit(user);
-		if(!password.equals("")){
-			userDaoImpl.editPassword(user);
-		}
-		return MessageContent.USER_UPDATED;
+		String hashedPass = bCryptPasswordEncoder.encode(userForm.getPassword());
+		userForm.setPassword(hashedPass);
+		userForm.setId(authorizedUser.getId());
+		userForm.setEnabled(true);
+		authorizedUser.setName(userForm.getName());
+		authorizedUser.setSurname(userForm.getSurname());
+		userDaoImpl.edit(userForm);
+		userDaoImpl.editPassword(userForm);
+		return "edituser";
 	}
 
 	@RequestMapping(value = "/deleteuser",method = RequestMethod.POST)
-	public String deleteUser(HttpServletRequest request,Authentication authentication,@RequestParam(value = "deletecheckbox", required = false) boolean checkDelete){
+	public String deleteUser(HttpServletRequest request,
+									 Authentication authentication,
+									 @RequestParam(value = "deletecheckbox", required = false) boolean checkDelete){
 		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
 		if(!checkDelete)
 			return "redirect:/updateprofile";

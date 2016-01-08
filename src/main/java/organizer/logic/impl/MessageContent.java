@@ -15,4 +15,23 @@ public class MessageContent {
 
 	public final static String PASSWORD_ERROR = "Passwords doesn't match";
 
+	public final static String EMAIL_ERROR = "Can't send mail";
+
+	public final static String EMAIL_SENDED = "Email successfully sended";
+
+	public final static String MAIL = "organizer365@outlook.com";
+
+	public final static String MAIL_SUBJECT_VERIFICATION = "SuperOrganizer.com email verification";
+
+	public final static String MAIL_SUBJECT_FORGET_PASS = "SuperOrganizer.com restore password";
+
+	public final static String MAIL_TEXT_VERIFICATION = "<html><body><b>Hello, %s! You succesfully registered on SuperOrganizer.com. Please go to this link <a href='http://localhost:8081/verification?verific=%s'>http://localhost:8081/verification?verific==%s</a></body></html>";
+
+	public final static String VERIFY_LOGIN = "Please login.";
+
+	public final static String VERIFY_ERROR = "Verify trouble. Verify identificator is dead.";
+
+	public final static String VERIFY_ENABLED = "User %s already enabled.";
+
+	public final static String VERIFY_SUCCESSFULL = "Verification successfull";
 }

@@ -6,6 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import organizer.logic.impl.MessageContent;
 import organizer.models.User;
 
 import javax.mail.MessagingException;
@@ -21,16 +22,15 @@ public class MailSender {
 	@Async
 	public void sendMail(User user,String verificationId) throws MessagingException{
 		simpleMailSender.send(createCustomMessage(user,verificationId));
-		System.out.println("lala");
 	}
 
 	public MimeMessage createCustomMessage(User user,String verificationId) throws  MessagingException{
 		MimeMessage message = simpleMailSender.createMimeMessage();
 		MimeMessageHelper messageHelper = new MimeMessageHelper(message,true);
-		messageHelper.setFrom("oda21101@outlook.com");
+		messageHelper.setFrom(MessageContent.MAIL);
 		messageHelper.setTo(user.getEmail());
-		messageHelper.setSubject("SuperOrganizer.com email verification");
-		messageHelper.setText("<html><body><b>Hello "+user.getName()+" you succesfully registered on SuperOrganizer.com. Please go to this link <a href='http://aa.com'>http://superorganizer.com?verific="+verificationId+"</a></body></html>",true);
+		messageHelper.setSubject(MessageContent.MAIL_SUBJECT_VERIFICATION);
+		messageHelper.setText(String.format(MessageContent.MAIL_TEXT_VERIFICATION, user.getEmail(),verificationId,verificationId),true);
 		return message;
 	}
 }

@@ -10,8 +10,6 @@ import organizer.dao.cache.UserRowMapper;
 import organizer.logic.impl.MessageContent;
 import organizer.models.User;
 
-@Component
-@Scope("prototype")
 public class UserDaoImpl implements UserDao {
 	@Autowired
 	@Qualifier("jdbcTemplate")
@@ -55,7 +53,7 @@ public class UserDaoImpl implements UserDao {
 			jdbcTemplate.update(
 				INSERT_ENABLED,
 				objectsCurrentValue,
-				1);//1-enabled
+				"FALSE");//TRUE-enabled
 			return String.format(MessageContent.USER_CREATED, user.getEmail());
 		}
 		throw new UnsupportedOperationException();
@@ -78,6 +76,10 @@ public class UserDaoImpl implements UserDao {
 		jdbcTemplate.update(
 			UPDATE_SURNAME,
 			user.getSurname(),
+			user.getId());
+		jdbcTemplate.update(
+			UPDATE_ENABLED,
+			String.valueOf(user.isEnabled()),
 			user.getId());
 	}
 

@@ -32,6 +32,12 @@ public final class CustomUserDetails extends org.springframework.security.core.u
 		return user.getSurname();
 	}
 
+	public void setRole(String role){
+		user.setRole(role);
+	}
+
+	public boolean getEnabled() { return user.isEnabled(); }
+
 	public void setName(String name){
 		user.setName(name);
 	}

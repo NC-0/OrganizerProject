@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers("/protected").authenticated()
 				.antMatchers(HttpMethod.POST,"/protected").authenticated()
-				.antMatchers("/updateprofile").authenticated()
+				.antMatchers("/updateprofile").hasAuthority("USER_ROLE")
 				.antMatchers(HttpMethod.POST,"/edituser").authenticated()
 				.antMatchers(HttpMethod.POST,"/deleteuser").authenticated()
 				.anyRequest().permitAll()
