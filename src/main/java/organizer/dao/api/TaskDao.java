@@ -1,17 +1,12 @@
 package organizer.dao.api;
 
-
-
-
-
-
-
 import organizer.models.Subtask;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import organizer.models.Task;
+import organizer.models.User;
 
 import java.util.List;
 
@@ -19,10 +14,10 @@ import java.util.List;
 @Scope("prototype")
 public interface TaskDao {
 	void create(int userId, Task task);
-	void delete(int id);
+	void delete(Task task);
 	void edit(Task task);
-	List<Task> get(int userId);
-	List <Subtask> getSubtasks (int taskId);
+	List<Task> get(final User user);
+	List <Subtask> getSubtasks (final Task task);
 
 	int OBJ_TYPE      = 1;
 	int OBJ_TYPE_SUBTASKS = 2;
@@ -44,7 +39,8 @@ public interface TaskDao {
 	String INSERT_REF_USER = "INSERT INTO OBJREFERENCE (ATTR_ID,  REFERENCE, OBJECT_ID) VALUES (" + USER_REF_ATTR + ", ?, ?)";
 	
 	// Delete Task requests
-	String DELETE = "DELETE FROM objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
+	String DELETE_OBJECT = "DELETE FROM objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
+	String DELETE_REF_TO_USER = "DELETE objreference WHERE attr_id = " + USER_REF_ATTR + " AND REFERENCE = ?";
 
 	// Update Task requests
 	String UPDATE_NAME = "UPDATE objects SET name = ? WHERE object_id = ?";
