@@ -129,4 +129,51 @@ public class User {
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj instanceof User) {
+			User user = (User) obj;
+			return
+					(
+							equals(id, user.getId()) &&
+									equals(email, user.getEmail()) &&
+									equals(password, user.getPassword()) &&
+									equals(name, user.getName()) &&
+									equals(surname, user.getSurname()) &&
+									equals(role, user.getRole()) &&
+									equals(enabled, user.isEnabled()) &&
+									equals(categories, user.getCategories()) &&
+									equals(tasks, user.getTasks())
+
+					);
+		}
+		return false;
+
+	}
+
+	private boolean equals(Object firstObject, Object secondObject) {
+		return (firstObject == secondObject || (firstObject != null && firstObject.equals(secondObject)));
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 37;
+		hash = hash * 17 + hashCode(id);
+		hash = hash * 17 + hashCode(email);
+		hash = hash * 17 + hashCode(password);
+		hash = hash * 17 + hashCode(name);
+		hash = hash * 17 + hashCode(surname);
+		hash = hash * 17 + hashCode(role);
+		hash = hash * 17 + hashCode(enabled);
+		hash = hash * 17 + hashCode(categories);
+		hash = hash * 17 + hashCode(tasks);
+		return hash;
+	}
+
+	private int hashCode(Object object){
+		return object !=null? object.hashCode():0;
+	}
 }
