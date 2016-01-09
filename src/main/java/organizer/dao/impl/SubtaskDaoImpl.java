@@ -21,27 +21,27 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	
 	public void create(Subtask subtask) {
 		jdbcTemplate.update(
-			SubtaskDao.INSERT,
+			INSERT,
 			subtask.getTask().getId(),
 			subtask.getName()
 		);
 
 		int subtaskId = jdbcTemplate.queryForObject(
-			SubtaskDao.SELECT_ID,
+			SELECT_ID,
 			Integer.class
 		);
 
 		subtask.setId(subtaskId);
 
 		jdbcTemplate.update(
-			SubtaskDao.INSERT_COMPLETED,
+			INSERT_COMPLETED,
 			subtaskId,
 			subtask.isCompleted()
 		);
 	}
 
 	public void delete(Subtask subtask) {
-		jdbcTemplate.update(SubtaskDao.DELETE, subtask);
+		jdbcTemplate.update(DELETE, subtask);
 	}
 
 	public void update(Subtask subtask) {
