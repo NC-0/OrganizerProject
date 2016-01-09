@@ -31,6 +31,7 @@ public class TaskRowMapper extends CachedRowMapper<Task> {
 				null
 
 		);
+		task.setUser(user);
 		task.setId(id);
 		Integer categoryId = resultSet.getInt("category");
 		for (Category category:user.getCategories()) {
