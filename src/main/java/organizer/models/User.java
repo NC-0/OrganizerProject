@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import organizer.logic.api.PasswordMatcher;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @PasswordMatcher(message = "Passwords don't match")
@@ -30,13 +31,23 @@ public class User {
 	private List<Task> tasks;
 
 	public User() {
+		this(null,null,null,null);
 	}
 
 	public User(String email, String password, String name, String surname) {
+		this(0,email,password,name,surname,"USER_ROLE",false,new ArrayList<Category>(),new ArrayList<Task>());
+	}
+
+	public User(int id, String email, String password, String name, String surname, String role, boolean enabled, List<Category> categories, List<Task> tasks) {
+		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.name = name;
 		this.surname = surname;
+		this.role = role;
+		this.enabled = enabled;
+		this.categories = categories;
+		this.tasks = tasks;
 	}
 
 	public boolean isEnabled() {
