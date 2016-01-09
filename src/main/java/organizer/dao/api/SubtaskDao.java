@@ -28,11 +28,21 @@ public interface SubtaskDao {
 
 	String DELETE = "DELETE FROM objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
 
+	String SELECT_SUBTASKS_BY_TASK_ID =
+			"SELECT " +
+					" obj.object_id as id," +
+					" obj.name as name," +
+					" compl_attr.value as completed" +
+					" FROM " +
+					" objects obj," +
+					" ATTRIBUTES compl_attr " +
+					" WHERE " +
+					" obj.object_id = compl_attr.object_id  " +
+					" AND obj.object_type_id = "+ OBJ_TYPE +
+					" AND obj.parent_id= ? " +
+					" AND compl_attr.attr_id = "+ IS_COMPLETED_ATTR;
+
 	String SELECT_BY_TASK_ID = "SELECT obj.object_id AS id, obj.name, attr.value AS completed FROM objects obj "
 		+ "JOIN attributes attr ON obj.object_id = attr.object_id WHERE obj.object_type_id = " + OBJ_TYPE
 		+ " AND obj.parent_id = ? AND attr.attr_id = " + IS_COMPLETED_ATTR;
-
-	String SELECT = "SELECT obj.object_id AS id, obj.name, attr.value AS completed FROM objects obj "
-		+ "JOIN attributes attr ON obj.object_id = attr.object_id WHERE obj.object_type_id = " + OBJ_TYPE
-		+ " AND ob.object_id = ? AND attr.attr_id = " + IS_COMPLETED_ATTR;
 }
