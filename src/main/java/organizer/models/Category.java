@@ -43,4 +43,38 @@ public class Category implements Comparable<Category> {
 			return this.name.compareTo(o.getName());
 		return 0;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+
+		if (this == obj)
+			return true;
+		if (obj instanceof Category) {
+			Category category = (Category) obj;
+
+			return  (
+					equals(id, category.getId()) &&
+							equals(name, category.getName())
+			);
+		}
+		return false;
+
+	}
+
+	private boolean equals(Object firstObject, Object secondObject) {
+		return (firstObject == secondObject || (firstObject != null && firstObject.equals(secondObject)));
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 37;
+		hash = hash * 17 + hashCode(id);
+		hash = hash * 17 + hashCode(name);
+		return hash;
+	}
+
+	private int hashCode(Object object){
+		return object !=null? object.hashCode():0;
+	}
 }
