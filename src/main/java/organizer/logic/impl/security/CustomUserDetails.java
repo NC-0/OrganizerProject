@@ -16,6 +16,10 @@ public final class CustomUserDetails extends org.springframework.security.core.u
 		this.user=user;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
 	public int getId(){
 		return user.getId();
 	}

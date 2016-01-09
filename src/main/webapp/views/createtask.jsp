@@ -14,7 +14,6 @@
 <h1>Create task</h1>
 
 <form:form method="post" commandName="taskForm" modelAttribute="taskForm">
-	<form:errors path="*" cssClass="errorblock" element="div"/>
 	<table>
 		<tr>
 			<td>Name:</td>
@@ -24,26 +23,26 @@
 
 		<tr>
 			<td>Date:</td>
-			<td><form:input path="date" type="text" /></td>
+			<td><form:input path="date" type="date" /></td>
 			<td><form:errors path="date" cssClass="error" /></td>
 		</tr>
 
 		<tr>
 			<td>Priority :</td>
-			<td><form:select path="priority">
-				<form:option value="0" label="--- Select ---" />
-				<form:options items="${priorityList}" />
+			<td><form:select path="priority_str">
+				<form:option value="" label="--- Select ---" />
+				<form:options items="${priorities}" />
 			</form:select>
-			<td><span class="error"><form:errors path="priority" /></span></td>
+			<td><span class="error"><form:errors path="priority_str" /></span></td>
 		</td>
 
 		<tr>
 			<td>Category :</td>
-			<td><form:select path="category">
-				<form:option value="NONE" label="--- Select ---" />
-				<form:options items="${categoryList}" values="${idList}" />
+			<td><form:select path="category_str">
+				<form:option value="" label="--- Select ---" />
+				<form:options items="${categories}" />
 			</form:select>
-			<td><span class="error"><form:errors path="category" /></span></td>
+			<td><span class="error"><form:errors path="category_str" /></span></td>
 		</td>
 
 		<tr>

@@ -1,19 +1,41 @@
 package organizer.models;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Range;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 
 public class Task {
 	private int id;
+	@Size(min=4, max=20)
 	private String name;
+
+	@NotNull
+	@DateTimeFormat(pattern = "yyyy-mm-dd")
 	private Date date;
+
 	private int priority;
+	/** String interpretation of number for User */
+	@NotEmpty
+	private String priority_str;
+
 	private Category category;
+
+	/** String interpretation of Category name for User */
+	@NotEmpty
+	private String category_str;
+
 	private boolean completed;
 	private List<Subtask> subtasks;
 
-	public Task(int id, String name, Date date, int priority, Category category, boolean completed, List<Subtask> subtasks) {
-		this.id = id;
+	public Task() {}
+
+	public Task(String name, Date date, int priority, Category category, boolean completed, List<Subtask> subtasks) {
+		//this.id = id;
 		this.name = name;
 		this.date = date;
 		this.priority = priority;
@@ -76,5 +98,21 @@ public class Task {
 
 	public void setSubtasks(List<Subtask> subtasks) {
 		this.subtasks = subtasks;
+	}
+
+	public String getCategory_str() {
+		return category_str;
+	}
+
+	public void setCategory_str(String category_str) {
+		this.category_str = category_str;
+	}
+
+	public String getPriority_str() {
+		return priority_str;
+	}
+
+	public void setPriority_str(String priority_str) {
+		this.priority_str = priority_str;
 	}
 }
