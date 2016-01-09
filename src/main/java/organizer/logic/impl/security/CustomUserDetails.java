@@ -16,10 +16,6 @@ public final class CustomUserDetails extends org.springframework.security.core.u
 		this.user=user;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
 	public int getId(){
 		return user.getId();
 	}
@@ -48,5 +44,9 @@ public final class CustomUserDetails extends org.springframework.security.core.u
 
 	public void setSurname(String surname){
 		user.setSurname(surname);
+	}
+
+	public User getUser(){
+		return user;
 	}
 }

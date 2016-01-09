@@ -1,18 +1,21 @@
 package organizer.models;
 
-public class Category {
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.Size;
+
+public class Category implements Comparable<Category> {
 	private int id;
+	@NotEmpty
+	@Size(min = 1, max = 50, message = "Your category must between 5 and 20 characters")
 	private String name;
 	private User user;
 
-	public Category(String name) {
-		this.name = name;
+	public Category() {
 	}
 
-	public Category(int id, String name, User user) {
-		this.id = id;
+	public Category(String name) {
 		this.name = name;
-		this.user = user;
 	}
 
 	public int getId() {
@@ -31,11 +34,13 @@ public class Category {
 		this.name = name;
 	}
 
-	public User getUser() {
-		return user;
-	}
+	public void setUser (User user) { this.user = user; }
 
-	public void setUser(User user) {
-		this.user = user;
+	public User getUser() { return user; }
+
+	public int compareTo(Category o) {
+		if(!this.name.equalsIgnoreCase(o.getName()))
+			return this.name.compareTo(o.getName());
+		return 0;
 	}
 }
