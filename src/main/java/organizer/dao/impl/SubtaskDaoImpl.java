@@ -35,13 +35,12 @@ public class SubtaskDaoImpl implements SubtaskDao {
 
 		jdbcTemplate.update(
 			INSERT_COMPLETED,
-			subtaskId,
-			subtask.isCompleted()
+			subtaskId
 		);
 	}
 
 	public void delete(Subtask subtask) {
-		jdbcTemplate.update(DELETE, subtask);
+		jdbcTemplate.update(DELETE, subtask.getId());
 	}
 
 	public void update(Subtask subtask) {
