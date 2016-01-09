@@ -35,7 +35,7 @@ public class User {
 	}
 
 	public User(String email, String password, String name, String surname) {
-		this(0,email,password,name,surname,"USER_ROLE",false,new ArrayList<Category>(),new ArrayList<Task>());
+		this(0,email,password,name,surname,"VERIFY_ROLE",false,new ArrayList<Category>(),new ArrayList<Task>());
 	}
 
 	public User(int id, String email, String password, String name, String surname, String role, boolean enabled, List<Category> categories, List<Task> tasks) {
