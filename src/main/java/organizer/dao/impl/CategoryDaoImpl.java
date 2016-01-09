@@ -19,29 +19,35 @@ public class CategoryDaoImpl implements CategoryDao {
 
 	public void create(Category category) {
 		jdbcTemplate.update(
-			INSERT,
+				INSERT_OBJECT,
 			category.getName()
 		);
-		Integer objectsCurrentValue = jdbcTemplate.queryForObject(
-			UserDao.SELECT_ID,
-			Integer.class);
+		category.setId(
+				jdbcTemplate.queryForObject(
+						SELECT_ID, Integer.class
+				)
+		);
 		jdbcTemplate.update(
-			INSERT_REF,
-			category.getUser().getId(),
-			objectsCurrentValue
+				INSERT_REF,
+				category.getId(),
+				category.getUser().getId()
 		);
 	}
 
 	public void delete(Category category) {
 		jdbcTemplate.update(
-			CategoryDao.DELETE,
-			category.getId()
+				DELETE_OBJECT,
+				category.getId()
+		);
+		jdbcTemplate.update(
+				DELETE_REF,
+				category.getId()
 		);
 	}
 
 	public void update(Category category) {
 		jdbcTemplate.update(
-			CategoryDao.UPDATE,
+			UPDATE,
 			category.getName(),
 			category.getId()
 		);
@@ -49,7 +55,7 @@ public class CategoryDaoImpl implements CategoryDao {
 
 	public List<Category> get(User user) {
 		return jdbcTemplate.query(
-			SELECT_USER_CATEGORIES,
+			SELECT_BY_USER_ID,
 			new CategoryRowMapper(),
 			user.getId()
 		);
