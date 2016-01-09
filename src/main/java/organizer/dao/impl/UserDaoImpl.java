@@ -40,6 +40,7 @@ public class UserDaoImpl implements UserDao {
 				user.getName());
 			Integer objectsCurrentValue = jdbcTemplate.queryForObject(
 				SELECT_ID, Integer.class);
+			user.setId(objectsCurrentValue);
 			jdbcTemplate.update(
 				INSERT_EMAIL,
 				objectsCurrentValue,
