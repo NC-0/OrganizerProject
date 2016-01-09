@@ -2,6 +2,7 @@ package organizer.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import organizer.dao.api.UserDao;
 import organizer.dao.cache.CategoryRowMapper;
@@ -59,7 +60,7 @@ public class UserDaoImpl implements UserDao {
 				"FALSE");//TRUE-enabled
 			return String.format(MessageContent.USER_CREATED, user.getEmail());
 		}
-		throw new UnsupportedOperationException();
+		throw new DuplicateKeyException("User already exist");
 	}
 
 	public void delete(User user) {
@@ -115,7 +116,7 @@ public class UserDaoImpl implements UserDao {
 				query,
 				new Object[]{value},
 				new UserRowMapper());
-		user.setCategories(jdbcTemplate.query(SELECT_CATEGORIES_BY_USER_ID,new CategoryRowMapper(),user.getId()));
+		user.setCategories(jdbcTemplate.query(SELECT_CATEGORIES_BY_USER_ID,new CategoryRowMapper(user),user.getId()));
 		user.setTasks(jdbcTemplate.query(SELECT_TASK_BY_USER_ID, new TaskRowMapper(user),user.getId()));
 		for (Task task : user.getTasks()) {
 			task.setSubtasks(jdbcTemplate.query(SELECT_SUBTASKS_BY_TASK_ID, new SubtaskRowMapper(task),task.getId()));
