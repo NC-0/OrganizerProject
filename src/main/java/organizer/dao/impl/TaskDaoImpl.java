@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import organizer.dao.api.TaskDao;
 import organizer.dao.cache.SubtaskRowMapper;
+import organizer.dao.cache.TaskRowMapper;
 import organizer.models.Task;
 import organizer.models.User;
 import java.util.List;
