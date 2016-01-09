@@ -3,9 +3,9 @@ package organizer.models;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import organizer.logic.api.PasswordMatcher;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @PasswordMatcher(message = "Passwords don't match")
 public class User {
@@ -26,6 +26,8 @@ public class User {
 	private String surname;
 	private String role;
 	private boolean enabled;
+	private List<Category> categories;
+	private List<Task> tasks;
 
 	public User() {
 	}
@@ -99,5 +101,21 @@ public class User {
 
 	public void setMatchingPassword(String matchingPassword) {
 		this.matchingPassword = matchingPassword;
+	}
+
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
+
+	public List<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
 	}
 }
