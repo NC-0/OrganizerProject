@@ -19,7 +19,7 @@ public class SubtaskRowMapper extends CachedRowMapper<Subtask> {
 		return new Subtask(
 			id,
 			resultSet.getString("name"),
-			resultSet.getBoolean("completed"),
+			"1".equals(resultSet.getString("completed")),
 			task
 		);
 	}
