@@ -17,9 +17,9 @@ public interface CategoryDao {
 	String INSERT_REF = (
 		"INSERT INTO objreference (" +
 		"attr_id," +
-		"object_id," +
-		"reference " +
-		") VALUES ("+REF_ATTR+",?,?)"
+		"reference, " +
+		"object_id" +
+				") VALUES ("+REF_ATTR+",?,?)"
 	);
 
 	String INSERT_OBJECT = (
