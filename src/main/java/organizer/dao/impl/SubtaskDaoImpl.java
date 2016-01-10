@@ -20,6 +20,8 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	private JdbcTemplate jdbcTemplate;
 	
 	public void create(Subtask subtask) {
+		if(subtask.getTask()== null || subtask.getTask().getId() <= 0)
+			throw new IllegalArgumentException("Illegal value taskId.");
 		jdbcTemplate.update(
 			INSERT,
 			subtask.getTask().getId(),

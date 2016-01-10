@@ -18,6 +18,8 @@ public class CategoryDaoImpl implements CategoryDao {
 	private JdbcTemplate jdbcTemplate;
 
 	public void create(Category category) {
+		if(category.getUser()== null || category.getUser().getId() <= 0)
+			throw new IllegalArgumentException("Illegal value userId.");
 		jdbcTemplate.update(
 				INSERT_OBJECT,
 			category.getName()

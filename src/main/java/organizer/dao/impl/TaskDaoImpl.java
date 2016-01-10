@@ -20,6 +20,8 @@ public class TaskDaoImpl implements TaskDao {
 	private JdbcTemplate jdbcTemplate;
 
 	public void create(Task task) {
+		if(task.getUser() == null || task.getUser().getId() <= 0)
+			throw new IllegalArgumentException("Illegal value userId.");
 		jdbcTemplate.update(INSERT, task.getName());
 		int taskId = jdbcTemplate.queryForObject(SELECT_ID, Integer.class);
 		task.setId(taskId);
