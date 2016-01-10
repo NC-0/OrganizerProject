@@ -21,7 +21,7 @@ public interface SubtaskDao {
 	String SELECT_ID = "SELECT object_id.CURRVAL FROM dual";
 
 	String INSERT           = "INSERT INTO objects (parent_id, object_type_id, name, description) VALUES (?, " + OBJ_TYPE + ", ?, NULL)";
-	String INSERT_COMPLETED = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + IS_COMPLETED_ATTR + ", ?, FALSE, NULL)";
+	String INSERT_COMPLETED = "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + IS_COMPLETED_ATTR + ", ?, 'FALSE', NULL)";
 
 	String UPDATE_NAME = "UPDATE objects SET name = ? WHERE object_id = ?";
 	String UPDATE_STATUS = "UPDATE attributes SET value = ? WHERE attr_id = " + IS_COMPLETED_ATTR + " and object_id = ?";
@@ -33,10 +33,10 @@ public interface SubtaskDao {
 					" obj.object_id as id," +
 					" obj.name as name," +
 					" compl_attr.value as completed" +
-					" FROM " +
+			" FROM " +
 					" objects obj," +
 					" ATTRIBUTES compl_attr " +
-					" WHERE " +
+			" WHERE " +
 					" obj.object_id = compl_attr.object_id  " +
 					" AND obj.object_type_id = "+ OBJ_TYPE +
 					" AND obj.parent_id= ? " +
