@@ -1,0 +1,30 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+        
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+            <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+            <property name="url" value="jdbc:oracle:thin:@//192.168.56.101:1521/xe"></property>
+            <property name="username" value="organizer"></property>
+            <property name="password" value="12345"></property>
+        </bean>
+        
+         <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+            <property name="dataSource" ref="dataSource"></property>
+        </bean>
+        
+        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+            <property name="dataSource" ref="dataSource"></property>
+        </bean>
+        
+        <bean id="userDaoImpl" class="organizer.dao.impl.UserDaoImpl" scope="prototype"></bean>
+        
+        <bean id="taskDaoImpl" class="organizer.dao.impl.TaskDaoImpl" scope="prototype"></bean>
+        
+        <bean id="categoryDaoImpl" class="organizer.dao.impl.CategoryDaoImpl" scope="prototype"></bean>
+
+        <bean id="subtaskDaoImpl" class="organizer.dao.impl.SubtaskDaoImpl" scope="prototype"></bean>
+        </beans>
