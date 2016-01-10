@@ -47,7 +47,7 @@ public class TaskDaoImplTest {
         Task task = new Task("task_name",new Date(),4,category,false,new ArrayList<Subtask>());
         task.setUser(user);
         taskDao.create(task);
-       assertTrue(taskDao.get(user).contains(task));
+        assertTrue(taskDao.get(user).contains(task));
     }
 
     @Test
@@ -106,6 +106,20 @@ public class TaskDaoImplTest {
         assertTrue(taskDao.get(user).contains(task));
         taskDao.delete(task);
         assertFalse(taskDao.get(user).contains(task));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateWithIllegalUserId(){
+        User user = new User("MyUserEmailNewTest@mail.ru","MyUserPassword","MyUserName","MyUserSurname");
+        userDao.create(user);
+        Category category = new Category("Category_name_test");
+        category.setUser(user);
+        categoryDao.create(category);
+        user = userDao.get(user.getId());
+        Task task = new Task("task_name",new Date(),4,category,false,new ArrayList<Subtask>());
+        user.setId(0);
+        task.setUser(user);
+        taskDao.create(task);
     }
 
 }

@@ -133,4 +133,21 @@ public class SubtaskDaoImplTest {
         assertFalse(subtaskDao.get(task).contains(subtask));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateWithIllegalTaskId(){
+        User user = new User("MyUserEmailNewTest@mail.ru","MyUserPassword","MyUserName","MyUserSurname");
+        userDao.create(user);
+        Category category = new Category("Category_name_test");
+        category.setUser(user);
+        categoryDao.create(category);
+        user = userDao.get(user.getId());
+        Task task = new Task("task_name",new Date(),4,category,false,null);
+        task.setUser(user);
+        taskDao.create(task);
+        Subtask subtask = new Subtask(-1,"subtask_name",false,task);
+        task.setId(0);
+        subtask.setTask(task);
+        subtaskDao.create(subtask);
+     }
+
 }

@@ -63,6 +63,15 @@ public class CategoryDaoImplTest {
         category.setName("after Update");
         categoryDao.update(category);
         assertTrue(categoryDao.get(user).contains(category));
+    }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateWithIllegalUserId(){
+        User user = new User("MyUserEmailNewTest@mail.ru","MyUserPassword","MyUserName","MyUserSurname");
+        userDao.create(user);
+        Category category = new Category("Category_name_test");
+        user.setId(0);
+        category.setUser(user);
+        categoryDao.create(category);
     }
 }
