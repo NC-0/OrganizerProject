@@ -173,7 +173,9 @@ public class UserController {
 		if(!checkDelete)
 			return "redirect:/updateprofile";
 		else {
-			userDaoImpl.delete(authorizedUser.getId());
+			User user = new User();
+			user.setId(authorizedUser.getId());
+			userDaoImpl.delete(user);
 			return "redirect:/j_spring_security_logout";
 		}
 	}

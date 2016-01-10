@@ -2,24 +2,18 @@ package organizer.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import organizer.controllers.validation.TaskValidator;
 import organizer.dao.api.CategoryDao;
 import organizer.dao.api.TaskDao;
 import organizer.logic.impl.security.CustomUserDetails;
 import organizer.models.Category;
 import organizer.models.Task;
 import organizer.models.User;
-
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -114,7 +108,9 @@ public class TaskController {
 		Category category = categories.get(task.getCategory_str());
 		task.setPriority(priority);
 		task.setCategory(category);
-		taskDaoImpl.create(user.getId(), task);
+		User user1 = new User();
+		user1.setId(user.getId());
+		taskDaoImpl.create(task);
 
 		// show success view
 		return "task-success";
