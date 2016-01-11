@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 public class Task {
+
 	private int id;
+
 	@Size(min=4, max=20)
 	private String name;
 
@@ -19,6 +21,7 @@ public class Task {
 	private Date date;
 
 	private int priority;
+
 	/** String interpretation of number for User */
 	@NotEmpty
 	private String priority_str;

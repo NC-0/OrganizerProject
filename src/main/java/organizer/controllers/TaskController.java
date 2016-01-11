@@ -2,15 +2,13 @@ package organizer.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import organizer.controllers.validation.TaskValidator;
 import organizer.dao.api.CategoryDao;
 import organizer.dao.api.TaskDao;
 import organizer.logic.impl.security.CustomUserDetails;
@@ -19,11 +17,10 @@ import organizer.models.Task;
 import organizer.models.User;
 
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
-@RequestMapping("/createtask")
+@RequestMapping("/task")
 public class TaskController {
 
 	@Autowired
@@ -33,9 +30,6 @@ public class TaskController {
 	@Autowired
 	@Qualifier("categoryDaoImpl")
 	private CategoryDao categoryDaoImpl;
-
-//	@Autowired
-//	private TaskValidator validator;
 
 	/**
 	 * map that contains user categories
@@ -53,7 +47,7 @@ public class TaskController {
 		priorities.put("So Low", 5);
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String initPage(Model model, Authentication authentication) {
 		// Add task for binding attributes
 		Task task = new Task();
@@ -64,42 +58,32 @@ public class TaskController {
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
 		User user = userDetails.getUser();
 
-		// fill categories from db
+		// fill categories from db to categories and jsp attribute
 		List<Category> categoryList = categoryDaoImpl.get(user);
+		Set<String> categoryDisplaySet  = new LinkedHashSet<>();
 		for (Category current : categoryList) {
 			categories.put(current.getName(), current);
+			categoryDisplaySet.add(current.getName());
 		}
+
+		// Init set of user categories loaded from db
+		model.addAttribute("categories", categoryDisplaySet);
+
+		// Init list of user priorities
+		Set<String> priorityList = new LinkedHashSet<>();
+		priorityList.addAll(priorities.keySet());
+		model.addAttribute("priorities", priorityList);
 
 		// show view
 		return "createtask";
 	}
 
 	/**
-	 * Init list of user priorities
-	 */
-	@ModelAttribute("priorities")
-	public Set<String> populatePriorities() {
-		Set<String> priorityList = new LinkedHashSet<>();
-		priorityList.addAll(priorities.keySet());
-		return priorityList;
-	}
-
-	/**
-	 * Init list of user categories loaded from db
-	 */
-	@ModelAttribute("categories")
-	public Set<String> populateCategories() {
-		Set<String> categoryList = new LinkedHashSet<>();
-		categoryList.addAll(categories.keySet());
-		return categoryList;
-	}
-
-	/**	 *
 	 * @param task - get information that user had input
 	 * @param result - var that contains binding errors
 	 * @return redirect to create-task page if was validation error otherwise to the success page
 	 */
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String createTask(@Valid @ModelAttribute("taskForm") Task task,
 							 BindingResult result,
 							 Authentication authentication) {
@@ -120,7 +104,31 @@ public class TaskController {
 		return "task-success";
 	}
 
+	@RequestMapping(value="/show",
+			produces = { MediaType.TEXT_HTML_VALUE },
+			method = RequestMethod.GET)
+	public String viewTasks () {
+		return "tasklist";
+	}
 
+	@RequestMapping(value="/list",
+					produces = { MediaType.APPLICATION_JSON_VALUE },
+					method = RequestMethod.GET)
+	public  @ResponseBody
+	List<Task> getTasks(/*@ModelAttribute(value="listForm") Task task, Authentication authentication*/) {
+//		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
+//		User user = userDetails.getUser();
+		Task task = new Task("name", new Date(), 1, null, false, null);
+		task.setCategory_str("Work");
+		task.setPriority_str("High");
+		Task task2 = new Task("name2", new Date(), 2, null, true, null);
+		task2.setCategory_str("Work2");
+		task2.setPriority_str("High2");
+		List<Task> tasks = new ArrayList<>();//taskDaoImpl.get(user);
+		tasks.add(task);
+		tasks.add(task2);
+		return tasks;
+	}
 
 }
 
