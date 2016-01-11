@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 public class Category implements Comparable<Category> {
 	private int id;
 	@NotEmpty
-	@Size(min = 1, max = 50, message = "Your category must between 5 and 20 characters")
+	@Size(min = 1, max = 50, message = "Your category must between 1 and 50 characters")
 	private String name;
 	private User user;
 

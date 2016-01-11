@@ -27,7 +27,7 @@ public class MessageContent {
 
 	public final static String MAIL_TEXT_VERIFICATION = "<html><body><b>Hello, %s! You succesfully registered on SuperOrganizer.com. Please go to this link <a href='http://localhost:8081/verification?verific=%s'>http://localhost:8081/verification?verific==%s</a></body></html>";
 
-	public final static String VERIFY_LOGIN = "Please login.";
+	public final static String VERIFY_LOGIN = "Email verification failed.Please login.";
 
 	public final static String VERIFY_ERROR = "Verify trouble. Verify identificator is dead.";
 

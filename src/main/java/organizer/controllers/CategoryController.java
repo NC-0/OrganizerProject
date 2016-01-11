@@ -10,9 +10,11 @@ import organizer.dao.api.CategoryDao;
 import organizer.logic.impl.security.CustomUserDetails;
 import organizer.models.Category;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -36,13 +38,32 @@ public class CategoryController {
 		return "redirect:/protected";
 	}
 
-	@RequestMapping(value = "/categorylist", method = RequestMethod.GET)
-	public String categoryList(Authentication authentication,
-										Map<String, Object> model){
+	@RequestMapping(value = "/categorylist", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody	List<Category> categoryList(Authentication authentication){
 		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
 		ArrayList<Category> categories = (ArrayList<Category>) categoryDao.get(authorizedUser.getUser());
 		Collections.sort(categories);
-		model.put("catList", categories);
-		return "categorylist";
+		return categories;
+	}
+
+	@RequestMapping(value = "/editcategory", method = RequestMethod.POST)
+	public String editCategory(Authentication authentication,
+										  @Valid @ModelAttribute("categoryForm") Category categoryForm,
+										  BindingResult result,
+										  Map<String, Object> model){
+		if(result.hasErrors())
+			return "organizer";
+		categoryForm.setName(categoryForm.getName().trim());
+		categoryDao.update(categoryForm);
+		return "redirect:/protected";
+	}
+
+	@RequestMapping(value = "/deletecategory", method = RequestMethod.POST)
+	public String deleteCategory(HttpServletRequest request){
+		Category category = new Category();
+		System.out.println("cat="+Integer.parseInt(request.getParameter("categoryid")));
+		category.setId(Integer.parseInt(request.getParameter("categoryid")));
+		categoryDao.delete(category);
+		return "redirect:/protected";
 	}
 }

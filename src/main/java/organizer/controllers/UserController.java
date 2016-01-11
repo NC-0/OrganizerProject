@@ -54,10 +54,7 @@ public class UserController {
 	@RequestMapping(value="/updateprofile",method=RequestMethod.GET)
 	public String editUserForm(Authentication authentication,Map<String, Object> model){
 		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
-		User user = new User(authorizedUser.getEmail(),
-			authorizedUser.getPassword(),
-			authorizedUser.getName(),
-			authorizedUser.getSurname());
+		User user = authorizedUser.getUser();
 		model.put("userForm",user);
 		return "edituser";
 	}
@@ -92,10 +89,7 @@ public class UserController {
 					String verifyId = request.getParameter("verific");
 					if(verifyId.equals(cookieVerify)) {
 						message = MessageContent.VERIFY_SUCCESSFULL;
-						User user = new User(authorizedUser.getEmail(),
-							authorizedUser.getPassword(),
-							authorizedUser.getName(),
-							authorizedUser.getSurname());
+						User user = authorizedUser.getUser();
 						user.setEnabled(true);
 						user.setRole("USER_ROLE");
 						user.setId(authorizedUser.getId());
