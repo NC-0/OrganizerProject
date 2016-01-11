@@ -53,17 +53,32 @@ public interface TaskDao {
 
 
 	// Get Task requests
-	String SELECT_LIST_OF_USER_TASKS = "SELECT oref1.REFERENCE, obj1.NAME, a1.date_value, a2.VALUE AS priority, "
-			+ "a4.VALUE AS status , oref2.REFERENCE AS category_id, obj2.NAME category_name FROM objreference oref1 "
-			+ "JOIN objects obj1 ON oref1.REFERENCE=obj1.object_id, "
-			+ "ATTRIBUTES a1, ATTRIBUTES a2, objreference oref2, objects obj2, ATTRIBUTES a4 WHERE  a1.date_value IS NOT NULL AND "
-			+ "a1.attr_id = "+ DATE_ATTR +" AND a1.object_id=obj1.object_id AND a2.VALUE IS NOT NULL AND "
-			+ "a2.attr_id = "+ PRIORITY_ATTR +" AND a2.object_id = obj1.object_id AND "
-			+ "oref2.attr_id = "+ TASK_REF_SUBTASK +" AND oref2.object_id=oref1.REFERENCE AND "
-			+ "obj2.object_id = (SELECT oref3.REFERENCE FROM objreference oref3 "
-			+ "WHERE oref3.attr_id = "+ TASK_REF_SUBTASK + " AND oref3.object_id=oref1.REFERENCE) "
-			+ "AND obj2.object_type_id = " + OBJTYPE_CATEGORY + " AND a4.attr_id = "+ STATUS_ATTR
-			+ " AND a4.object_id = obj1.object_id AND oref1.attr_id = " + USER_REF_ATTR + " AND oref1.object_id = ? ";
+	String SELECT_LIST_OF_USER_TASKS = " " +
+			"SELECT" +
+			" obj.OBJECT_ID as id, " +
+			" obj.NAME as taskname," +
+			" date_attr.DATE_VALUE as dates ," +
+			" priority_attr.VALUE as priority," +
+			" category_attr.VALUE as category," +
+			" status_attr.VALUE as status " +
+			" FROM" +
+			" attributes date_attr," +
+			" attributes priority_attr," +
+			" attributes category_attr," +
+			" attributes status_attr," +
+			" OBJREFERENCE ref," +
+			" objects obj" +
+			" WHERE" +
+			" date_attr.attr_id = " + DATE_ATTR + " AND" +
+			" priority_attr.attr_id = " + PRIORITY_ATTR + " AND" +
+			" category_attr.attr_id = " + CATEGORY_ATTR + " AND" +
+			" status_attr.attr_id = " + STATUS_ATTR + " AND" +
+			" ref.object_id = ? AND" +
+			" ref.attr_id = " + USER_REF_ATTR + " AND" +
+			" date_attr.object_id = obj.OBJECT_ID AND" +
+			" priority_attr.OBJECT_ID = obj.OBJECT_ID AND" +
+			" category_attr.object_id = obj.OBJECT_ID AND" +
+			" status_attr.object_id = obj.OBJECT_ID";
 	
 	String SELECT_SUBTASKS_BY_TASK_ID = "SELECT obj.object_id, obj.name, attr.value FROM objects obj "
 			+ "JOIN  ATTRIBUTES attr ON obj.object_id=attr.object_id WHERE obj.object_type_id = "+ OBJ_TYPE_SUBTASKS 

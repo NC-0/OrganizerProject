@@ -1,4 +1,4 @@
-
+<%@ include file="/views/include.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,13 +30,15 @@
         $.get("http://localhost:8081/task/list", function(data) {
 
             $.each(data, function(i, task) {
+                var date = new Date(task.date);
 
                 $(".data-tasks-js").append(
                         "<tr><td>" + task.name + "</td>" +
-                        "<td>" + task.data + "</td>" +
-                        "<td>" + task.priority_str + "</td>" +
-                        "<td>" + task.status + "</td>" +
-                        "<td>" + task.category_str + "</td></tr>");
+                        "<td>" + date + "</td>" +
+                        "<td>" + task.priority + "</td>" +
+                        "<td>" + task.completed + "</td>" +
+                        "<td>" + task.category + "</td></tr>"
+                );
             });
 
         });

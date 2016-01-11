@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import organizer.dao.api.TaskDao;
 import organizer.dao.api.UserDao;
+import organizer.dao.cache.TaskRowMapper;
 import organizer.models.Category;
 import organizer.models.Subtask;
 import organizer.models.Task;
@@ -64,18 +65,8 @@ public class TaskDaoImpl implements TaskDao {
 	}
 
 	public List <Task> get(final User user) {
-//		List<Task>tasks = (ArrayList<Task>)jdbcTemplate.query(TaskDao.SELECT_LIST_OF_USER_TASKS,
-//				new Object[]{user.getId()}, new RowMapper<Task>(){
-//			@Override
-//			public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
-//				Task task = new Task(rs.getInt("REFERENCE"),rs.getString("Name"),rs.getDate("DATE_VALUE"),
-//						rs.getInt("PRIORITY"), new Category(rs.getInt("CATEGORY_ID"), rs.getString("CATEGORY_NAME"), user),
-//						new Boolean(rs.getString("Status")), getSubtasks(rs.getInt("REFERENCE")));
-//			return task;
-//			}
-//		});
-//		return tasks;
-		return null;
+		List<Task> tasks =  jdbcTemplate.query(SELECT_LIST_OF_USER_TASKS, new TaskRowMapper(user),user.getId());
+		return tasks;
 	}
 	
 	public List <Subtask> getSubtasks (final Task task){
