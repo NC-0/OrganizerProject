@@ -54,6 +54,12 @@ public class UserDaoImpl implements UserDao {
 				INSERT_ENABLED,
 				objectsCurrentValue,
 				"FALSE");//TRUE-enabled
+			jdbcTemplate.update(
+				INSERT_VERIFY,
+				objectsCurrentValue,
+				user.getVerify(),
+				user.getRegistrationDate()
+			);
 			return String.format(MessageContent.USER_CREATED, user.getEmail());
 		}
 		throw new UnsupportedOperationException();
@@ -88,6 +94,29 @@ public class UserDaoImpl implements UserDao {
 			UPDATE_PASSWORD,
 			user.getPassword(),
 			user.getId());
+	}
+
+	public boolean existVerify(String verificationId) {
+		boolean verify = jdbcTemplate.queryForObject(
+			SELECT_VERIFY,
+			new Object[]{verificationId},
+			Integer.class) != 0;
+		return verify;
+	}
+
+	public User verify(String verificationId){
+		if (existVerify(verificationId)){
+			int userId = jdbcTemplate.queryForObject(
+				SELECT_USER_ID,
+				new Object[]{verificationId},
+				Integer.class);
+			User user = jdbcTemplate.queryForObject(
+				SELECT_USER_BY_ID,
+				new Object[]{userId},
+				new UserRowMapper());
+			return user;
+		}
+		return null;
 	}
 
 	public User get(String email) {

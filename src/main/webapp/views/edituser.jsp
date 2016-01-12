@@ -24,16 +24,7 @@
                 <td align="left" width="40%"><form:input path="email" size="30" readonly="true"/></td>
                 <td align="left"><form:errors path="email" cssClass="error"/></td>
             </tr>
-            <tr>
-                <td>Password: </td>
-                <td><form:password path="password" size="30"/></td>
-                <td><form:errors path="password" cssClass="error"/></td>
-            </tr>
-            <tr>
-                <td>Retry password: </td>
-                <td><form:password path="matchingPassword" size="30"/></td>
-                <td><form:errors cssClass="error"/></td>
-            </tr>
+
             <tr>
                 <td>Name: </td>
                 <td><form:input path="name" size="30"/></td>
@@ -43,6 +34,19 @@
                 <td>Surname: </td>
                 <td><form:input path="surname" size="30"/></td>
                 <td><form:errors path="surname" cssClass="error"/></td>
+            </tr>
+            <tr>
+                <td colspan="3"><input type="checkbox" name="editecheckbox">Edit password</td>
+            </tr>
+            <tr>
+                <td>Password: </td>
+                <td><form:password path="password" size="30"/></td>
+                <td><form:errors path="password" cssClass="error"/></td>
+            </tr>
+            <tr>
+                <td>Retry password: </td>
+                <td><form:password path="matchingPassword" size="30"/></td>
+                <td><form:errors cssClass="error"/></td>
             </tr>
             <tr>
                 <td></td>

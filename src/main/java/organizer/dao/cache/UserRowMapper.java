@@ -14,13 +14,11 @@ public class UserRowMapper extends CachedRowMapper<User> {
 			resultSet.getString("username"),
 			resultSet.getString("surname")
 		);
-		boolean enabled = Boolean.valueOf(resultSet.getString("enabled"));
-		if(enabled)
-			user.setRole("USER_ROLE");
-		else
-			user.setRole("VERIFY_ROLE");
+		user.setVerify(resultSet.getString("verify"));
+		user.setRegistrationDate(resultSet.getDate("regdate"));
+		user.setRole("USER_ROLE");
 		user.setId(Integer.valueOf(resultSet.getString("id")));
-		user.setEnabled(enabled);
+		user.setEnabled(Boolean.valueOf(resultSet.getString("enabled")));
 		return user;
 	}
 }

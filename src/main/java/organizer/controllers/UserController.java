@@ -28,7 +28,9 @@ import organizer.logic.impl.security.CustomUserDetails;
 import organizer.logic.impl.security.UserAuthenticationService;
 import organizer.models.User;
 
+import java.sql.Date;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Map;
 
 @Controller
@@ -75,30 +77,17 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/verification",method = RequestMethod.GET)
-	public String validate(HttpServletRequest request,Authentication authentication,
-								  @CookieValue(value = "verificationId",
-									  defaultValue = "undefined") String cookieVerify	){
-		String message=MessageContent.VERIFY_LOGIN;
-		System.out.println(cookieVerify);
-		if(authentication!=null){
-			message = MessageContent.VERIFY_ERROR;
-			if(!cookieVerify.equals("undefined")) {
-				CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
-				message = String.format(MessageContent.VERIFY_ENABLED, authorizedUser.getEmail());
-				if(!authorizedUser.getEnabled()) {
-					String verifyId = request.getParameter("verific");
-					if(verifyId.equals(cookieVerify)) {
-						message = MessageContent.VERIFY_SUCCESSFULL;
-						User user = authorizedUser.getUser();
+	public String validate(HttpServletRequest request){
+		String message = MessageContent.VERIFY_ERROR;
+		String verifyId = request.getParameter("verific");
+		if(verifyId!=null) {
+			User user = userDaoImpl.verify(verifyId);
+			if (user != null) {
+				if((System.currentTimeMillis()-user.getRegistrationDate().getTime())<7*24*60*60*1000){
+					if(user.isEnabled()==false) {
 						user.setEnabled(true);
-						user.setRole("USER_ROLE");
-						user.setId(authorizedUser.getId());
-						GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
-						authentication = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
-							authentication.getCredentials(),
-							Arrays.asList(authority));
-						SecurityContextHolder.getContext().setAuthentication(authentication);
 						userDaoImpl.edit(user);
+						message = MessageContent.VERIFY_SUCCESSFULL;
 					}
 				}
 			}
@@ -108,8 +97,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value="/createuser",method=RequestMethod.POST)
-	public String createUser(HttpServletResponse response,
-									 @Valid @ModelAttribute("userForm") User userForm,
+	public String createUser(@Valid @ModelAttribute("userForm") User userForm,
 									 BindingResult result,
 									 Map<String, Object> model){
 		if (result.hasErrors()) {
@@ -117,14 +105,14 @@ public class UserController {
 		}
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		String hashedPass = bCryptPasswordEncoder.encode(userForm.getPassword());
+		String verificationId = bCryptPasswordEncoder.encode(userForm.getEmail()+MessageContent.MAIL+userForm.getName()+userForm.getSurname());
+		java.sql.Date timeNow = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
+		userForm.setVerify(verificationId);
 		userForm.setPassword(hashedPass);
+		userForm.setRegistrationDate(timeNow);
 		String message;
 		try{
 			message = userDaoImpl.create(userForm);
-			String verificationId = bCryptPasswordEncoder.encode(userForm.getEmail()+MessageContent.MAIL+userForm.getName()+userForm.getSurname());
-			Cookie cookieVerify = new Cookie("verificationId", verificationId);
-			cookieVerify.setMaxAge(7*24*60*60);
-			response.addCookie(cookieVerify);
 			try {
 				mailSender.sendMail(userForm,verificationId);
 			}catch (MessagingException e) {
@@ -139,24 +127,33 @@ public class UserController {
 	}
 
 	@RequestMapping(value="/edituser",method=RequestMethod.POST)
-	public String editUser(HttpServletResponse response,
-								  @Valid @ModelAttribute("userForm") User userForm,
-								  BindingResult result, Map<String, Object> model,
-								  Authentication authentication){
+	public String editUser(@Valid @ModelAttribute("userForm") User userForm,
+								  BindingResult result,
+								  Authentication authentication,
+								  @RequestParam(value = "editecheckbox", required = false) boolean checkEdit){
 		if (result.hasErrors()) {
-			return "edituser";
+			if(result.hasFieldErrors("password")){
+
+			}
+			else
+				return "edituser";
 		}
 		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		String hashedPass = bCryptPasswordEncoder.encode(userForm.getPassword());
-		userForm.setPassword(hashedPass);
 		userForm.setId(authorizedUser.getId());
 		userForm.setEnabled(true);
 		authorizedUser.setName(userForm.getName());
 		authorizedUser.setSurname(userForm.getSurname());
 		userDaoImpl.edit(userForm);
-		userDaoImpl.editPassword(userForm);
-		return "edituser";
+		if(checkEdit){
+			if (result.hasFieldErrors("password")) {
+				return "edituser";
+			}
+			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+			String hashedPass = bCryptPasswordEncoder.encode(userForm.getPassword());
+			userForm.setPassword(hashedPass);
+			userDaoImpl.editPassword(userForm);
+		}
+		return "redirect:/updateprofile";
 	}
 
 	@RequestMapping(value = "/deleteuser",method = RequestMethod.POST)

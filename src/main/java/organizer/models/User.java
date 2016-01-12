@@ -6,6 +6,7 @@ import organizer.logic.api.PasswordMatcher;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.sql.Date;
 
 @PasswordMatcher(message = "Passwords don't match")
 public class User {
@@ -19,14 +20,15 @@ public class User {
 	private String password;
 	private String matchingPassword;
 	@NotNull
-	@Size(min = 6, max = 20)
+	@Size(min = 1, max = 20)
 	private String name;
 	@NotNull
-	@Size(min = 6, max = 20)
+	@Size(min = 1, max = 20)
 	private String surname;
 	private String role;
 	private boolean enabled;
-
+	private String verify;
+	private java.sql.Date registrationDate;
 	public User() {
 	}
 
@@ -99,5 +101,21 @@ public class User {
 
 	public void setMatchingPassword(String matchingPassword) {
 		this.matchingPassword = matchingPassword;
+	}
+
+	public String getVerify() {
+		return verify;
+	}
+
+	public void setVerify(String verify) {
+		this.verify = verify;
+	}
+
+	public Date getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
 	}
 }

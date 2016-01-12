@@ -61,7 +61,6 @@ public class CategoryController {
 	@RequestMapping(value = "/deletecategory", method = RequestMethod.POST)
 	public String deleteCategory(HttpServletRequest request){
 		Category category = new Category();
-		System.out.println("cat="+Integer.parseInt(request.getParameter("categoryid")));
 		category.setId(Integer.parseInt(request.getParameter("categoryid")));
 		categoryDao.delete(category);
 		return "redirect:/protected";

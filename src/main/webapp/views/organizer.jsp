@@ -16,6 +16,7 @@
         }
 
         #elements{
+            position: absolute;
             height: 200px;
             overflow-y: scroll ;
             overflow-x: hidden;
@@ -47,6 +48,7 @@
             height:20px;
             background-color: #ffffff;
         }
+
         .delete:hover {
             text-align: left;
             cursor: hand;
@@ -54,6 +56,7 @@
             width: 10px;
             height:20px;
         }
+
         .edit{
             text-align: left;
             cursor: hand;
@@ -61,12 +64,26 @@
             height:20px;
             background-color: #ffffff;
         }
+
         .edit:hover{
             text-align: left;
             cursor: hand;
             background-color: #5ce05a;
             width: 10px;
             height:20px;
+        }
+
+        #parent {
+            width: 1080px; margin: auto;
+            position: relative;
+        }
+
+        #content {
+            border: solid 1px lightgray;
+            border-radius: 5px;
+            position: absolute;
+            left: 230px;
+            width: 900px;
         }
     </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
@@ -97,6 +114,7 @@
         function makeCategory(data){
             $('#elements').empty();
             $('#elements').append("<table>")
+            $('#elements table').append("<tr><td onclick='selectTasks(0)' class='clicktr'>All</td></tr> ")
             for(var i=0;i<data.length;i++) {
                 $('#elements table').append("<tr><td width='200px' onclick='selectTasks("+data[i].id+")' class='clicktr' id=" + data[i].id + ">" + data[i].name + "</td><td><div class='delete' onclick='deleteCategory("+data[i].id+")'>D</div><div data-toggle=\"modal\" data-target=\"#myModal1\" class='edit' onclick='editCategory("+data[i].id+")'>U</div></td></tr>");
                 $('.clicktr').click(
@@ -123,12 +141,44 @@
             });
         }
         function selectTasks(cat){
+            $("#tasktable tbody tr").remove();
+            if(cat==0){
+                $.get("http://localhost:8081/task/list", function(data) {
+
+                    $.each(data, function(i, task) {
+                        var date = new Date(task.date);
+
+                        $(".data-tasks-js").append(
+                                "<tr><td>" + task.name + "</td>" +
+                                "<td>" + date + "</td>" +
+                                "<td>" + task.priority + "</td>" +
+                                "<td>" + task.completed + "</td>" +
+                                "<td>" + task.category + "</td></tr>"
+                        );
+                    });
+
+                });
+            }else{
+                $.get("http://localhost:8081/task/listcat/"+cat, function(data) {
+
+                    $.each(data, function(i, task) {
+                        var date = new Date(task.date);
+
+                        $(".data-tasks-js").append(
+                                "<tr><td>" + task.name + "</td>" +
+                                "<td>" + date + "</td>" +
+                                "<td>" + task.priority + "</td>" +
+                                "<td>" + task.completed + "</td>" +
+                                "<td>" + task.category + "</td></tr>"
+                        );
+                    });
+
+                });
+            }
         }
     </script>
 </head>
 <body onload="loadData()">
-<a class="btn btn-primary btn-sm" href="/categorylist" >Мои категории</a>
-<a class="btn btn-primary btn-sm" href="/createtask">Создание задачи</a>
 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Новая категория</button>
 <!-- Modal -->
 <div class="modal fade bs-example-modal-md" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" da>
@@ -183,7 +233,22 @@
     </div>
 </div>
 <br><br><br>
-Categories
-<div id="elements"></div>
+<div id="parent">
+    Categories
+    <div id="elements"></div>
+    <div id="content">
+        <table id="tasktable" class="data-tasks-js table table-striped" >
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Data</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
 </body>
 </html>
