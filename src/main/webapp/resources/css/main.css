@@ -1,0 +1,315 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+
+
+
+
+.Body {
+	height: 100%;
+	width: 100%;
+}
+
+.Body td {
+	vertical-align: top;
+}
+
+
+
+
+.modal-title {
+	font-size: 26px;
+	line-height: 1.2em;
+	text-transform: uppercase;
+}
+
+
+
+
+
+.Body .Logo {
+	background-color: #34495E;
+	border-bottom: 2px solid #2C3E50;
+	color: #95A5A6;
+	font-weight: bold;
+	font-size: 26px;
+	padding: 0.6em 1em 0.6em 0.8em;
+	text-transform: uppercase;
+}
+
+.Body .Logo a {
+	color: #D1D2D4;
+}
+
+.Body .Logo a:hover {
+	color: #FFFFFF;
+}
+
+
+
+
+
+.Body .Action {
+	border-bottom: 2px solid #34495E;
+	font-size: 26px;
+	font-weight: bold;
+	padding: 0.6em 1.5em;
+	text-transform: uppercase;
+}
+
+
+
+
+
+.Body .Login {
+	border-bottom: 2px solid #34495E;
+	padding: 0em 2em;
+	text-align: right;
+	font-weight: bold;
+	line-height: 1.2em;
+	vertical-align: middle;
+}
+
+.Body .Login .Logout {
+	font-size: 0.85em;
+}
+
+
+
+
+
+.Body .Sidebar {
+	height: 100%;
+	background-color: #34495E;
+	color: #95A5A6;
+    overflow-x: hidden;
+    width: 15%;
+    text-wrap: none;
+    white-space: nowrap
+}
+
+.Body .Sidebar > .Fix {
+	position: relative;
+	top: -2px;
+}
+
+.Body .Sidebar a {
+	color: #D1D2D4;
+}
+
+.Body .Sidebar a:hover {
+	color: #FFF;
+}
+
+.Body .Sidebar .Title {
+	background-color: #2C3E50;
+	font-weight: bold;
+	padding: 0.35em 1.2em;
+	text-transform: uppercase;
+	font-size: 0.9em;
+}
+
+.Body .Sidebar ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	font-size: 0.9em;
+}
+
+.Body .Sidebar ul .Selected {
+	background-color: #1ABC9C;
+	padding-right: 5px;
+}
+
+.Body .Sidebar ul .Selected a {
+	font-weight: bold;
+	color: #1ABC9C;
+}
+
+.Body .Sidebar li .Item {
+	padding: 0.45em 1.2em;
+	background-color: #34495E;
+
+    overflow-x: hidden;
+    width: 300px;
+}
+
+.Body .Sidebar li .Item span {
+	margin-right: 8px;
+}
+
+.Body .Sidebar li .Item span:hover {
+	color: #FFF;
+}
+
+
+
+
+
+.Body .Content {
+	height: 100%;
+	padding: 0 2em;
+	width: 100%;
+}
+
+.Body .Preambula {
+	color: #79797d;
+	font-size: 0.7em;
+	padding: 0.8em 0.2em;
+}
+
+table.TodoList {
+	font-size: 0.9em;
+}
+
+table.TodoList label.checkbox {
+	margin: 0;
+	width: 20px;
+}
+
+table.TodoList th.Header {
+	font-size: 0.9em;
+	padding: 0.6em 1.1em 0.6em 1.1em;
+	vertical-align: top;
+	text-transform: uppercase;
+}
+
+table.TodoList td.Text {
+	line-height: 1.6em;
+	padding: 0.5em 1em 0.5em 1em;
+}
+
+table.TodoList td.Checkbox {
+	padding: 0.65em 0em 0em 1em;
+}
+
+table.TodoList td.TaskCompletion {
+	text-align: right;
+	width: 90px;
+	padding: 0.4em 0 0 0;
+}
+
+
+
+
+.Calendar {
+	height: 100%;
+}
+
+.Calendar th {
+	text-transform: uppercase;
+	font-size: 0.9em;
+}
+
+.Calendar td {
+	width: 14.29%;
+	height: 20%;
+}
+
+.Calendar ul.Tasks {
+	border-top: 1px solid #ECF0F1;
+	border-bottom: 1px solid #ECF0F1;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.Calendar ul.Tasks li {
+	background: #3498DB;
+	border-top: 1px solid #ECF0F1;
+	border-bottom: 1px solid #ECF0F1;
+	color: #ECF0F1;
+	padding: 0.2em 0.5em;
+	font-size: 0.7em;
+	font-weight: bold;
+}
+
+
+
+
+
+.Body .Footer {
+	background-color: #34495E;
+	color: #95A5A6;
+	font-size: 0.8em;
+	font-weight: bold;
+	padding: 1em 1.2em;
+	vertical-align: bottom;
+}
+
+
+
+
+
+
+.welcome {
+	background-color: #ECF0F1;
+	border-radius: 6px;
+	padding: 5px 25px;
+}
+
+form#login {
+	background-color: white;
+	border-radius: 6px;
+	padding: 5px 25px;
+}
+
+.navbar-brand img {
+	height: 27px;
+}
+
+.navbar-brand span {
+	position: relative;
+	top: 2px;
+	margin-top: 5px;
+}
+
+.featureList {
+	list-style-type: none;
+	padding: 0;
+}
+
+.featureList li {
+	padding: 0px;
+}
+
+.featureList li img {
+	float: left;
+	height: 100px;
+	margin: 0px 20px 20px 0px;
+}
+
+.featureList li .clearfix {
+	clear: both;
+	height: 0;
+	width: 0;
+}
+
+.footer {
+	margin-top: 20px; 
+}
+
+.footer a {
+	color: #E67E22;
+}
+
+.footer a:hover {
+	color: #D35400;
+}
+
+.footer .navbar-text {
+	color: white;
+	font-size: 0.9em;
+}
+
+.error {
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}

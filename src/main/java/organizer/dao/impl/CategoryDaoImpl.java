@@ -34,14 +34,18 @@ public class CategoryDaoImpl implements CategoryDao {
 
 	public void delete(Category category) {
 		jdbcTemplate.update(
-			CategoryDao.DELETE,
+			DELETE,
+			category.getId()
+		);
+		jdbcTemplate.update(
+			DELETE_REF,
 			category.getId()
 		);
 	}
 
 	public void update(Category category) {
 		jdbcTemplate.update(
-			CategoryDao.UPDATE,
+			UPDATE,
 			category.getName(),
 			category.getId()
 		);

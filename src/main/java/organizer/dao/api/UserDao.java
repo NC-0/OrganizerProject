@@ -2,7 +2,10 @@ package organizer.dao.api;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import organizer.logic.impl.email.MailTasks;
 import organizer.models.User;
+
+import java.util.List;
 
 public interface UserDao {
 	boolean exist(String email);
@@ -15,6 +18,7 @@ public interface UserDao {
 	User verify(String verificationId);
 	User get(String email);
 	User get(int id);
+	MailTasks getTommorowTasks();
 
 	int OBJ_TYPE      = 3;
 	int EMAIL_ATTR    = 6;
@@ -101,4 +105,21 @@ public interface UserDao {
 		"AND surname_attr.object_id = email_attr.OBJECT_ID AND " +
 		"enable_attr.object_id = email_attr.OBJECT_ID AND " +
 		"verify_attr.OBJECT_ID=email_attr.OBJECT_ID";
+
+	String SELECT_USERS_AND_TASKS ="SELECT " +
+		"task_obj.name as task, " +
+		"usr_attr.value as mail " +
+		"FROM " +
+		"objects task_obj, " +
+		"objects usr_obj, " +
+		"ATTRIBUTES usr_attr, " +
+		"objreference ref " +
+		"WHERE " +
+		"task_obj.OBJECT_TYPE_ID=1 AND " +
+		"usr_obj.OBJECT_TYPE_ID=3 AND " +
+		"usr_attr.ATTR_ID=6 AND " +
+		"usr_attr.OBJECT_ID=usr_obj.OBJECT_ID AND " +
+		"ref.ATTR_ID=10 AND " +
+		"ref.OBJECT_ID=usr_obj.OBJECT_ID AND " +
+		"ref.REFERENCE=task_obj.OBJECT_ID";
 }

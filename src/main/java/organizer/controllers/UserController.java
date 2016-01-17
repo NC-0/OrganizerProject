@@ -70,7 +70,6 @@ public class UserController {
 		}
 		model.setViewName("login");
 		if(authentication!=null) {
-			System.out.println("a"+authentication.getName());
 			model = new ModelAndView("redirect:/protected");
 		}
 		return model;
@@ -114,7 +113,10 @@ public class UserController {
 		try{
 			message = userDaoImpl.create(userForm);
 			try {
-				mailSender.sendMail(userForm,verificationId);
+				mailSender.sendMail(userForm.getEmail(),
+					verificationId,
+					MessageContent.MAIL_SUBJECT_VERIFICATION,
+					MessageContent.MAIL_TEXT_VERIFICATION);
 			}catch (MessagingException e) {
 				model.put("message",message);
 				return "createuser";
@@ -123,7 +125,8 @@ public class UserController {
 			model.put("message",String.format(MessageContent.USER_ALREADY_EXIST, userForm.getEmail()));
 			return "createuser";
 		}
-		return "redirect:/";
+		model.put("message",String.format(MessageContent.USER_CREATED, userForm.getEmail()));
+		return "hello";
 	}
 
 	@RequestMapping(value="/edituser",method=RequestMethod.POST)
@@ -132,18 +135,17 @@ public class UserController {
 								  Authentication authentication,
 								  @RequestParam(value = "editecheckbox", required = false) boolean checkEdit){
 		if (result.hasErrors()) {
-			if(result.hasFieldErrors("password")){
-
+			if(result.hasFieldErrors("password") && !result.hasFieldErrors("name") && !result.hasFieldErrors("surname")){
+				CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
+				userForm.setId(authorizedUser.getId());
+				userForm.setEnabled(true);
+				authorizedUser.setName(userForm.getName());
+				authorizedUser.setSurname(userForm.getSurname());
+				userDaoImpl.edit(userForm);
 			}
 			else
 				return "edituser";
 		}
-		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
-		userForm.setId(authorizedUser.getId());
-		userForm.setEnabled(true);
-		authorizedUser.setName(userForm.getName());
-		authorizedUser.setSurname(userForm.getSurname());
-		userDaoImpl.edit(userForm);
 		if(checkEdit){
 			if (result.hasFieldErrors("password")) {
 				return "edituser";

@@ -5,12 +5,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import organizer.dao.api.UserDao;
 import organizer.logic.impl.MessageContent;
+import organizer.models.Task;
 import organizer.models.User;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class MailSender {
@@ -20,17 +26,17 @@ public class MailSender {
 	private JavaMailSender simpleMailSender;
 
 	@Async
-	public void sendMail(User user,String verificationId) throws MessagingException{
-		simpleMailSender.send(createCustomMessage(user,verificationId));
+	public void sendMail(String mail,String text,String subject,String body) throws MessagingException{
+		simpleMailSender.send(createCustomMessage(mail,text,subject,body));
 	}
 
-	public MimeMessage createCustomMessage(User user,String verificationId) throws  MessagingException{
+	private MimeMessage createCustomMessage(String mail,String text,String subject,String body) throws  MessagingException{
 		MimeMessage message = simpleMailSender.createMimeMessage();
 		MimeMessageHelper messageHelper = new MimeMessageHelper(message,true);
 		messageHelper.setFrom(MessageContent.MAIL);
-		messageHelper.setTo(user.getEmail());
-		messageHelper.setSubject(MessageContent.MAIL_SUBJECT_VERIFICATION);
-		messageHelper.setText(String.format(MessageContent.MAIL_TEXT_VERIFICATION, user.getEmail(),verificationId,verificationId),true);
+		messageHelper.setTo(mail);
+		messageHelper.setSubject(subject);
+		messageHelper.setText(String.format(body, mail,text,text),true);
 		return message;
 	}
 }

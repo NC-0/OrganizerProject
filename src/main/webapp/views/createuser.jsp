@@ -1,77 +1,100 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+
+<!DOCTYPE html>
 <html>
 <head>
-
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Login</title>
+    <title>Organizer - Sign up</title>
+
+    <script src="/resources/js/jquery-1.10.2.min.js"></script>
+    <script src="/resources/js/bootstrap.min.js"></script>
+    <script src="/resources/js/bootstrap-select.js"></script>
+    <script src="/resources/js/bootstrap-switch.js"></script>
+    <script src="/resources/js/flatui-checkbox.js"></script>
+    <script src="/resources/js/flatui-radio.js"></script>
+    <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/resources/css/flat-ui.css" rel="stylesheet">
+    <link href="/resources/css/datepicker.css" rel="stylesheet">
+    <link href="/resources/css/main.css" rel="stylesheet">
+
     <style>
-        .error {
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            color: #a94442;
-            background-color: #f2dede;
-            border-color: #ebccd1;
-            width:400px;
+        body {
+            background-image: url('/resources/images/blur.jpg');
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            margin: 0;
+            padding: 55px 65px;
         }
-        .attention {
-            color: green;
+
+        h1 {
+            color: #FFFFFF;
+            font-size: 72px;
         }
-        .regborder {
-            alignment: center;
-            margin: 100px auto;
-            padding: 15px;
+
+        h4 {
+            color: #FFFFFF;
+        }
+
+        .row {
+            position: relative;
+            left: 10px;
+            top: 10px;
         }
     </style>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 </head>
 <body>
-<div align="center" class="regborder">
-    <c:if test="${not empty message}">
-        <div class="error">${message}</div>
-    </c:if>
-    <table>
-        <form:form action="createuser" commandName="userForm">
-            <tr>
-                <td>Email: </td>
-                <td><form:input path="email" class="form-control" size="30"/></td>
-                <td><form:errors path="email" cssClass="attention"/></td>
-            </tr>
-            <tr>
-                <td>Password: </td>
-                <td><form:password path="password" class="form-control" size="30"/></td>
-                <td><form:errors path="password" cssClass="attention"/></td>
-            </tr>
-            <tr>
-                <td>Retry password: </td>
-                <td><form:password path="matchingPassword" class="form-control" size="30"/></td>
-                <td><form:errors cssClass="attention"/></td>
-            </tr>
-            <tr>
-                <td>Name: </td>
-                <td><form:input path="name" class="form-control" size="30"/></td>
-                <td><form:errors path="name" cssClass="attention"/></td>
-            </tr>
-            <tr>
-                <td>Surname: </td>
-                <td><form:input path="surname" class="form-control" size="30"/></td>
-                <td><form:errors path="surname" cssClass="attention"/></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td align="center"><input type="submit" class="btn btn-primary btn-sm" value="Register"/></td>
-                <td></td>
-            </tr>
-        </form:form>
-    </table>
-</div>
+    <form:form id="login" cssClass="col-md-4 col-md-offset-4" action="createuser" commandName="userForm">
+        <h3>Registration</h3>
+        <hr/>
+
+        <c:if test="${not empty message}">
+            <div class="alert alert-danger">${message}</div>
+        </c:if>
+
+        <spring:bind path="email">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input path="email" class="input-lg form-control" placeholder="Email" />
+                <form:errors path="email" cssClass="help-block" element="small" />
+            </div>
+        </spring:bind>
+
+
+        <spring:bind path="password">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:password path="password"  class="input-lg form-control" placeholder="Password" />
+                <form:errors path="password" cssClass="help-block" element="small" />
+            </div>
+        </spring:bind>
+
+        <spring:bind path="password">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:password path="matchingPassword" class="input-lg form-control" placeholder="Password confirmation" />
+                <form:errors cssClass="help-block" element="small" />
+            </div>
+        </spring:bind>
+
+        <spring:bind path="name">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input path="name"  class="input-lg form-control" placeholder="Name" />
+                <form:errors path="name" cssClass="help-block" element="small" />
+            </div>
+        </spring:bind>
+
+        <spring:bind path="surname">
+            <div class="form-group ${status.error ? 'has-error' : ''}">
+                <form:input path="surname" class="input-lg form-control" placeholder="Surname"/>
+                <form:errors path="surname" cssClass="help-block" element="small" />
+            </div>
+        </spring:bind>
+
+        <div class="form-group" style="position: relative; top: 12px; padding-bottom: 12px">
+            <input type="submit" class="btn btn-lg btn-info btn-block" value="Register" />
+        </div>
+    </form:form>
 </body>
 </html>

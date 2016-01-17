@@ -2,13 +2,16 @@ package organizer.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import organizer.dao.api.UserDao;
+import organizer.dao.cache.MailTaskRowMapper;
 import organizer.dao.cache.UserRowMapper;
 import organizer.logic.impl.MessageContent;
+import organizer.logic.impl.email.MailTasks;
 import organizer.models.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDaoImpl implements UserDao {
 	@Autowired
@@ -139,5 +142,14 @@ public class UserDaoImpl implements UserDao {
 			return user;
 		}
 		return null;
+	}
+
+	public MailTasks getTommorowTasks(){
+		MailTasks mailTasks = new MailTasks();
+		jdbcTemplate.query(
+			SELECT_USERS_AND_TASKS,
+			new MailTaskRowMapper(
+				mailTasks.getTaskMultimap()));
+		return mailTasks;
 	}
 }
