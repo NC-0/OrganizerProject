@@ -1,102 +1,40 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+         pageEncoding="UTF-8" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <% request.setCharacterEncoding("UTF-8"); %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Organizer</title>
     <meta name="_csrf" content="${_csrf.token}"/>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
-    <style>
-        .error {
-            color: red; font-weight: bold;
-        }
 
-        #elements{
-            position: absolute;
-            height: 200px;
-            overflow-y: scroll ;
-            overflow-x: hidden;
-            border: solid 1px lightgray;
-            border-radius: 5px;
-            position: absolute;
-            float: left;
-        }
+    <script src="/resources/js/jquery-1.10.2.min.js"></script>
+    <script src="/resources/js/bootstrap.min.js"></script>
+    <script src="/resources/js/bootstrap-select.js"></script>
+    <script src="/resources/js/bootstrap-switch.js"></script>
+    <script src="/resources/js/flatui-checkbox.js"></script>
+    <script src="/resources/js/flatui-radio.js"></script>
+    <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/resources/css/flat-ui.css" rel="stylesheet">
+    <%--<link href="/resources/css/datepicker.css" rel="stylesheet">--%>
+    <link href="/resources/css/main.css" rel="stylesheet">
+    <link href="/resources/css/style.css" rel="stylesheet">
 
-        #elements td{
-            text-align: left;
-            height: 40px;
-        }
-
-        #elements td:hover {
-            cursor: pointer;
-            cursor: hand;
-            background: #79c4e0;
-        }
-
-        .active{
-            background-color: #7DAFFF;
-        }
-
-        .delete{
-            text-align: left;
-            cursor: hand;
-            width: 10px;
-            height:20px;
-            background-color: #ffffff;
-        }
-
-        .delete:hover {
-            text-align: left;
-            cursor: hand;
-            background-color:#e01f00;
-            width: 10px;
-            height:20px;
-        }
-
-        .edit{
-            text-align: left;
-            cursor: hand;
-            width: 10px;
-            height:20px;
-            background-color: #ffffff;
-        }
-
-        .edit:hover{
-            text-align: left;
-            cursor: hand;
-            background-color: #5ce05a;
-            width: 10px;
-            height:20px;
-        }
-
-        #parent {
-            width: 1080px; margin: auto;
-            position: relative;
-        }
-
-        #content {
-            border: solid 1px lightgray;
-            border-radius: 5px;
-            position: absolute;
-            left: 230px;
-            width: 900px;
-        }
-    </style>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script>
-        $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
             jqXHR.setRequestHeader(header, token);
         });
-        function deleteCategory(cat){
-            if(cat!=0) {
+        function addTask() {
+
+        }
+        function deleteCategory(cat) {
+            if (cat != 0) {
                 $.ajax({
                     type: "POST",
                     url: "/deletecategory",
@@ -107,68 +45,136 @@
                 });
             }
         }
-        function editCategory(cat){
+        function editCategory(cat) {
             $('#editidfield').val(cat);
-            $('#editnamefield').val($('#'+cat).text());
+            $('#editnamefield').val($('#' + cat).text());
         }
-        function makeCategory(data){
+        function makeCategory(data) {
             $('#elements').empty();
-            $('#elements').append("<table>")
-            $('#elements table').append("<tr><td onclick='selectTasks(0)' class='clicktr'>All</td></tr> ")
-            for(var i=0;i<data.length;i++) {
-                $('#elements table').append("<tr><td width='200px' onclick='selectTasks("+data[i].id+")' class='clicktr' id=" + data[i].id + ">" + data[i].name + "</td><td><div class='delete' onclick='deleteCategory("+data[i].id+")'>D</div><div data-toggle=\"modal\" data-target=\"#myModal1\" class='edit' onclick='editCategory("+data[i].id+")'>U</div></td></tr>");
+            $('#elements').append('<li><div class="Item">' +
+            '<a href="#" data-toggle="modal" data-target="#myModal" class="EditTask">' +
+            '<span class="fui-plus"></span>Created</a></div></li>');
+
+            $('#elements').append("<div class=\"Categories\">");
+            $('#elements .Categories').append("<li><div class=\"Item\"><a style=\"cursor: pointer\" onclick='selectTasks(0)'><span class=\"fui-list\"></span>All</a></div></li>");
+            for (var i = 0; i < data.length; i++) {
+                $('#elements .Categories').append("<li><div class=\"Item\">" +
+                "<span style='cursor: pointer' class='fui-gear' data-toggle=\"modal\" data-target=\"#myModal1\" onclick='editCategory(" + data[i].id + ")'></span>" +
+                "<span style='cursor: pointer' class='fui-cross' onclick='deleteCategory(" + data[i].id + ")'></span>" +
+                "<a style=\"cursor: pointer\" onclick='selectTasks(" + data[i].id + ")' id=" + data[i].id + ">" + data[i].name + "</a>" +
+                "</li>");
                 $('.clicktr').click(
-                        $(function(){
-                            $('#elements table').on('click', 'tr', function(){
-                                $(this).parent().children().removeClass('active');
-                                $(this).addClass('active');
+                        $(function () {
+                            $('#elements .Categories').on('click', 'li', function () {
+                                $(this).parent().children().removeClass('Selected');
+                                $(this).addClass('Selected');
                             });
                         })
                 );
             }
             $('#elements').append("</table>")
         }
-        function loadData(){
+        function loadData() {
             $.ajax({
                 type: "GET",
                 url: "/categorylist",
-                cache:false,
-                async:true,
-                dataType :'json',
-                success: function(data){
+                cache: false,
+                async: true,
+                dataType: 'json',
+                success: function (data) {
                     makeCategory(data);
                 }
             });
         }
-        function selectTasks(cat){
+        function selectTasks(cat) {
             $("#tasktable tbody tr").remove();
-            if(cat==0){
-                $.get("http://localhost:8081/task/list", function(data) {
+            if (cat == 0) {
+                $.get("task/list", function (data) {
+                    $(".data-tasks-js").empty();
 
-                    $.each(data, function(i, task) {
+                    <!-- accordion begin -->
+                    $(".data-tasks-js").append(
+                            "<table class='table TodoList'>"+
+                                "<tr>" +
+                                    "<th class='Header' style='width: 1px'><input class='TaskSelAll' type='checkbox'></th>" +
+                                    "<th class='Header' style='min-width: 14em;'>Task name</th>" +
+                                    "<th class='Header' style='min-width: 10em;'>Date</th>" +
+                                    "<th class='Header' style='min-width: 10em;'>Priority</th>" +
+                                    "<th class='Header' style='min-width: 10em;'>Category</th>" +
+                                    "<th></th>" +
+                                "</tr>" +
+                            "</table>" +
+
+                            "<tr>" +
+                            "<div class='panel-group accordion' id='accordion' role='tablist' aria-multiselectable='true'>"
+                    );
+
+                    $.each(data, function (i, task) {
                         var date = new Date(task.date);
 
-                        $(".data-tasks-js").append(
-                                "<tr><td>" + task.name + "</td>" +
-                                "<td>" + date + "</td>" +
-                                "<td>" + task.priority + "</td>" +
-                                "<td>" + task.completed + "</td>" +
-                                "<td>" + task.category + "</td></tr>"
+                        $('.data-tasks-js').append(
+
+
+                            "<div class='panel panel-default'>" +
+                                "<div class='panel-heading' role='tab' id='heading'>" +
+                                    "<h4 class='panel-title'>" +
+                                        "<a class='collapsed' role=\"button\" data-toggle='collapse' data-parent='#accordion' href='#collapse' aria-expanded=\"false\" aria-controls=\"collapseThree\">" +
+                                            "<table class='table TodoList'>"+
+                                                "<tbody>" +
+                                                    "<tr>" +
+                                                    "<td class='Header' style='width: 1px'>" +
+                                                        "<input type=\"checkbox\" " + (task.completed ? "checked" : "") + "/>" +
+                                                    "</td>" +
+                                                    "<td class='Header' style='min-width: 14em;'>" + task.name + "</td>" +
+                                                    "<td class='Header' style='min-width: 10em;'>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "</td>" +
+                                                    "<td class='Header' style='min-width: 10em;'>" + task.priority + "</td>" +
+                                                    "<td class='Header' style='min-width: 10em;'>" +
+//                                                        "<div class=\"btns pull-right\">" +
+                                                            "<a href='task/edit?="+task.id+"' class='copy'><span style='cursor: pointer' class='fui-gear'></span></a>" +
+                                                            "<a href='task/delete?="+task.id+"' class='delete'><span style='cursor: pointer' class='fui-cross'></span></a>" +
+//                                                        "</div>" +
+                                                    "</td></tr>" +
+                                                "</tbody>" +
+                                            "</table>" +
+                                        "</a>" +
+                                    "</h4>" +
+                                "</div>" +
+                                "<div id='collapse' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading'>" +
+                                     "<div class='panel-body'>" +
+                                         "<div class='text pull-left'>" +
+                                             "Subtasks" +
+                                         "</div>" +
+                                         "<div class=\"btns pull-right\">" +
+                                            "<a href='subtask/edit' class='copy'><span style='cursor: pointer' class='fui-gear'></span></a>" +
+                                            "<a href='subtask/delete' class='delete'><span style='cursor: pointer' class='fui-cross'></span></a>" +
+                                         "</div>" +
+                                     "</div>" +
+                                "</div>" +
+                            "</div>"
                         );
                     });
 
-                });
-            }else{
-                $.get("http://localhost:8081/task/listcat/"+cat, function(data) {
+                    <!-- accordion end -->
+                    $(".data-tasks-js").append(
+                            "</div>" +
+                            "</tr>"
+                    );
 
-                    $.each(data, function(i, task) {
+                });
+            } else {
+                $.get("task/listcat/" + cat, function (data) {
+
+                    $.each(data, function (i, task) {
                         var date = new Date(task.date);
 
                         $(".data-tasks-js").append(
-                                "<tr><td>" + task.name + "</td>" +
-                                "<td>" + date + "</td>" +
+                                "<tr>" +
+                                "<td style='padding-left: 15px'>" +
+                                "<input type=\"checkbox\" " + (task.completed ? "checked" : "") + "/>" +
+                                "</td>" +
+                                "<td>" + task.name + "</td>" +
+                                "<td>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "</td>" +
                                 "<td>" + task.priority + "</td>" +
-                                "<td>" + task.completed + "</td>" +
                                 "<td>" + task.category + "</td></tr>"
                         );
                     });
@@ -179,76 +185,125 @@
     </script>
 </head>
 <body onload="loadData()">
-<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Новая категория</button>
-<!-- Modal -->
+
+<table class="Body">
+    <tr>
+        <td class="Logo">
+            <a href="">Orgasmizer</a>
+        </td>
+        <td class="Action">
+            Your tasks
+        </td>
+        <td class="Login">
+            Mykhaylo&nbsp;Skrypkin<br/>
+            <a href="j_spring_security_logout" class="Logout">Logout</a>
+        </td>
+    </tr>
+    <tr>
+        <td class="Sidebar">
+            <div class="Fix">
+                <div class="Title">Tasks</div>
+                <ul>
+
+                    <li>
+                        <div class="Item">
+                            <!-- Trigger the modal with a button -->
+                            <a href="task/create">
+                                <span class="fui-plus"></span>
+                                Create
+                            </a>
+                            <a href="task/edit">
+                                <span class="fui-plus"></span>
+                                Edit
+                            </a>
+                        </div>
+                    </li>
+                    <%--<li>--%>
+                    <%--<div class="Item">--%>
+                    <%--<a href="#" id="RemoveTasks">--%>
+                    <%--<span class="fui-cross"></span>--%>
+                    <%--Remove--%>
+                    <%--</a>--%>
+                    <%--</div>--%>
+                    <%--</li>--%>
+                </ul>
+                <div class="Title">Categories</div>
+                <ul id="elements"></ul>
+            </div>
+        </td>
+        <td class="Content" rowspan="2" colspan="2">
+            <div class="Preambula">
+                You have <span>N</span> tasks.
+            </div>
+            <table class="table TodoList">
+
+                <tbody class="data-tasks-js"></tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="Footer">
+            &copy;&nbsp;Orgasmizer Team, 2016
+        </td>
+    </tr>
+</table>
+
+
+
 <div class="modal fade bs-example-modal-md" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" da>
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add category</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel" style="text-transform: none">Add category</h4>
             </div>
             <div class="modal-body">
-                <table>
-                    <form:form action="createcategory" commandName="categoryForm">
-                        <tr>
-                            <td colspan="3" align="left"><form:errors path="name" cssClass="error"/></td>
-                        </tr>
-                        <tr>
-                            <td>Category title: </td>
-                            <td><form:input path="name" class="form-control" size="50"/></td>
-                            <td><input class="btn btn-primary" type="submit" value="Submit"/></td>
-                        </tr>
-                    </form:form>
-                </table>
+                <form:form action="createcategory" commandName="categoryForm">
+                    <div class="form-group">
+                        <form:input path="name" class="form-control" placeholder="Category name" />
+                        <form:errors path="name" cssClass="error"/>
+                    </div>
+
+                    <form:input type="hidden" path="id" id="editidfield" class="form-control" size="50"/>
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-info btn-block" value="Create" />
+                    </div>
+                </form:form>
             </div>
         </div>
     </div>
 </div>
+
 <div class="modal fade bs-example-modal-md" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" da>
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Edit category</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel" style="text-transform: none">Edit category</h4>
             </div>
             <div class="modal-body">
-                <table>
-                    <form:form action="editcategory" commandName="categoryForm">
-                        <tr>
-                            <td colspan="3" align="left"><form:errors path="name" cssClass="error"/></td>
-                        </tr>
-                        <tr>
-                            <td colspan="3" align="left"><form:input type="hidden" path="id" id="editidfield" class="form-control" size="50"/></td>
-                        </tr>
-                        <tr>
-                            <td>Category title: </td>
-                            <td><form:input path="name" class="form-control" id="editnamefield" size="50"/></td>
-                            <td><input class="btn btn-primary" type="submit" value="Submit"/></td>
-                        </tr>
-                    </form:form>
-                </table>
+                <form:form action="editcategory" commandName="categoryForm">
+                    <div class="form-group">
+                        <form:input path="name" class="form-control" id="editnamefield" placeholder="Category name" />
+                        <form:errors path="name" cssClass="error"/>
+                    </div>
+
+                    <form:input type="hidden" path="id" id="editidfield" />
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-info btn-block" value="Submit" />
+                    </div>
+
+                </form:form>
             </div>
         </div>
     </div>
 </div>
-<br><br><br>
-<div id="parent">
-    Categories
-    <div id="elements"></div>
-    <div id="content">
-        <table id="tasktable" class="data-tasks-js table table-striped" >
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Data</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Category</th>
-                </tr>
-            </thead>
-        </table>
-    </div>
-</div>
+
+
+
 </body>
 </html>

@@ -29,7 +29,7 @@ public class TaskDaoImpl implements TaskDao {
 
 	public void create(int userId, Task task) {
 		task.getName();
-		// Add Task object 	
+		// Add Task object
 		jdbcTemplate.update(TaskDao.INSERT, task.getName());
 
 		// get current task object_id from OBJECTS and set it
@@ -39,7 +39,7 @@ public class TaskDaoImpl implements TaskDao {
 		// Task Object - Fill all task attributes
 		jdbcTemplate.update(TaskDao.INSERT_DATE, taskId, task.getDate());
 		jdbcTemplate.update(TaskDao.INSERT_PRIORITY, taskId, task.getPriority());
-		jdbcTemplate.update(TaskDao.INSERT_CATEGORY, taskId, task.getCategory().getName());
+		jdbcTemplate.update(TaskDao.INSERT_CATEGORY, taskId, task.getCategory().getId());
 		jdbcTemplate.update(TaskDao.INSERT_STATUS, taskId, task.isCompleted());
 
 		// Add reference between Task and User
@@ -64,11 +64,32 @@ public class TaskDaoImpl implements TaskDao {
 			jdbcTemplate.update(UPDATE_SUBTASK_STATUS, task.getId());
 	}
 
+	public Task get(User user, int taskId) {
+		Task task = jdbcTemplate.queryForObject(
+			SELECT_TASK_BY_ID,
+			new TaskRowMapper(user),
+			taskId
+		);
+		return task;
+	}
+
 	public List <Task> get(final User user) {
-		List<Task> tasks =  jdbcTemplate.query(SELECT_LIST_OF_USER_TASKS, new TaskRowMapper(user),user.getId());
+		List<Task> tasks =  jdbcTemplate.query(
+				SELECT_LIST_OF_USER_TASKS,
+				new TaskRowMapper(user),
+				user.getId()
+		);
 		return tasks;
 	}
-	
+	public List <Task> getByCat(final User user, Category category) {
+		List<Task> tasks =  jdbcTemplate.query(
+				SELECT_LIST_OF_USER_TASKS_BY_CAT,
+				new TaskRowMapper(user), user.getId(),
+				String.valueOf(category.getId())
+		);
+		return tasks;
+	}
+
 	public List <Subtask> getSubtasks (final Task task){
 //		List <Subtask> subtasks = (ArrayList<Subtask>)jdbcTemplate.query(TaskDao.SELECT_SUBTASKS_BY_TASK_ID, new Object[]{task.getId()},
 //				new RowMapper <Subtask>() {

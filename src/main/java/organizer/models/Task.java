@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -13,11 +14,12 @@ public class Task {
 
 	private int id;
 
-	@Size(min=4, max=20)
+	@Size(min=1, max=20)
 	private String name;
 
 	@NotNull
-	@DateTimeFormat(pattern = "yyyy-mm-dd")
+	@DateTimeFormat(pattern = "dd-mm-yy")
+	@Future(message = "Date must be greater than current date")
 	private Date date;
 
 	private int priority;

@@ -1,0 +1,32 @@
+
+.accordion {
+	/*width: 400px;
+	margin: 100px auto;*/
+}
+.accordion a {
+	display: block;
+	/*padding: 10px 15px;*/
+	text-decoration: none;
+}
+.accordion .panel-heading {
+	padding: 0;
+	border-bottom: 0;
+}
+
+/*
+.btns a {
+	padding: 0;
+	padding-top: 4px;
+	float: left;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	background: #33333D;
+	border-radius: 50%;
+}
+.btns a + a {
+	margin-left: 3px;
+}
+.btns a:hover {
+	background: #4A4A59;
+}*/
