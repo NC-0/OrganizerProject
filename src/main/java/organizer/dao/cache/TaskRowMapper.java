@@ -23,15 +23,17 @@ public class TaskRowMapper extends CachedRowMapper<Task> {
 
     @Override
     public Task createObject(int id, ResultSet resultSet) throws SQLException {
-        Task task =  new Task(
-                resultSet.getString("taskname"),
-                resultSet.getDate("dates"),
-                resultSet.getInt("priority"),
-                null,
-                resultSet.getBoolean("status"),
-                null
 
+        Task task =  new Task(
+            resultSet.getString("taskname"),
+            resultSet.getDate("dates"),
+            resultSet.getInt("priority"),
+            null,
+            resultSet.getBoolean("status"),
+            null
         );
+
+        task.setId(id);
         return task;
     }
 }
