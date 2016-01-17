@@ -24,13 +24,20 @@ public class CategoryController {
 	@Qualifier("categoryDaoImpl")
 	private CategoryDao categoryDao;
 
+	@RequestMapping(value = "/addcategory", method = RequestMethod.GET)
+	public String addCategory(Map<String, Object> model){
+		Category category = new Category();
+		model.put("categoryForm",category);
+		return "createcategory";
+	}
+
 	@RequestMapping(value = "/createcategory", method = RequestMethod.POST)
 	public String createCategory(Authentication authentication,
 										  @Valid @ModelAttribute("categoryForm") Category categoryForm,
 										  BindingResult result,
 										  Map<String, Object> model){
 		if(result.hasErrors())
-			return "organizer";
+			return "createcategory";
 		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
 		categoryForm.setUser(authorizedUser.getUser());
 		categoryForm.setName(categoryForm.getName().trim());
@@ -46,13 +53,22 @@ public class CategoryController {
 		return categories;
 	}
 
+	@RequestMapping(value = "/updatecategory", method = RequestMethod.GET)
+	public String updateCategory(HttpServletRequest request){
+		Category category = new Category();
+		category.setId(Integer.parseInt(request.getParameter("categoryid")));
+		category.setName(String.valueOf(request.getParameter("categoryname")));
+		request.setAttribute("categoryForm",category);
+		return "editcategory";
+	}
+
 	@RequestMapping(value = "/editcategory", method = RequestMethod.POST)
 	public String editCategory(Authentication authentication,
-										  @Valid @ModelAttribute("categoryForm") Category categoryForm,
-										  BindingResult result,
-										  Map<String, Object> model){
+										@Valid @ModelAttribute("categoryForm") Category categoryForm,
+										BindingResult result,
+										Map<String, Object> model){
 		if(result.hasErrors())
-			return "organizer";
+			return "editcategory";
 		categoryForm.setName(categoryForm.getName().trim());
 		categoryDao.update(categoryForm);
 		return "redirect:/protected";
