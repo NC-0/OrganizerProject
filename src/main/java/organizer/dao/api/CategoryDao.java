@@ -55,10 +55,11 @@ public interface CategoryDao {
 	);
 
 	String DELETE_REF =
-		"DELETE FROM " +
-			"OBJREFERENCE " +
-			"WHERE " +
-			"reference = ? " +
-			"AND attr_id = " + REF_ATTR;
+		"DELETE FROM objects " +
+			"WHERE object_id " +
+			"IN (" +
+			"SELECT reference " +
+			"FROM objreference " +
+			"WHERE object_id = ?)";
 
 }

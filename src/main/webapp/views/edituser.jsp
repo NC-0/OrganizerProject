@@ -45,7 +45,27 @@
             left: 10px;
             top: 10px;
         }
+
+        .err{
+            color:#b94a48;
+            background-color:#f2dede;
+            border-color:#ebccd1;
+            border-radius: 5px;
+            padding-left: 15px;
+        }
+
     </style>
+    <script>
+        $(document).ready(function() {
+            var check = ${checkedpass};
+            if(check==false){
+                $('#passverify').text('');
+                $('#pass1').removeClass('has-error');
+                $('#pass2').removeClass('has-error');
+            }
+        });
+    </script>
+
 </head>
 <body>
 <form:form id="login" cssClass="col-md-4 col-md-offset-4" action="edituser" commandName="userForm">
@@ -61,9 +81,7 @@
     </table>
     <hr/>
 
-    <c:if test="${not empty message}">
-        <div class="alert alert-danger">${message}</div>
-    </c:if>
+    <div class="form-group has-error"><div class="err"><form:errors cssClass="help-block" element="small" /></div></div>
 
     <spring:bind path="email">
         <div class="form-group ${status.error ? 'has-error' : ''}">
@@ -91,16 +109,15 @@
     </div>
 
     <spring:bind path="password">
-        <div class="form-group ${status.error ? 'has-error' : ''}">
-            <form:password path="password"  class="input-lg form-control" placeholder="Password" />
-            <form:errors path="password" cssClass="help-block" element="small" />
+        <div id="pass1" class="form-group ${status.error? 'has-error' : ''}">
+            <form:password path="password" class="input-lg form-control" placeholder="Password" />
+            <form:errors path="password" id="passverify" cssClass="help-block" element="small" />
         </div>
     </spring:bind>
 
     <spring:bind path="password">
-        <div class="form-group ${status.error ? 'has-error' : ''}">
+        <div id="pass2" class="form-group ${status.error ? 'has-error' : ''}">
             <form:password path="matchingPassword" class="input-lg form-control" placeholder="Password confirmation" />
-            <form:errors cssClass="help-block" element="small" />
         </div>
     </spring:bind>
 

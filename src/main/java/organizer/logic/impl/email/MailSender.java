@@ -32,7 +32,7 @@ public class MailSender {
 
 	private MimeMessage createCustomMessage(String mail,String text,String subject,String body) throws  MessagingException{
 		MimeMessage message = simpleMailSender.createMimeMessage();
-		MimeMessageHelper messageHelper = new MimeMessageHelper(message,true);
+		MimeMessageHelper messageHelper = new MimeMessageHelper(message,true,"UTF-8");
 		messageHelper.setFrom(MessageContent.MAIL);
 		messageHelper.setTo(mail);
 		messageHelper.setSubject(subject);

@@ -49,9 +49,11 @@
         
         <bean id="userDaoImpl" class="organizer.dao.impl.UserDaoImpl" scope="prototype"></bean>
         
-         <bean id="taskDaoImpl" class="organizer.dao.impl.TaskDaoImpl" scope="prototype"></bean>
+        <bean id="taskDaoImpl" class="organizer.dao.impl.TaskDaoImpl" scope="prototype"></bean>
         
         <bean id="categoryDaoImpl" class="organizer.dao.impl.CategoryDaoImpl" scope="prototype"></bean>
+
+        <bean id="subtaskDaoImpl" class="organizer.dao.impl.SubtaskDaoImpl" scope="prototype"></bean>
 
         <bean id="simpleMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
             <property name="host" value="smtp-mail.outlook.com" />

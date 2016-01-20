@@ -4,8 +4,10 @@ import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
@@ -32,6 +34,7 @@ import java.sql.Date;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class UserController {
@@ -133,10 +136,12 @@ public class UserController {
 	public String editUser(@Valid @ModelAttribute("userForm") User userForm,
 								  BindingResult result,
 								  Authentication authentication,
-								  @RequestParam(value = "editecheckbox", required = false) boolean checkEdit){
+								  @RequestParam(value = "editecheckbox", required = false) boolean checkEdit,
+								  HttpServletRequest request){
+		request.setAttribute("checkedpass",checkEdit);
+		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
 		if (result.hasErrors()) {
 			if(result.hasFieldErrors("password") && !result.hasFieldErrors("name") && !result.hasFieldErrors("surname")){
-				CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
 				userForm.setId(authorizedUser.getId());
 				userForm.setEnabled(true);
 				authorizedUser.setName(userForm.getName());
@@ -152,6 +157,7 @@ public class UserController {
 			}
 			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 			String hashedPass = bCryptPasswordEncoder.encode(userForm.getPassword());
+			userForm.setId(authorizedUser.getId());
 			userForm.setPassword(hashedPass);
 			userDaoImpl.editPassword(userForm);
 		}
@@ -169,5 +175,37 @@ public class UserController {
 			userDaoImpl.delete(authorizedUser.getId());
 			return "redirect:/j_spring_security_logout";
 		}
+	}
+
+	@RequestMapping(value = "/restore",method = RequestMethod.GET)
+	public String restore(Authentication authentication){
+		if(authentication!=null)
+			return "redirect:/";
+		return "restore";
+	}
+
+	@RequestMapping(value = "/restorepass",method = RequestMethod.POST)
+	public String restorePassword(HttpServletRequest request){
+		String email = request.getParameter("email");
+		if(userDaoImpl.exist(email)){
+			String generatedString = RandomStringUtils.randomAlphanumeric(10);
+			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+			String hashedPass = bCryptPasswordEncoder.encode(generatedString);
+			User user = userDaoImpl.get(email);
+			user.setPassword(hashedPass);
+			userDaoImpl.editPassword(user);
+			try {
+				mailSender.sendMail(email,
+					generatedString,
+					MessageContent.MAIL_SUBJECT_FORGET_PASS,
+					MessageContent.MAIL_TEXT_FORGET);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+			request.setAttribute("message",MessageContent.EMAIL_PASS);
+		}else {
+			request.setAttribute("message",String.format(MessageContent.USER_NOT_EXIST,email));
+		}
+		return "restore";
 	}
 }

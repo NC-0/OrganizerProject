@@ -1,6 +1,4 @@
 ﻿<%@ page contentType="text/html; charset=UTF-8" %>
-
-
 <html>
 <head>
 </head>
@@ -72,7 +70,9 @@
 <div id="bottomalign">
    <div class="bottom1">
        <div class="mesg">${message}</div>
-       <a style="color: #ffffff" href="/registration">Registration</a>&nbsp;&nbsp;&nbsp;<a style="color: #ffffff" href="/login">Sign in</a>
+       <a style="color: #ffffff" href="/registration">Registration</a>&nbsp;&nbsp;&nbsp;
+       <a style="color: #ffffff" href="/login">Sign in</a>&nbsp;&nbsp;&nbsp;
+       <a style="color: #ffffff" href="/restore">Forget password?</a>
    </div>
 </div>
 

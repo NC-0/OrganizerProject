@@ -19,5 +19,4 @@ public class HelloController {
 			return "redirect:/protected";
 		return "hello";
 	}
-	
 }

@@ -1,0 +1,25 @@
+package organizer.controllers;
+
+import com.google.common.base.Throwables;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+
+@Controller
+public class ErrorController {
+
+	@RequestMapping("error")
+	public String performError(HttpServletRequest request){
+		Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+		Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
+		String message = null;
+		if(statusCode!=null)
+			message = String.valueOf(statusCode);
+		if(throwable!=null)
+			message = Throwables.getRootCause(throwable).getMessage();
+		request.setAttribute("message",message);
+		return "error";
+	}
+}
+

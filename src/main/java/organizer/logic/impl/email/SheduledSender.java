@@ -23,7 +23,9 @@ public class SheduledSender {
 	@Qualifier("mailSender")
 	private MailSender mailSender;
 
-	@Scheduled(cron = "01 26 20 * * *")
+	private String[] colors = {"#fe5537","#FF9933","#fedf38","#1CE333","#33CCFF"};
+
+	@Scheduled(cron = "01 50 16 * * *")
 	public void reminder() throws MessagingException {
 		MailTasks mailTasks = userDaoImpl.getTommorowTasks();
 		Set<String> mails = mailTasks.getTaskMultimap().keySet();
@@ -33,7 +35,7 @@ public class SheduledSender {
 			List<Task> taskList = (List<Task>) mailTasks.getTaskMultimap().get(mail);
 			String text="";
 			for(int j=0;j<taskList.size();j++)
-				text=text+String.format(MessageContent.EMAIL_TASK,taskList.get(j).getName());
+				text=text+String.format(MessageContent.EMAIL_TASK,colors[taskList.get(j).getPriority()-1],taskList.get(j).getName());
 			mailSender.sendMail(mail,text,MessageContent.MAIL_SUBJECT_NOTIFY,MessageContent.EMAIL_TASK_NOTIFY);
 		}
 	}

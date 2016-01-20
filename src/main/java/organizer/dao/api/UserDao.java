@@ -45,8 +45,8 @@ public interface UserDao {
 	String UPDATE_PASSWORD 	= "UPDATE attributes usr_attr SET usr_attr.value = ? WHERE usr_attr.attr_id = " + PASSWORD_ATTR + "  and usr_attr.object_id = ?";
 	String UPDATE_ENABLED	= "UPDATE attributes usr_attr SET usr_attr.value = ? WHERE usr_attr.attr_id = " + ENABLED_ATTR + "  and usr_attr.object_id = ?";
 
-	String DELETE_OBJECT 					= "DELETE objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
-	String DELETE_OBJECTS_REF_T0_USER	= "DELETE objects WHERE object_id IN (SELECT reference FROM objreference WHERE object_id = ?)";
+	String DELETE_OBJECT 					= "DELETE FROM objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
+	String DELETE_OBJECTS_REF_T0_USER	= "DELETE FROM objects WHERE object_id IN (SELECT reference FROM objreference WHERE object_id = ?)";
 
 	String SELECT_USER_BY_EMAIL = "SELECT " +
 		"verify_attr.VALUE as verify," +
@@ -108,18 +108,25 @@ public interface UserDao {
 
 	String SELECT_USERS_AND_TASKS ="SELECT " +
 		"task_obj.name as task, " +
-		"usr_attr.value as mail " +
+		"usr_attr.value as mail, " +
+		"task_attr.value as priorr " +
 		"FROM " +
 		"objects task_obj, " +
 		"objects usr_obj, " +
 		"ATTRIBUTES usr_attr, " +
+		"ATTRIBUTES task_attr, " +
+		"ATTRIBUTES date_attr, " +
 		"objreference ref " +
 		"WHERE " +
 		"task_obj.OBJECT_TYPE_ID=1 AND " +
 		"usr_obj.OBJECT_TYPE_ID=3 AND " +
 		"usr_attr.ATTR_ID=6 AND " +
+		"task_attr.ATTR_ID=2 AND " +
+		"task_attr.OBJECT_ID=task_obj.OBJECT_ID AND " +
+		"date_attr.OBJECT_ID=task_obj.OBJECT_ID AND " +
 		"usr_attr.OBJECT_ID=usr_obj.OBJECT_ID AND " +
 		"ref.ATTR_ID=10 AND " +
 		"ref.OBJECT_ID=usr_obj.OBJECT_ID AND " +
-		"ref.REFERENCE=task_obj.OBJECT_ID";
+		"ref.REFERENCE=task_obj.OBJECT_ID AND " +
+		"to_char(date_attr.DATE_VALUE)=to_char(sysdate)";
 }

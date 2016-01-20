@@ -22,15 +22,13 @@
     <link href="/resources/css/flat-ui.css" rel="stylesheet">
     <link href="/resources/css/main.css" rel="stylesheet">
     <link href="/resources/css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="/resources/css/styles.css"><!-- подключаю свои стили для таблицы -->
-
+    <link href="/resources/css/styles.css" rel="stylesheet">
     <script>
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
             jqXHR.setRequestHeader(header, token);
         });
-
         function deleteCategory(cat) {
             if (cat != 0) {
                 $.ajax({
@@ -44,17 +42,16 @@
             }
         }
 
-        function deleteTask(task) {
+        function deleteTask(id) {
             $.ajax({
                 type: "post",
                 url: "task/delete",
-                data: { 'id': task.id },
+                data: { 'id': id },
                 success: function(){
                     location.reload();
                 }
             });
         }
-
         function makeCategory(data) {
             $('#elements').empty();
             $('#elements').append('<li><div class="Item">' +
@@ -65,6 +62,7 @@
             $('#elements .Categories').append("<li><div class=\"Item\"><a style=\"cursor: pointer\" onclick='selectTasks(0)'><span class=\"fui-list\"></span>All</a></div></li>");
             for (var i = 0; i < data.length; i++) {
                 $('#elements .Categories').append("<li><div class=\"Item\">" +
+                        "<a href='/calendar?cat=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-calendar-solid'></span></a>"+
                         "<a href='/updatecategory?categoryid=" + data[i].id + "&categoryname="+data[i].name+"' class='EditTask'><span style='cursor: pointer' class='fui-gear'></span></a>" +
                         "<span style='cursor: pointer' class='fui-cross' onclick='deleteCategory(" + data[i].id + ")'></span>" +
                         "<a style=\"cursor: pointer\" onclick='selectTasks(" + data[i].id + ")' id=" + data[i].id + ">" + data[i].name + "</a>" +
@@ -94,6 +92,18 @@
             selectTasks(0);
         }
 
+        function selectTasks(cat) {
+            $("#tasktable tbody tr").remove();
+            if (cat == 0) {
+                $.get("task/list", function (data) {
+                    addRows(data);
+                });
+            } else {
+                $.get("task/listcat/" + cat, function (data) {
+                    addRows(data);
+                });
+            }
+        }
         function addRows(data) {
             $(".table-body").empty();
 
@@ -157,20 +167,6 @@
 
         }
 
-        function selectTasks(cat) {
-            $("#tasktable tbody tr").remove();
-            if (cat == 0) {
-                $.get("task/list", function (data) {
-                    addRows(data);
-                });
-            } else {
-                $.get("task/listcat/" + cat, function (data) {
-                    addRows(data);
-                });
-            }
-        }
-
-
     </script>
 </head>
 <body onload="loadData()">
@@ -184,6 +180,7 @@
             Your tasks
         </td>
         <td class="Login">
+            <a href='/calendar?cat=0' class='EditTask'><span style='cursor: pointer' class='fui-calendar-solid'></span></a>
             <a href='/updateprofile' class='EditTask'><span style='cursor: pointer' class='fui-gear'></span></a>
             ${username}&nbsp;${usersurname}<br/>
             <a href="j_spring_security_logout" class="Logout">Logout</a>
@@ -210,26 +207,26 @@
         </td>
         <td class="Content" rowspan="2" colspan="2">
             <div class="Preambula">
-                You have <span>N</span> tasks.
+                You have <span id="taskSize"></span> tasks.
             </div>
 
-                <section id="tasktable" class="table table-data TodoList">
+            <section id="tasktable" class="table table-data TodoList">
 
-                    <div class="data-tasks-js">
-                        <!-- заголовочные столбцы таблицы, - неизменяемая строка таблицы -->
-                        <div class="row table-header">
-                            <div class="col-xs-1 Header"><input class='TaskSelAll' type='checkbox' disabled="true"></div>
-                            <div class="col-xs-3 Header">Task name</div>
-                            <div class="col-xs-3 Header">Date</div>
-                            <div class="col-xs-2 Header">Priority</div>
-                            <div class="col-xs-3 Header">Category</div>
-                        </div>
-                        <div class='row table-body'>
-                            <div class='panel-group accordion' id='accordion' role='tablist' aria-multiselectable='true'>  <!-- accordion begin  -->
-                            </div>
+                <div class="data-tasks-js">
+                    <!-- заголовочные столбцы таблицы, - неизменяемая строка таблицы -->
+                    <div class="row table-header">
+                        <div class="col-xs-1 Header"><input class='TaskSelAll' type='checkbox' disabled="true"></div>
+                        <div class="col-xs-3 Header">Task name</div>
+                        <div class="col-xs-3 Header">Date</div>
+                        <div class="col-xs-2 Header">Priority</div>
+                        <div class="col-xs-3 Header">Operations</div>
+                    </div>
+                    <div class='row table-body'>
+                        <div class='panel-group accordion' id='accordion' role='tablist' aria-multiselectable='true'>  <!-- accordion begin  -->
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
         </td>
     </tr>
     <tr>
@@ -241,3 +238,4 @@
 
 </body>
 </html>
+

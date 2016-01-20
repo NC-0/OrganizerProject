@@ -20,6 +20,7 @@ public class MailTaskRowMapper implements RowMapper {
 	public Object mapRow(ResultSet resultSet, int i) throws SQLException {
 		Task task = new Task();
 		task.setName(resultSet.getString("task"));
+		task.setPriority(resultSet.getInt("priorr"));
 		taskMultimap.put(resultSet.getString("mail"),task);
 		return task;
 	}
