@@ -30,8 +30,7 @@ public interface TaskDao {
 	int STATUS_ATTR   = 4;
 	int USER_REF_ATTR = 10;
 	int SUBTASK_ATTR_TYPE = 5;
-	int TASK_REF_SUBTASK = 12;
-	int OBJTYPE_CATEGORY = 4;
+	int TASK_REF_CATEGORY = 13;
 
 	// Create Task requests
 	String INSERT          = "INSERT INTO OBJECTS (PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION) VALUES (NULL, " + OBJ_TYPE + ", ?, NULL)";
@@ -40,16 +39,19 @@ public interface TaskDao {
 	String INSERT_CATEGORY = "INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE) VALUES (" + CATEGORY_ATTR + ", ?, ?, NULL)";
 	String INSERT_STATUS   = "INSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE, DATE_VALUE) VALUES (" + STATUS_ATTR + ", ?, ?, NULL)";
 	String INSERT_REF_USER = "INSERT INTO OBJREFERENCE (ATTR_ID,  REFERENCE, OBJECT_ID) VALUES (" + USER_REF_ATTR + ", ?, ?)";
+	String INSERT_REF_CATEGORY = "INSERT INTO OBJREFERENCE (ATTR_ID,  REFERENCE, OBJECT_ID) VALUES (" + TASK_REF_CATEGORY + ", ?, ?)";
 
 	// Delete Task requests
 	String DELETE_OBJECT = "DELETE FROM objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
 	String DELETE_REF_TO_USER = "DELETE objreference WHERE attr_id = " + USER_REF_ATTR + " AND REFERENCE = ?";
+	String DELETE_REF_TO_CATEGORY = "DELETE objreference WHERE attr_id = " + TASK_REF_CATEGORY + " AND REFERENCE = ?";
 
 	// Update Task requests
 	String UPDATE_NAME = "UPDATE objects SET name = ? WHERE object_id = ?";
 	String UPDATE_DATE = "UPDATE attributes SET date_value = ? WHERE attr_id = " + DATE_ATTR +" and object_id = ?";
 	String UPDATE_PRIORITY = "UPDATE attributes SET value = ? WHERE attr_id = " + PRIORITY_ATTR +" and object_id = ?";
 	String UPDATE_CATEGORY = "UPDATE attributes SET value = ? WHERE attr_id = " + CATEGORY_ATTR +" and object_id = ?";
+	String UPDATE_CATEGORY_REF = "UPDATE OBJREFERENCE SET reference = ? WHERE attr_id = " + TASK_REF_CATEGORY +" and object_id = ?";
 	String UPDATE_STATUS = "UPDATE attributes SET value = ? WHERE attr_id = " + STATUS_ATTR +" and object_id = ?";
 	String UPDATE_SUBTASK_STATUS = "UPDATE attributes SET value = 1 WHERE attr_id =" + SubtaskDao.IS_COMPLETED_ATTR +
 		" AND object_id IN (SELECT object_id FROM objects WHERE parent_id = ?)";

@@ -20,9 +20,9 @@
     <script src="/resources/js/flatui-radio.js"></script>
     <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="/resources/css/flat-ui.css" rel="stylesheet">
-    <link href="/resources/css/datepicker.css" rel="stylesheet">
     <link href="/resources/css/main.css" rel="stylesheet">
     <link href="/resources/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/resources/css/styles.css"><!-- подключаю свои стили для таблицы -->
 
     <script>
         $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
@@ -30,6 +30,7 @@
             var header = $("meta[name='_csrf_header']").attr("content");
             jqXHR.setRequestHeader(header, token);
         });
+
         function deleteCategory(cat) {
             if (cat != 0) {
                 $.ajax({
@@ -42,6 +43,18 @@
                 });
             }
         }
+
+        function deleteTask(task) {
+            $.ajax({
+                type: "post",
+                url: "task/delete",
+                data: { 'id': task.id },
+                success: function(){
+                    location.reload();
+                }
+            });
+        }
+
         function makeCategory(data) {
             $('#elements').empty();
             $('#elements').append('<li><div class="Item">' +
@@ -80,102 +93,84 @@
             });
             selectTasks(0);
         }
+
+        function addRows(data) {
+            $(".table-body").empty();
+
+            $.each(data, function (i, task) {
+                var date = new Date(task.date);
+
+                $('.table-body').append(
+                        "<div class='panel panel-default'>" +
+                            "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
+                                "<a class='collapsed' role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + i + "' aria-expanded='false' aria-controls='collapse'>" +
+                                    "<div class='row'>" +
+                                        "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
+                                        "<div class='col-xs-3 Header'>" + task.name + "</div>" +
+                                        "<div class='col-xs-3 Header'>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "</div>" +
+                                        "<div class='col-xs-2 Header'>" + task.priority + "</div>" +
+                                        "<div class='col-xs-3 Header'>" +
+                                            "<a href='task/edit?id="+task.id+"' class='copy'>" +
+                                                "<span style='cursor: pointer' class='fui-gear'></span>" +
+                                            "</a>" +
+//                                            "<a data-method='post' href='task/delete?id="+task.id+"' class='copy'>" +
+                                                "<span style='cursor: pointer' class='fui-cross' onclick='deleteTask(" + task + ")' ></span>" +
+//                                            "</a>" +
+                                        "</div>" +
+                                    "</div>" +
+                                "</a>" +
+                            "</div>" +
+                            "<div id='collapse"+i+"' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading'>" +
+                                "<div class='panel-body'>" +
+                                        "<div class='row'>" +
+                                            "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
+                                            "<div class='col-xs-3 Header'>SubTask name</div>" +
+                                            "<div class='col-xs-3 Header'>Date</div>" +
+                                            "<div class='col-xs-2 Header'>Priority</div>" +
+                                            "<div class='col-xs-3 Header'>" +
+                                                "<a href='task/edit?="+task.id+"' class='copy'><span style='cursor: pointer' class='fui-gear'></span></a>" +
+//                                                "<a href='task/delete?="+task.id+"' class='delete'><span style='cursor: pointer' class='fui-cross'></span></a>" +
+                                                "<span style='cursor: pointer' class='fui-cross' onclick='deleteTask(" + task + ")'></span>" +
+                                            "</div>" +
+                                        "</div>" +
+
+                                        "<div class='row'>" +
+                                            "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
+                                            "<div class='col-xs-3 Header'>SubTask name</div>" +
+                                            "<div class='col-xs-3 Header'>Date</div>" +
+                                            "<div class='col-xs-2 Header'>Priority</div>" +
+                                            "<div class='col-xs-3 Header'>" +
+                                            "<a href='task/edit?="+task.id+"' class='copy'>" +
+                                                "<span style='cursor: pointer' class='fui-gear'></span>" +
+                                            "</a>" +
+                                            "<a href='task/delete?="+task.id+"' class='delete'>" +
+                                                "<span style='cursor: pointer' class='fui-cross'></span>" +
+                                            "</a>" +
+                                            "</div>" +
+                                        "</div>" +
+
+                                "</div>" +
+                            "</div>" +
+                        "</div>"
+                );
+            });
+
+        }
+
         function selectTasks(cat) {
             $("#tasktable tbody tr").remove();
             if (cat == 0) {
                 $.get("task/list", function (data) {
-                    $(".data-tasks-js").empty();
-
-                    <!-- accordion begin -->
-                    $(".data-tasks-js").append(
-                            "<table class='table TodoList'>"+
-                            "<tr>" +
-                            "<th class='Header' style='width: 1px'><input class='TaskSelAll' type='checkbox'></th>" +
-                            "<th class='Header' style='min-width: 14em;'>Task name</th>" +
-                            "<th class='Header' style='min-width: 10em;'>Date</th>" +
-                            "<th class='Header' style='min-width: 10em;'>Priority</th>" +
-                            "<th class='Header' style='min-width: 10em;'>Category</th>" +
-                            "<th></th>" +
-                            "</tr>" +
-                            "</table>" +
-
-                            "<tr>" +
-                            "<div class='panel-group accordion' id='accordion' role='tablist' aria-multiselectable='true'>"
-                    );
-
-                    $.each(data, function (i, task) {
-                        var date = new Date(task.date);
-
-                        $('.data-tasks-js').append(
-
-
-                                "<div class='panel panel-default'>" +
-                                "<div class='panel-heading' role='tab' id='heading'>" +
-                                "<h4 class='panel-title'>" +
-                                "<a class='collapsed' role=\"button\" data-toggle='collapse' data-parent='#accordion' href='#collapse' aria-expanded=\"false\" aria-controls=\"collapseThree\">" +
-                                "<table class='table TodoList'>"+
-                                "<tbody>" +
-                                "<tr>" +
-                                "<td class='Header' style='width: 1px'>" +
-                                "<input type=\"checkbox\" " + (task.completed ? "checked" : "") + "/>" +
-                                "</td>" +
-                                "<td class='Header' style='min-width: 14em;'>" + task.name + "</td>" +
-                                "<td class='Header' style='min-width: 10em;'>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "</td>" +
-                                "<td class='Header' style='min-width: 10em;'>" + task.priority + "</td>" +
-                                "<td class='Header' style='min-width: 10em;'>" +
-//                                                        "<div class=\"btns pull-right\">" +
-                                "<a href='task/edit?="+task.id+"' class='copy'><span style='cursor: pointer' class='fui-gear'></span></a>" +
-                                "<a href='task/delete?="+task.id+"' class='delete'><span style='cursor: pointer' class='fui-cross'></span></a>" +
-//                                                        "</div>" +
-                                "</td></tr>" +
-                                "</tbody>" +
-                                "</table>" +
-                                "</a>" +
-                                "</h4>" +
-                                "</div>" +
-                                "<div id='collapse' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading'>" +
-                                "<div class='panel-body'>" +
-                                "<div class='text pull-left'>" +
-                                "Subtasks" +
-                                "</div>" +
-                                "<div class=\"btns pull-right\">" +
-                                "<a href='subtask/edit' class='copy'><span style='cursor: pointer' class='fui-gear'></span></a>" +
-                                "<a href='subtask/delete' class='delete'><span style='cursor: pointer' class='fui-cross'></span></a>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>" +
-                                "</div>"
-                        );
-                    });
-
-                    <!-- accordion end -->
-                    $(".data-tasks-js").append(
-                            "</div>" +
-                            "</tr>"
-                    );
-
+                    addRows(data);
                 });
             } else {
                 $.get("task/listcat/" + cat, function (data) {
-
-                    $.each(data, function (i, task) {
-                        var date = new Date(task.date);
-
-                        $(".data-tasks-js").append(
-                                "<tr>" +
-                                "<td style='padding-left: 15px'>" +
-                                "<input type=\"checkbox\" " + (task.completed ? "checked" : "") + "/>" +
-                                "</td>" +
-                                "<td>" + task.name + "</td>" +
-                                "<td>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "</td>" +
-                                "<td>" + task.priority + "</td>" +
-                                "<td>" + task.category + "</td></tr>"
-                        );
-                    });
-
+                    addRows(data);
                 });
             }
         }
+
+
     </script>
 </head>
 <body onload="loadData()">
@@ -206,10 +201,6 @@
                                 <span class="fui-plus"></span>
                                 Create
                             </a>
-                            <a href="task/edit">
-                                <span class="fui-plus"></span>
-                                Edit
-                            </a>
                         </div>
                     </li>
                 </ul>
@@ -222,10 +213,23 @@
                 You have <span>N</span> tasks.
             </div>
 
-            <table id="tasktable" class="table TodoList">
+                <section id="tasktable" class="table table-data TodoList">
 
-                <tbody class="data-tasks-js"></tbody>
-            </table>
+                    <div class="data-tasks-js">
+                        <!-- заголовочные столбцы таблицы, - неизменяемая строка таблицы -->
+                        <div class="row table-header">
+                            <div class="col-xs-1 Header"><input class='TaskSelAll' type='checkbox' disabled="true"></div>
+                            <div class="col-xs-3 Header">Task name</div>
+                            <div class="col-xs-3 Header">Date</div>
+                            <div class="col-xs-2 Header">Priority</div>
+                            <div class="col-xs-3 Header">Category</div>
+                        </div>
+                        <div class='row table-body'>
+                            <div class='panel-group accordion' id='accordion' role='tablist' aria-multiselectable='true'>  <!-- accordion begin  -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
         </td>
     </tr>
     <tr>

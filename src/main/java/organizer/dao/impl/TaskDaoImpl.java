@@ -44,12 +44,16 @@ public class TaskDaoImpl implements TaskDao {
 
 		// Add reference between Task and User
 		jdbcTemplate.update(TaskDao.INSERT_REF_USER, taskId, userId);
+
+		// Add reference between Task and Category
+		jdbcTemplate.update(TaskDao.INSERT_REF_CATEGORY, taskId, userId);
 	}
 
 	public void delete(Task task) {
-		System.out.println("deleting");
 		// delete reference to parent user
 		jdbcTemplate.update(TaskDao.DELETE_REF_TO_USER, task.getId());
+		// delete reference to parent category
+		jdbcTemplate.update(TaskDao.DELETE_REF_TO_CATEGORY, task.getId());
 		// delete task
 		jdbcTemplate.update(TaskDao.DELETE_OBJECT, task.getId());
 	}
@@ -60,6 +64,11 @@ public class TaskDaoImpl implements TaskDao {
 		jdbcTemplate.update(UPDATE_PRIORITY, task.getPriority(), task.getId());
 		jdbcTemplate.update(UPDATE_CATEGORY, task.getCategory().getId(), task.getId());
 		jdbcTemplate.update(UPDATE_STATUS, task.isCompleted(), task.getId());
+
+		// update category reference
+		jdbcTemplate.update(UPDATE_CATEGORY_REF, task.getCategory().getId(), task.getId());
+
+		// update all subtasks
 		if (task.isCompleted())
 			jdbcTemplate.update(UPDATE_SUBTASK_STATUS, task.getId());
 	}

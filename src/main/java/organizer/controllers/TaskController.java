@@ -15,6 +15,7 @@ import organizer.models.Category;
 import organizer.models.Task;
 import organizer.models.User;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -44,6 +45,15 @@ public class TaskController {
 		priorities.put("Normal", 3);
 		priorities.put("Low", 4);
 		priorities.put("So Low", 5);
+	}
+
+	public static Map<Integer, String> priorities2 = new LinkedHashMap<Integer, String>();
+	static {
+		priorities2.put(1, "Very High");
+		priorities2.put(2, "High");
+		priorities2.put(3, "Normal");
+		priorities2.put(4, "Low");
+		priorities2.put(5, "So Low");
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
@@ -87,7 +97,7 @@ public class TaskController {
 		}
 
 		// add categories to user
-		user.setCategories(categoryList);
+		//user.setCategories(categoryList);
 
 		// Init set of user categories loaded from db
 		model.addAttribute("categories", categoryDisplayList);
@@ -129,11 +139,6 @@ public class TaskController {
 		return "redirect:/";
 	}
 
-	/**
-	 * @param task - get information that user had input
-	 * @param result - var that contains binding errors
-	 * @return redirect to create-task page if was validation error otherwise to the success page
-	 */
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	public String editTask(@Valid @ModelAttribute("taskForm") Task task,
 							 BindingResult result,
@@ -183,6 +188,14 @@ public class TaskController {
 		category.setId(cat);
 		List<Task> tasks = taskDaoImpl.getByCat(user,category);
 		return tasks;
+	}
+
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public void deleteTask(HttpServletRequest request, Authentication authentication) {
+		Task task = new Task();
+		int id = Integer.parseInt(request.getParameter("id"));
+		task.setId(id);
+		taskDaoImpl.delete(task);
 	}
 
 }
