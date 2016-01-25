@@ -13,12 +13,12 @@ public class ErrorController {
 	public String performError(HttpServletRequest request){
 		Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
 		Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
-		String message = null;
+//		String requestUri = (String) request.getAttribute("javax.servlet.error.request_uri");
 		if(statusCode!=null)
-			message = String.valueOf(statusCode);
+			request.setAttribute("code",String.valueOf(statusCode));
 		if(throwable!=null)
-			message = Throwables.getRootCause(throwable).getMessage();
-		request.setAttribute("message",message);
+			request.setAttribute("message",Throwables.getRootCause(throwable).getMessage());
+		request.setAttribute("url","/");
 		return "error";
 	}
 }

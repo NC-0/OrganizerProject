@@ -10,6 +10,7 @@ public interface CategoryDao {
 	void delete(Category category);
 	void update(Category category);
 	List<Category> get(User user);
+	Category get(int id,User user);
 
 	int OBJ_TYPE      = 4;
 	int REF_ATTR 		= 12;
@@ -24,6 +25,23 @@ public interface CategoryDao {
 			"usr_obj.OBJECT_ID=usr_cat_ref.OBJECT_ID AND " +
 			"usr_obj.OBJECT_ID=?"
 	);
+
+	String SELECT_CATEGORY_BY_ID =
+		"SELECT "+
+		"cat_obj.NAME as name,"+
+		"cat_obj.OBJECT_ID as id "+
+		"FROM "+
+		"objects cat_obj, "+
+		"objects usr_obj, "+
+		"objreference reff "+
+		"WHERE "+
+		"cat_obj.OBJECT_ID=? AND "+
+		"cat_obj.OBJECT_TYPE_ID=4 AND "+
+		"usr_obj.OBJECT_ID = ? AND "+
+		"usr_obj.OBJECT_TYPE_ID = 3 AND "+
+		"reff.ATTR_ID=12 AND "+
+		"reff.REFERENCE=cat_obj.OBJECT_ID AND "+
+		"reff.OBJECT_ID=usr_obj.OBJECT_ID";
 
 	String INSERT_REF = (
 		"INSERT INTO objreference (" +

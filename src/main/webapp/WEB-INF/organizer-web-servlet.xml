@@ -83,4 +83,17 @@
             <aop:advisor advice-ref="transactionAdvice" pointcut-ref="daoTransactionalOperations"/>
         </aop:config>
 
+        <aop:config>
+            <aop:aspect id="loggingDAOAspect" ref="logging">
+                <aop:pointcut id="loggingDAOService" expression="execution(* organizer.dao.api.*.*(..))"/>
+                <aop:after-throwing throwing="ex" method="log" pointcut-ref="loggingDAOService"/>
+            </aop:aspect>
+            <aop:aspect id="loggingControllerAspect" ref="logging">
+                <aop:pointcut id="loggingControllerService" expression="execution(* organizer.controllers.*.*(..))"/>
+                <aop:before method="logBefore" pointcut-ref="loggingControllerService"/>
+            </aop:aspect>
+        </aop:config>
+
+        <bean id="logging" class="organizer.logic.impl.Logging"></bean>
+
         </beans>

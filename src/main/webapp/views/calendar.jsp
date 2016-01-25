@@ -2,8 +2,12 @@
 <html>
 <head>
     <title>Organizer - calendar</title>
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+    <link href="/resources/css/flat-ui.css" rel="stylesheet">
     <link href="/resources/css/main.css" rel="stylesheet">
     <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
             background-image: url('/resources/images/blur.jpg');
@@ -29,15 +33,33 @@
             left: 10px;
             top: 10px;
         }
+
+        .tasktitle{
+            overflow: hidden;
+        }
+
     </style>
     <link rel='stylesheet' href='/resources/js/fullcalendar/fullcalendar.css' />
     <script src='/resources/js/fullcalendar/lib/jquery.min.js'></script>
     <script src='/resources/js/fullcalendar/lib/moment.min.js'></script>
     <script src='/resources/js/fullcalendar/fullcalendar.js'></script>
+    <script src="/resources/js/bootstrap.min.js"></script>
     <script>
         var userEvents="{\"events\":[";
+
+        $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            jqXHR.setRequestHeader(header, token);
+        });
+
         $(document).ready(function() {
+            var title = '${cattitle}';
             var cat = ${cat};
+            if(title=="")
+                title='All tasks';
+            else
+                title='Category:'+title;
             if(cat==0){
                 $.ajax({
                     type: "GET",
@@ -71,20 +93,55 @@
                         click: function() {
                             window.location.href = '/';
                         }
+                    },
+                    addTaskCustomButton: {
+                        text: 'Add task',
+                        click: function() {
+                            window.location.href = '/task/create';
+                        }
                     }
                 },
                 contentHeight: 600,
                 header: {
                     left: 'prev,next today',
-                    center: 'title',
+                    center: 'title addTaskCustomButton',
                     right: 'backCustomButton'
                 },
+                titleFormat: '['+title+']',
                 defaultDate: '2016-01-12',
                 editable: false,
                 eventLimit: true,
-                eventSources:tmp
+                eventSources:tmp,
+                eventRender: function(event, element) {
+                    element.html('<table style="border: none" class="hovered"><tr>' +
+                            '<td style=\'cursor: pointer;border: none\' id="task'+event.id+'" class="tasktitle">'+event.title + '</td>' +
+                            '<td style=\'border: none\' width="15px"><a href="task/edit?id='+event.id+'" class="copy"><span style="cursor: pointer" class="fui-gear"></span></a></td>' +
+                            '<td style=\'border: none\' width="15px"><span style=\'cursor: pointer\' class="fui-cross" onclick="deleteTask(' + event.id + ')"></span></td></tr>' +
+                            '</table>');
+                    element.popover({
+                        content: '<b>Subtasks:<br>1.<br>2.<br>3.',
+                        html: true,
+                        placement: 'bottom',
+                        container:'body',
+                        trigger: 'focus'
+                    });
+                    element.attr('tabindex', -1);
+                }
             });
            });
+
+        function deleteTask(id) {
+            $('.popover.in').remove();
+            $.ajax({
+                type: "post",
+                url: "task/delete",
+                data: { 'id': id },
+                success: function(){
+                    location.reload();
+                }
+            });
+        }
+
         function parseDate(data){
             if(data.length!=0){
                 for (var i = 0; i < data.length; i++) {
@@ -113,7 +170,8 @@
                     userEvents=userEvents+"{\"title\":\""+data[i].name+
                             "\",\"start\":\""+date.getFullYear()+"-"+date.getMonth()+1+"-"+date.getDate()+
                             "\",\"color\":\""+clr+
-                            "\",\"textColor\":\""+'#000000'+"\"},";
+                            "\",\"textColor\":\""+'#000000'+
+                            "\",\"id\":\""+data[i].id+"\"},";
                 }
             }else{
                 userEvents=userEvents+"[";
@@ -123,7 +181,7 @@
 </head>
 <body>
 <form id="login">
-    <div id='calendar'></div>
+    <div id='calendar' style="font-size: 16px !important;"></div>
 </form>
 </body>
 </html>

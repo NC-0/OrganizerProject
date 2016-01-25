@@ -40,7 +40,7 @@ public class CategoryController {
 			return "createcategory";
 		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
 		categoryForm.setUser(authorizedUser.getUser());
-		categoryForm.setName(categoryForm.getName().trim());
+		categoryForm.setName(categoryForm.getName());
 		categoryDao.create(categoryForm);
 		return "redirect:/protected";
 	}
@@ -54,10 +54,9 @@ public class CategoryController {
 	}
 
 	@RequestMapping(value = "/updatecategory", method = RequestMethod.GET)
-	public String updateCategory(HttpServletRequest request){
-		Category category = new Category();
-		category.setId(Integer.parseInt(request.getParameter("categoryid")));
-		category.setName(String.valueOf(request.getParameter("categoryname")));
+	public String updateCategory(Authentication authentication,HttpServletRequest request){
+		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
+		Category category = categoryDao.get(Integer.parseInt(request.getParameter("categoryid")),authorizedUser.getUser());
 		request.setAttribute("categoryForm",category);
 		return "editcategory";
 	}

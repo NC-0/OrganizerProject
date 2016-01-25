@@ -58,4 +58,14 @@ public class CategoryDaoImpl implements CategoryDao {
 			user.getId()
 		);
 	}
+
+	public Category get(int id,User user) {
+		Category category = jdbcTemplate.queryForObject(
+			SELECT_CATEGORY_BY_ID,
+			new CategoryRowMapper(),
+			id,
+			user.getId()
+		);
+		return category;
+	}
 }

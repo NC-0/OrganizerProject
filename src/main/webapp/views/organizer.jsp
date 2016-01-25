@@ -52,6 +52,7 @@
                 }
             });
         }
+
         function makeCategory(data) {
             $('#elements').empty();
             $('#elements').append('<li><div class="Item">' +
@@ -63,7 +64,7 @@
             for (var i = 0; i < data.length; i++) {
                 $('#elements .Categories').append("<li><div class=\"Item\">" +
                         "<a href='/calendar?cat=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-calendar-solid'></span></a>"+
-                        "<a href='/updatecategory?categoryid=" + data[i].id + "&categoryname="+data[i].name+"' class='EditTask'><span style='cursor: pointer' class='fui-gear'></span></a>" +
+                        "<a href='/updatecategory?categoryid=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-gear'></span></a>" +
                         "<span style='cursor: pointer' class='fui-cross' onclick='deleteCategory(" + data[i].id + ")'></span>" +
                         "<a style=\"cursor: pointer\" onclick='selectTasks(" + data[i].id + ")' id=" + data[i].id + ">" + data[i].name + "</a>" +
                         "</div></li>");
@@ -106,10 +107,9 @@
         }
         function addRows(data) {
             $(".table-body").empty();
-
+            $('#taskSize').text(data.length);
             $.each(data, function (i, task) {
-                var date = new Date(task.date);
-
+                var date = new Date(task.date);;
                 $('.table-body').append(
                         "<div class='panel panel-default'>" +
                             "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
@@ -124,7 +124,7 @@
                                                 "<span style='cursor: pointer' class='fui-gear'></span>" +
                                             "</a>" +
 //                                            "<a data-method='post' href='task/delete?id="+task.id+"' class='copy'>" +
-                                                "<span style='cursor: pointer' class='fui-cross' onclick='deleteTask(" + task + ")' ></span>" +
+                                                "<span style='cursor: pointer' class='fui-cross' onclick='deleteTask(" + task.id + ")' ></span>" +
 //                                            "</a>" +
                                         "</div>" +
                                     "</div>" +
@@ -207,7 +207,7 @@
         </td>
         <td class="Content" rowspan="2" colspan="2">
             <div class="Preambula">
-                You have <span id="taskSize"></span> tasks.
+                You have <span id='taskSize'></span> tasks.
             </div>
 
             <section id="tasktable" class="table table-data TodoList">

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
     <title>Organizer - Error</title>
@@ -11,7 +12,6 @@
     <script src="/resources/js/flatui-radio.js"></script>
     <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="/resources/css/flat-ui.css" rel="stylesheet">
-    <link href="/resources/css/datepicker.css" rel="stylesheet">
     <link href="/resources/css/main.css" rel="stylesheet">
 
     <style>
@@ -30,10 +30,6 @@
             font-size: 72px;
         }
 
-        h4 {
-            color: #FFFFFF;
-        }
-
         .row {
             position: relative;
             left: 10px;
@@ -44,7 +40,23 @@
 <body>
     <div style="width: 30%; margin:0 auto;" align="center">
         <form id="login">
-            <h3>OPPS! Error  ;(</h3><hr><br><h2>${message}</h2>
+            <table width="100%">
+                <tr>
+                    <td>
+                        <h4>OPPS! Error ;(</h4>
+                    </td>
+                    <td align="right">
+                        <a href="${url}" type="button" class="btn btn-info btn-lg">Back</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <hr>
+                        <h2>${code}</h2>
+                        ${message}
+                    </td>
+                </tr>
+            </table>
         </form>
     </div>
 </body>

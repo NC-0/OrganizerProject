@@ -1,4 +1,6 @@
 ﻿<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
 </head>
@@ -11,7 +13,6 @@
 <script src="/resources/js/flatui-radio.js"></script>
 <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="/resources/css/flat-ui.css" rel="stylesheet">
-<link href="/resources/css/datepicker.css" rel="stylesheet">
 <link href="/resources/css/main.css" rel="stylesheet">
 <style>
     body {
@@ -30,7 +31,7 @@
     }
 
     h4 {
-        color: #FFFFFF;
+        color: #ffffff;
     }
 
     .row {
@@ -63,16 +64,25 @@
         left: 10px;
         position: absolute;
     }
+
+    .infodiv{
+        position: absolute;
+        right: 10px;
+        background-color: #34495e;
+        border-radius: 6px;
+        padding: 10px;
+        opacity: 0.5;
+    }
 </style>
 </head>
 <body>
 
 <div id="bottomalign">
    <div class="bottom1">
-       <div class="mesg">${message}</div>
-       <a style="color: #ffffff" href="/registration">Registration</a>&nbsp;&nbsp;&nbsp;
-       <a style="color: #ffffff" href="/login">Sign in</a>&nbsp;&nbsp;&nbsp;
-       <a style="color: #ffffff" href="/restore">Forget password?</a>
+       <div class="mesg"><c:if test="${not empty message}"><span class='fui-chat'> ${message}</span></c:if></div>
+       <a style="color: #ffffff" href="/registration"><span class='fui-user'> Registration</span></a>&nbsp;&nbsp;&nbsp;
+       <a style="color: #ffffff" href="/login"><span class='fui-check'> Sign in</span></a>&nbsp;&nbsp;&nbsp;
+       <a style="color: #ffffff" href="/restore"><span class='fui-new'> Forget password?</span></a>
    </div>
 </div>
 
@@ -80,5 +90,24 @@
     <table><tr><td><a href=""><img src="/resources/images/logo.png"></a></td><td class="logo"><h3>Organizer</h3></td></tr></table>
 </div>
 
+<div class="infodiv">
+    <table>
+        <tr>
+            <td align="right">
+                <h4>Join us<img src="/resources/images/join.png"></h4>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                <h4>Organize <img src="/resources/images/organize.png"></h4>
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                <h4>Do it <img src="/resources/images/doit.png"></h4>
+            </td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>
