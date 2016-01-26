@@ -96,4 +96,6 @@
 
         <bean id="logging" class="organizer.logic.impl.Logging"></bean>
 
+	<bean id="restorePassMap" class="organizer.logic.impl.security.RestorePasswordMap"></bean>
+
         </beans>

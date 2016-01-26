@@ -53,6 +53,10 @@
             jqXHR.setRequestHeader(header, token);
         });
 
+        $(document).click(function(event){
+            $('.popover.in').remove();
+        });
+
         $(document).ready(function() {
             var title = '${cattitle}';
             var cat = ${cat};
@@ -112,9 +116,10 @@
                 editable: false,
                 eventLimit: true,
                 eventSources:tmp,
+                eventOrder: 'level',
                 eventRender: function(event, element) {
                     element.html('<table style="border: none" class="hovered"><tr>' +
-                            '<td style=\'cursor: pointer;border: none\' id="task'+event.id+'" class="tasktitle">'+event.title + '</td>' +
+                            '<td onclick="clearPopover()" style=\'cursor: pointer;border: none\' id="task'+event.id+'" class="tasktitle">'+event.title + '</td>' +
                             '<td style=\'border: none\' width="15px"><a href="task/edit?id='+event.id+'" class="copy"><span style="cursor: pointer" class="fui-gear"></span></a></td>' +
                             '<td style=\'border: none\' width="15px"><span style=\'cursor: pointer\' class="fui-cross" onclick="deleteTask(' + event.id + ')"></span></td></tr>' +
                             '</table>');
@@ -129,6 +134,10 @@
                 }
             });
            });
+
+        function clearPopover(){
+            event.stopPropagation();
+        }
 
         function deleteTask(id) {
             $('.popover.in').remove();
@@ -171,6 +180,7 @@
                             "\",\"start\":\""+date.getFullYear()+"-"+date.getMonth()+1+"-"+date.getDate()+
                             "\",\"color\":\""+clr+
                             "\",\"textColor\":\""+'#000000'+
+                            "\",\"level\":\""+data[i].priority+
                             "\",\"id\":\""+data[i].id+"\"},";
                 }
             }else{

@@ -27,6 +27,7 @@ import organizer.dao.api.UserDao;
 import organizer.logic.impl.MessageContent;
 import organizer.logic.impl.email.MailSender;
 import organizer.logic.impl.security.CustomUserDetails;
+import organizer.logic.impl.security.RestorePasswordMap;
 import organizer.logic.impl.security.UserAuthenticationService;
 import organizer.models.User;
 
@@ -46,6 +47,10 @@ public class UserController {
 	@Autowired
 	@Qualifier("mailSender")
 	private MailSender mailSender;
+
+	@Autowired
+	@Qualifier("restorePassMap")
+	private RestorePasswordMap restorePasswordMap;
 
 	@RequestMapping(value="/registration",method=RequestMethod.GET)
 	public String createUserForm(Authentication authentication,Map<String, Object> model){
@@ -191,14 +196,20 @@ public class UserController {
 			String generatedString = RandomStringUtils.randomAlphanumeric(10);
 			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 			String hashedPass = bCryptPasswordEncoder.encode(generatedString);
+			String verificationId = bCryptPasswordEncoder.encode(email+new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
 			User user = userDaoImpl.get(email);
 			user.setPassword(hashedPass);
-			userDaoImpl.editPassword(user);
+			user.setVerify(verificationId);
+			restorePasswordMap.addRestore(verificationId,user);
 			try {
 				mailSender.sendMail(email,
 					generatedString,
 					MessageContent.MAIL_SUBJECT_FORGET_PASS,
-					MessageContent.MAIL_TEXT_FORGET);
+					MessageContent.MAIL_TEXT_FORGET+
+						String.format(
+						MessageContent.MAIL_PASS_CONFIRMATION,
+						verificationId,
+						verificationId));
 			} catch (MessagingException e) {
 				e.printStackTrace();
 			}
@@ -207,5 +218,18 @@ public class UserController {
 			request.setAttribute("message",String.format(MessageContent.USER_NOT_EXIST,email));
 		}
 		return "restore";
+	}
+
+	@RequestMapping(value = "restoreverify",method = RequestMethod.GET)
+	public String restoreVerification(HttpServletRequest request){
+		String message = MessageContent.VERIFY_ERROR;
+		String restore = request.getParameter("restore");
+		User user = restorePasswordMap.verify(restore);
+		if(user!=null){
+			userDaoImpl.editPassword(user);
+			message = MessageContent.VERIFY_SUCCESSFULL;
+		}
+		request.setAttribute("message",message);
+		return "hello";
 	}
 }
