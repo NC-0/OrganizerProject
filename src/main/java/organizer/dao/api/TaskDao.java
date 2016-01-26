@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import organizer.models.Task;
 import organizer.models.User;
+import organizer.models.Subtask;
 
 import java.util.List;
 
