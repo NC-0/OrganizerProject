@@ -123,8 +123,22 @@
                             '<td style=\'border: none\' width="15px"><a href="task/edit?id='+event.id+'" class="copy"><span style="cursor: pointer" class="fui-gear"></span></a></td>' +
                             '<td style=\'border: none\' width="15px"><span style=\'cursor: pointer\' class="fui-cross" onclick="deleteTask(' + event.id + ')"></span></td></tr>' +
                             '</table>');
+                    var subtsk='<table><tr><td colspan="2"><b>Subtasks:</td></tr>';
+                    $.ajax({
+                        type: "GET",
+                        url: "subtask/list?id=" + event.id,
+                        cache: false,
+                        async: false,
+                        dataType: 'json',
+                        success: function (data) {
+                            for(var i=0;i<data.length;i++){
+                                subtsk=subtsk+'<tr><td><b>'+(i+1)+'.</b></td><td>'+data[i].name+'</td></tr>';
+                            }
+                        }
+                    });
+                    subtsk=subtsk+'</table>';
                     element.popover({
-                        content: '<b>Subtasks:<br>1.<br>2.<br>3.',
+                        content: subtsk,
                         html: true,
                         placement: 'bottom',
                         container:'body',

@@ -31,7 +31,9 @@ public class MessageContent {
 
 	public final static String MAIL_TEXT_VERIFICATION = "<html><body><b>Hello, %s! You succesfully registered on SuperOrganizer.com. Please go to this link <a href='http://localhost:8081/verification?verific=%s'>http://localhost:8081/verification?verific=%s</a></body></html>";
 
-	public final static String MAIL_TEXT_FORGET = "<html><body><b>Hello, %s! You forgot password on SuperOrganizer.com. You new password: %s</body></html>";
+	public final static String MAIL_TEXT_FORGET = "<html><body><b>Hello %s! You forgot password on SuperOrganizer.com.<br> You new password: %s<br> ";
+
+	public final static String MAIL_PASS_CONFIRMATION = "If it was you, then confirm changes by this link <a href='http://localhost:8081/restoreverify?restore=%s'>http://localhost:8081/restoreverify?restore=%s</a>.</body></html>";
 
 	public final static String VERIFY_ERROR = "Unrecognize verification id";
 
@@ -41,5 +43,5 @@ public class MessageContent {
 
 	public final static String EMAIL_TASK = "<tr><td bgcolor='%s'>%s</td></tr>";
 
-	public final static String EMAIL_PASS = "New password send to you email";
+	public final static String EMAIL_PASS = "New password send to your email";
 }
