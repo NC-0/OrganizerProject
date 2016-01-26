@@ -137,13 +137,13 @@
             <version>${aspectj.version}</version>
         </dependency>
 
-	    <dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
             <version>4.2.4.RELEASE</version>
         </dependency>
 
-	    <dependency>
+        <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4.3</version>
@@ -162,7 +162,8 @@
             <version>18.0</version>
         </dependency>
 
-	    <dependency>
+        <!-- Validation -->
+        <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>1.1.0.Final</version>
@@ -174,6 +175,7 @@
             <version>5.0.1.Final</version>
         </dependency>
 
+        <!-- Web tags -->
         <dependency>
             <groupId>taglibs</groupId>
             <artifactId>standard</artifactId>
@@ -181,22 +183,17 @@
             <scope>runtime</scope>
         </dependency>
 
-	 <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.3</version>
+        <!-- For JSON data -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.5.0</version>
         </dependency>
 
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.1</version>
         </dependency>
 
     </dependencies>

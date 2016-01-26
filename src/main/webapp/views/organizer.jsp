@@ -69,8 +69,8 @@
         function makeCategory(data) {
             $('#elements').empty();
             $('#elements').append('<li><div class="Item">' +
-                    '<a href="/addcategory" class="EditTask">' +
-                    '<span class="fui-plus"></span>Create</a></div></li>');
+            '<a href="/addcategory" class="EditTask">' +
+            '<span class="fui-plus"></span>Create</a></div></li>');
 
             $('#elements').append("<div class=\"Categories\">");
             $('#elements .Categories').append("<li><div class=\"Item\"><a style=\"cursor: pointer\" onclick='selectTasks(0)'><span class=\"fui-list\"></span>All</a></div></li>");
@@ -92,6 +92,7 @@
             }
             $('#elements').append("</table>")
         }
+
         function loadData() {
             $.ajax({
                 type: "GET",
@@ -148,41 +149,27 @@
                                 "</a>" +
                             "</div>" +
                             "<div id='collapse"+task.id+"' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading'>" +
-//                                "<div class='panel-body'>" +
-//                                        "<div class='row'>" +
-//                                            "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
-//                                            "<div class='col-xs-3 Header'>SubTask name</div>" +
-//                                            "<div class='col-xs-3 Header'>Date</div>" +
-//                                            "<div class='col-xs-2 Header'>Priority</div>" +
-//                                            "<div class='col-xs-3 Header'>" +
-//                                                "<a href='task/edit?="+task.id+"' class='copy'><span style='cursor: pointer' class='fui-gear'></span></a>" +
-////                                                "<a href='task/delete?="+task.id+"' class='delete'><span style='cursor: pointer' class='fui-cross'></span></a>" +
-//                                                "<span style='cursor: pointer' class='fui-cross' onclick='deleteTask(" + task + ")'></span>" +
-//                                            "</div>" +
-//                                        "</div>" +
-//                                "</div>" +
-//                            "</div>" +
-                        "</div>"
+                            "</div>"
                 );
 
                 $("#collapse"+task.id).append("<div class='panel-body'>");
                 $.get('subtask/list?id='+task.id, function (subtasks) {
                     $.each(subtasks, function (i, subtask) {
                         $("#collapse"+task.id).append(
-                            "<div class='row'>" +
-                                "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
-                                "<div class='col-xs-3 Header'>"+subtask.name+"</div>" +
-                                "<div class='col-xs-3 Header'></div>" +
-                                "<div class='col-xs-2 Header'></div>" +
-                                "<div class='col-xs-3 Header'>" +
-                                    "<a href='subtask/edit?="+subtask.id+"' class='copy'>" +
-                                        "<span style='cursor: pointer' class='fui-gear'></span>" +
-                                    "</a>" +
-                                    "<a class='copy'>" +
-                                        "<span style='cursor: pointer' class='fui-cross' onclick='deleteSubtask(" + subtask + "," + sort + ")'></span>" +
-                                    "</a>" +
-                                "</div>" +
-                            "</div>"
+                                "<div class='row'>" +
+                                    "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
+                                    "<div class='col-xs-3 Header'>"+subtask.name+"</div>" +
+                                    "<div class='col-xs-3 Header'></div>" +
+                                    "<div class='col-xs-2 Header'></div>" +
+                                    "<div class='col-xs-3 Header'>" +
+                                        "<a href='subtask/edit?="+subtask.id+"' class='copy'>" +
+                                        "<span style='cursor: pointer; margin-left: 18px' class='fui-gear'></span>" +
+                                        "</a>" +
+                                        "<a class='copy'>" +
+                                            "<span style='cursor: pointer' class='fui-cross' onclick='deleteSubtask(" + subtask + "," + sort + ")'></span>" +
+                                        "</a>" +
+                                    "</div>" +
+                                "</div>"
                         );
                     });
                 });

@@ -15,7 +15,6 @@
     <script src="/resources/js/flatui-radio.js"></script>
     <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="/resources/css/flat-ui.css" rel="stylesheet">
-    <link href="/resources/css/datepicker.css" rel="stylesheet">
     <link href="/resources/css/main.css" rel="stylesheet">
 
     <style>

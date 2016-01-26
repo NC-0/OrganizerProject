@@ -75,8 +75,14 @@ public class SubtaskController {
         Task task = new Task();
         task.setId(id);
         List<Subtask> subtasks = subtaskDaoImpl.get(task);
-        for (Subtask sub : subtasks)
-        System.out.println(sub.getName());
         return subtasks;
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public void deleteTask(int id) {
+        Subtask subtask = new Subtask();
+        subtask.setId(id);
+        subtaskDaoImpl.delete(subtask);
+        //return "redirect:/protected";
     }
 }
