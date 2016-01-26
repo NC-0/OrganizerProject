@@ -77,7 +77,7 @@
             for (var i = 0; i < data.length; i++) {
                 $('#elements .Categories').append("<li><div class=\"Item\">" +
                         "<a href='/calendar?cat=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-calendar-solid'></span></a>"+
-                        "<a href='/updatecategory?categoryid=" + data[i].id + "&categoryname="+data[i].name+"' class='EditTask'><span style='cursor: pointer' class='fui-gear'></span></a>" +
+                        "<a href='/updatecategory?categoryid=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-gear'></span></a>" +
                         "<span style='cursor: pointer' class='fui-cross' onclick='deleteCategory(" + data[i].id + ")'></span>" +
                         "<a style=\"cursor: pointer\" onclick='selectTasks(" + data[i].id + ")' id=" + data[i].id + ">" + data[i].name + "</a>" +
                         "</div></li>");
@@ -126,8 +126,8 @@
                 var date = new Date(task.date);
                 $('.table-body').append(
                         "<div class='panel panel-default'>" +
-                            "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
-                                "<a class='collapsed' role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + i + "' aria-expanded='false' aria-controls='collapse'>" +
+                            "<div class='panel-heading' role='tab' id='heading" + task.id + "'>" +
+                                "<a class='collapsed' role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + task.id + "' aria-expanded='false' aria-controls='collapse'>" +
                                     "<div class='row'>" +
                                         "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
                                         "<div class='col-xs-3 Header'>" + task.name + "</div>" +
@@ -147,7 +147,7 @@
                                     "</div>" +
                                 "</a>" +
                             "</div>" +
-                            "<div id='collapse"+i+"' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading'>" +
+                            "<div id='collapse"+task.id+"' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading'>" +
 //                                "<div class='panel-body'>" +
 //                                        "<div class='row'>" +
 //                                            "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
@@ -161,14 +161,14 @@
 //                                            "</div>" +
 //                                        "</div>" +
 //                                "</div>" +
-                            "</div>" +
+//                            "</div>" +
                         "</div>"
                 );
 
-                $("#collapse"+i).append("<div class='panel-body'>");
+                $("#collapse"+task.id).append("<div class='panel-body'>");
                 $.get('subtask/list?id='+task.id, function (subtasks) {
                     $.each(subtasks, function (i, subtask) {
-                        $("#collapse"+i).append(
+                        $("#collapse"+task.id).append(
                             "<div class='row'>" +
                                 "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
                                 "<div class='col-xs-3 Header'>"+subtask.name+"</div>" +
@@ -186,7 +186,8 @@
                         );
                     });
                 });
-                $("collapse"+i).append("</div>");
+                $("collapse"+task.id).append("</div>");
+                $('.table-body').append("</div>");
             });
 
         }
