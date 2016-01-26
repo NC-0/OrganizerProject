@@ -12,8 +12,6 @@ import organizer.models.Task;
 
 import java.util.List;
 
-@Component
-@Scope("prototype")
 public class SubtaskDaoImpl implements SubtaskDao {
 	@Autowired
 	@Qualifier("jdbcTemplate")

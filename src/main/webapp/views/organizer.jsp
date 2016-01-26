@@ -42,13 +42,26 @@
             }
         }
 
-        function deleteTask(id) {
+        function deleteTask(id, sort) {
             $.ajax({
                 type: "post",
                 url: "task/delete",
                 data: { 'id': id },
-                success: function(){
-                    location.reload();
+                success: function() {
+                    selectTasks(sort);
+                    /*location.reload();*/
+                }
+            });
+        }
+
+        function deleteSubtask(id, sort) {
+            $.ajax({
+                type: "post",
+                url: "subtask/delete",
+                data: { 'id': id },
+                success: function() {
+                    selectTasks(sort);
+                    /*location.reload();*/
                 }
             });
         }
@@ -64,7 +77,7 @@
             for (var i = 0; i < data.length; i++) {
                 $('#elements .Categories').append("<li><div class=\"Item\">" +
                         "<a href='/calendar?cat=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-calendar-solid'></span></a>"+
-                        "<a href='/updatecategory?categoryid=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-gear'></span></a>" +
+                        "<a href='/updatecategory?categoryid=" + data[i].id + "&categoryname="+data[i].name+"' class='EditTask'><span style='cursor: pointer' class='fui-gear'></span></a>" +
                         "<span style='cursor: pointer' class='fui-cross' onclick='deleteCategory(" + data[i].id + ")'></span>" +
                         "<a style=\"cursor: pointer\" onclick='selectTasks(" + data[i].id + ")' id=" + data[i].id + ">" + data[i].name + "</a>" +
                         "</div></li>");
@@ -94,22 +107,23 @@
         }
 
         function selectTasks(cat) {
-            $("#tasktable tbody tr").remove();
+            /*$("#tasktable tbody tr").remove();*/
             if (cat == 0) {
                 $.get("task/list", function (data) {
-                    addRows(data);
+                    addRows(data, cat);
                 });
             } else {
                 $.get("task/listcat/" + cat, function (data) {
-                    addRows(data);
+                    addRows(data, cat);
                 });
             }
         }
-        function addRows(data) {
+
+        function addRows(data, sort) {
             $(".table-body").empty();
             $('#taskSize').text(data.length);
             $.each(data, function (i, task) {
-                var date = new Date(task.date);;
+                var date = new Date(task.date);
                 $('.table-body').append(
                         "<div class='panel panel-default'>" +
                             "<div class='panel-heading' role='tab' id='heading" + i + "'>" +
@@ -118,51 +132,61 @@
                                         "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
                                         "<div class='col-xs-3 Header'>" + task.name + "</div>" +
                                         "<div class='col-xs-3 Header'>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "</div>" +
-                                        "<div class='col-xs-2 Header'>" + task.priority + "</div>" +
+                                        "<div class='col-xs-2 Header'>" + task.priority_str + "</div>" +
                                         "<div class='col-xs-3 Header'>" +
+                                            "<a href='subtask/create?id="+task.id+"' class='copy'>" +
+                                                "<span style='cursor: pointer' class='fui-plus'></span>" +
+                                            "</a>" +
                                             "<a href='task/edit?id="+task.id+"' class='copy'>" +
                                                 "<span style='cursor: pointer' class='fui-gear'></span>" +
                                             "</a>" +
-//                                            "<a data-method='post' href='task/delete?id="+task.id+"' class='copy'>" +
-                                                "<span style='cursor: pointer' class='fui-cross' onclick='deleteTask(" + task.id + ")' ></span>" +
-//                                            "</a>" +
+                                            "<a class='copy'>" +
+                                                "<span style='cursor: pointer' class='fui-cross' onclick='deleteTask(" + task.id + "," + sort + ")' ></span>" +
+                                            "</a>" +
                                         "</div>" +
                                     "</div>" +
                                 "</a>" +
                             "</div>" +
                             "<div id='collapse"+i+"' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading'>" +
-                                "<div class='panel-body'>" +
-                                        "<div class='row'>" +
-                                            "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
-                                            "<div class='col-xs-3 Header'>SubTask name</div>" +
-                                            "<div class='col-xs-3 Header'>Date</div>" +
-                                            "<div class='col-xs-2 Header'>Priority</div>" +
-                                            "<div class='col-xs-3 Header'>" +
-                                                "<a href='task/edit?="+task.id+"' class='copy'><span style='cursor: pointer' class='fui-gear'></span></a>" +
-//                                                "<a href='task/delete?="+task.id+"' class='delete'><span style='cursor: pointer' class='fui-cross'></span></a>" +
-                                                "<span style='cursor: pointer' class='fui-cross' onclick='deleteTask(" + task + ")'></span>" +
-                                            "</div>" +
-                                        "</div>" +
-
-                                        "<div class='row'>" +
-                                            "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
-                                            "<div class='col-xs-3 Header'>SubTask name</div>" +
-                                            "<div class='col-xs-3 Header'>Date</div>" +
-                                            "<div class='col-xs-2 Header'>Priority</div>" +
-                                            "<div class='col-xs-3 Header'>" +
-                                            "<a href='task/edit?="+task.id+"' class='copy'>" +
-                                                "<span style='cursor: pointer' class='fui-gear'></span>" +
-                                            "</a>" +
-                                            "<a href='task/delete?="+task.id+"' class='delete'>" +
-                                                "<span style='cursor: pointer' class='fui-cross'></span>" +
-                                            "</a>" +
-                                            "</div>" +
-                                        "</div>" +
-
-                                "</div>" +
+//                                "<div class='panel-body'>" +
+//                                        "<div class='row'>" +
+//                                            "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
+//                                            "<div class='col-xs-3 Header'>SubTask name</div>" +
+//                                            "<div class='col-xs-3 Header'>Date</div>" +
+//                                            "<div class='col-xs-2 Header'>Priority</div>" +
+//                                            "<div class='col-xs-3 Header'>" +
+//                                                "<a href='task/edit?="+task.id+"' class='copy'><span style='cursor: pointer' class='fui-gear'></span></a>" +
+////                                                "<a href='task/delete?="+task.id+"' class='delete'><span style='cursor: pointer' class='fui-cross'></span></a>" +
+//                                                "<span style='cursor: pointer' class='fui-cross' onclick='deleteTask(" + task + ")'></span>" +
+//                                            "</div>" +
+//                                        "</div>" +
+//                                "</div>" +
                             "</div>" +
                         "</div>"
                 );
+
+                $("#collapse"+i).append("<div class='panel-body'>");
+                $.get('subtask/list?id='+task.id, function (subtasks) {
+                    $.each(subtasks, function (i, subtask) {
+                        $("#collapse"+i).append(
+                            "<div class='row'>" +
+                                "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
+                                "<div class='col-xs-3 Header'>"+subtask.name+"</div>" +
+                                "<div class='col-xs-3 Header'></div>" +
+                                "<div class='col-xs-2 Header'></div>" +
+                                "<div class='col-xs-3 Header'>" +
+                                    "<a href='subtask/edit?="+subtask.id+"' class='copy'>" +
+                                        "<span style='cursor: pointer' class='fui-gear'></span>" +
+                                    "</a>" +
+                                    "<a class='copy'>" +
+                                        "<span style='cursor: pointer' class='fui-cross' onclick='deleteSubtask(" + subtask + "," + sort + ")'></span>" +
+                                    "</a>" +
+                                "</div>" +
+                            "</div>"
+                        );
+                    });
+                });
+                $("collapse"+i).append("</div>");
             });
 
         }

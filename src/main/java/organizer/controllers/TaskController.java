@@ -35,6 +35,7 @@ public class TaskController {
 	 * map that contains user categories
 	 */
 	private Map<String, Category> categories = new LinkedHashMap<String, Category>();
+
 	/**
 	 * map that contains user priorities
 	 */
@@ -56,13 +57,16 @@ public class TaskController {
 		priorities2.put(5, "So Low");
 	}
 
+//	enum Priority {
+//		Very_High, High, Normal, Low, So_Low
+//	}
+
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String initPage(Model model, Authentication authentication) {
 		// Add task for binding attributes
 		Task task = new Task();
 		task.setCompleted(false);
 		model.addAttribute("taskForm", task);
-		model.addAttribute("title", "Create");
 
 		// get current user
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
@@ -83,6 +87,7 @@ public class TaskController {
 		Task task = taskDaoImpl.get(user, id);
 		model.addAttribute("taskForm", task);
 		initAttributes(user, model);
+		model.addAttribute("priority", priorities2.get(task.getPriority()));
 		// show view
 		return "edittask";
 	}
@@ -174,6 +179,9 @@ public class TaskController {
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
 		User user = userDetails.getUser();
 		List<Task> tasks = taskDaoImpl.get(user);
+		for (Task task : tasks) {
+			task.setPriority_str(priorities2.get(task.getPriority()));
+		}
 		return tasks;
 	}
 
@@ -187,15 +195,19 @@ public class TaskController {
 		Category category = new Category();
 		category.setId(cat);
 		List<Task> tasks = taskDaoImpl.getByCat(user,category);
+		for (Task task : tasks) {
+			task.setPriority_str(priorities2.get(task.getPriority()));
+		}
 		return tasks;
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
-	public void deleteTask(HttpServletRequest request, Authentication authentication) {
+	public String deleteTask(HttpServletRequest request, Authentication authentication) {
 		Task task = new Task();
 		int id = Integer.parseInt(request.getParameter("id"));
 		task.setId(id);
 		taskDaoImpl.delete(task);
+		return "redirect:/protected";
 	}
 
 }
