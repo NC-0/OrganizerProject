@@ -10,6 +10,8 @@ public class SubtaskRowMapper extends CachedRowMapper<Subtask> {
 
 	private Task task;
 
+	public SubtaskRowMapper() {}
+
 	public SubtaskRowMapper(Task task) {
 		this.task = task;
 	}

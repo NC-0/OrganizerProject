@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
 	<title>Create task</title>
@@ -46,8 +47,12 @@
 			top: 10px;
 		}
 
-		error {
-			color: red;
+		.input-lg {
+			/*margin-bottom: 12px;*/
+		}
+
+		.help-block {
+			margin-left: 15px;
 		}
 	</style>
 
@@ -73,32 +78,40 @@
 		</table>
 		<hr/>
 
-		<div class="form-group">
-			<form:input path="name" class="input-lg form-control" placeholder="Name" />
-			<form:errors path="name" cssClass="error" />
-		</div>
+		<spring:bind path="name">
+			<div class="form-group ${status.error ? 'has-error' : ''}">
+				<form:input path="name" class="input-lg form-control" placeholder="Name" />
+				<form:errors path="name" cssClass="help-block" element="small" />
+			</div>
+		</spring:bind>
 
-		<div class="form-group">
-			<form:input path="date"  class="input-lg form-control" type="text" id="dateid" placeholder="Date" />
-			<form:errors path="date" cssClass="error" />
-		</div>
+		<spring:bind path="date">
+			<div class="form-group ${status.error ? 'has-error' : ''}">
+				<form:input path="date"  class="input-lg form-control" type="text" id="dateid" placeholder="Date" />
+				<form:errors path="date" cssClass="help-block" element="small" />
+			</div>
+		</spring:bind>
 
-		<div class="form-group">
-			<form:select path="priority_str" class="form-control">
-				<option selected>Open to choose priority:</option>
-				<form:options items="${priorities}" />
-			</form:select>
-			<span class="error"><form:errors path="priority_str" /></span>
+		<spring:bind path="priority_str">
+			<div class="form-group ${status.error ? 'has-error' : ''}">
+				<form:select path="priority_str" class="form-control">
+					<option selected>Open to choose priority:</option>
+					<form:options items="${priorities}" />
+				</form:select>
+				<form:errors path="priority_str" cssClass="help-block" element="small" />
+			</div>
+		</spring:bind>
 
-		</div>
 
-		<div class="form-group">
-			<form:select path="category_str" class="form-control">
-				<option selected>Choose category:</option>
-				<form:options items="${categories}" />
-			</form:select>
-			<span class="error"><form:errors path="category_str" /></span>
-		</div>
+		<spring:bind path="category_str">
+			<div class="form-group ${status.error ? 'has-error' : ''}">
+				<form:select path="category_str" class="form-control">
+					<option selected>Choose category:</option>
+					<form:options items="${categories}" />
+				</form:select>
+				<div><form:errors path="category_str" cssClass="help-block" element="small" /></div>
+			</div>
+		</spring:bind>
 
 		<div class="form-group" style="position: relative; top: 12px; padding-bottom: 12px">
 			<input type="submit" value="Submit" class="btn btn-lg btn-info btn-block" />
@@ -113,7 +126,6 @@
 				dateFormat: "dd-mm-yy"
 			});
 		});
-
 	});
 </script>
 </html>

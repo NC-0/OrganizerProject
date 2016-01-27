@@ -155,7 +155,6 @@ public class TaskController {
 
 		// checking errors
 		if (result.hasErrors()) {
-			System.out.print("error edit task");
 			initAttributes(user, model);
 			return "edittask";
 		}

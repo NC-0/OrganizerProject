@@ -61,7 +61,7 @@
                 data: { 'id': id },
                 success: function() {
                     selectTasks(sort);
-                    /*location.reload();*/
+//                    location.reload();
                 }
             });
         }
@@ -162,11 +162,11 @@
                                     "<div class='col-xs-3 Header'></div>" +
                                     "<div class='col-xs-2 Header'></div>" +
                                     "<div class='col-xs-3 Header'>" +
-                                        "<a href='subtask/edit?="+subtask.id+"' class='copy'>" +
+                                        "<a href='subtask/edit?id="+subtask.id+"' class='copy'>" +
                                         "<span style='cursor: pointer; margin-left: 18px' class='fui-gear'></span>" +
                                         "</a>" +
                                         "<a class='copy'>" +
-                                            "<span style='cursor: pointer' class='fui-cross' onclick='deleteSubtask(" + subtask + "," + sort + ")'></span>" +
+                                            "<span style='cursor: pointer' class='fui-cross' onclick='deleteSubtask(" + subtask.id + "," + sort + ")'></span>" +
                                         "</a>" +
                                     "</div>" +
                                 "</div>"

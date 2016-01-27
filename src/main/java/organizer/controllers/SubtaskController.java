@@ -79,10 +79,31 @@ public class SubtaskController {
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public void deleteTask(int id) {
+    public String deleteTask(HttpServletRequest request) {
         Subtask subtask = new Subtask();
+        int id = Integer.parseInt(request.getParameter("id"));
         subtask.setId(id);
         subtaskDaoImpl.delete(subtask);
-        //return "redirect:/protected";
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    public String editGetTask(Integer id, Model model) {
+        // Get task for binding attributes
+        Subtask subtask = subtaskDaoImpl.get(id);
+        model.addAttribute("subtaskForm", subtask);
+        // show view
+        return "editsubtask";
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String editTask(@Valid @ModelAttribute("subtaskForm") Subtask subtask,
+                           BindingResult result) {
+        // checking errors
+        if (result.hasErrors()) {
+            return "edittask";
+        }
+        subtaskDaoImpl.update(subtask);
+        return "redirect:/";
     }
 }

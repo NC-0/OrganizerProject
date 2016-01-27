@@ -2,7 +2,9 @@ package organizer.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 import organizer.dao.api.CategoryDao;
 import organizer.dao.api.UserDao;
 import organizer.dao.cache.CategoryRowMapper;

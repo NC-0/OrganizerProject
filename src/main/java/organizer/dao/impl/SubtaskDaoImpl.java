@@ -39,7 +39,7 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	}
 
 	public void delete(Subtask subtask) {
-		jdbcTemplate.update(SubtaskDao.DELETE, subtask);
+		jdbcTemplate.update(SubtaskDao.DELETE, subtask.getId());
 	}
 
 	public void update(Subtask subtask) {
@@ -65,12 +65,12 @@ public class SubtaskDaoImpl implements SubtaskDao {
 		);
 	}
 
-	// Get a single subtask by id [NOT IMPLEMENTED]
-//	public Subtask get(int subtaskId) {
-//		return jdbcTemplate.queryForObject(
-//			SubtaskDao.SELECT,
-//			new SubtaskRowMapper(),
-//			subtaskId
-//		);
-//	}
+	// Get a single subtask by id
+	public Subtask get(int id) {
+		return jdbcTemplate.queryForObject(
+			SubtaskDao.SELECT,
+			new SubtaskRowMapper(),
+			id
+		);
+	}
 }
