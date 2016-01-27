@@ -2,22 +2,13 @@ package organizer.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-
-import org.springframework.stereotype.Component;
 import organizer.dao.api.TaskDao;
 import organizer.dao.api.UserDao;
 import organizer.dao.cache.TaskRowMapper;
 import organizer.models.Category;
-import organizer.models.Subtask;
 import organizer.models.Task;
 import organizer.models.User;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDaoImpl implements TaskDao {
@@ -96,20 +87,4 @@ public class TaskDaoImpl implements TaskDao {
 		);
 		return tasks;
 	}
-
-	public List <Subtask> getSubtasks (final Task task){
-//		List <Subtask> subtasks = (ArrayList<Subtask>)jdbcTemplate.query(TaskDao.SELECT_SUBTASKS_BY_TASK_ID, new Object[]{task.getId()},
-//				new RowMapper <Subtask>() {
-//					@Override
-//					public Subtask mapRow(ResultSet rs, int rowNum)
-//							throws SQLException {
-//						Subtask subtask = new Subtask(rs.getInt("OBJECT_ID"), rs.getString("NAME"), new Boolean(rs.getString("VALUE")), task);
-//						return subtask;
-//					}
-//		});
-//		return (ArrayList<Subtask>) subtasks;
-		return null;
-	}
-
-
 }
