@@ -17,6 +17,8 @@ import organizer.models.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -209,6 +211,32 @@ public class TaskController {
 		return "redirect:/protected";
 	}
 
+	@RequestMapping(value = "/complete",
+		method = RequestMethod.POST)
+	public String completeTask(HttpServletRequest request) {
+		int id = Integer.parseInt(request.getParameter("id"));
+//		int prior = Integer.parseInt(request.getParameter("priority"));
+//		int catId = Integer.parseInt(request.getParameter("category"));
+//		String name = request.getParameter("name");
+//		boolean status = Boolean.parseBoolean(request.getParameter("completed"));
+//
+//		SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yy");
+//		Date date = null;
+//		try {
+//			date = formatter.parse(request.getParameter("date"));
+//		} catch (ParseException ex) { return "redirect:/"; } // !!
+//
+//		Category cat = new Category();
+//		cat.setId(catId);
+
+		Task task = new Task(); //name, date, prior, cat, status, null);
+		task.setCompleted(true);
+		task.setId(id);
+
+		taskDaoImpl.updateStatus(task);
+
+		return "redirect:/";
+	}
 }
 
 

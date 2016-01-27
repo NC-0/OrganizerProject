@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
@@ -49,10 +49,16 @@
             $.ajax({
                 type: "post",
                 url: "task/complete",
-                data: { 'id': id },
+                data: {
+                    'id': id
+                },
                 success: function() {
-                    selectTasks(sort);
-                    /*location.reload();*/
+                    $("#collapse"+id).animate({'line-height':0},1000).fadeOut(1000,function() {
+                        $("#collapse"+id).remove();
+                    });
+                    $("#heading"+id).animate({'line-height':0},1000).fadeOut(1000,function() {
+                        $("#heading"+id).remove();
+                    });
                 }
             });
         }
@@ -63,6 +69,9 @@
                 url: "task/delete",
                 data: { 'id': id },
                 success: function() {
+                    $("#collapse"+id).animate({'line-height':0},1000).fadeOut(1000,function() {
+                        $("#collapse"+id).remove();
+                    });
                     $("#heading"+id).animate({'line-height':0},1000).fadeOut(1000,function() {
                         $("#heading"+id).remove();
                     });
@@ -141,6 +150,7 @@
             $(".table-body").empty();
             $('#taskSize').text(data.length);
             $.each(data, function (i, task) {
+                if (task.completed) return;
                 var date = new Date(task.date);
                 filterids.push('#filtereddiv'+i);
                 $('.table-body').append(
@@ -148,7 +158,9 @@
                             "<div class='panel-heading' role='tab' id='heading" + task.id + "'>" +
                                 "<a class='collapsed' role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + task.id + "' aria-expanded='false' aria-controls='collapse'>" +
                                     "<div class='row'>" +
-                                        "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox' onclick='completeTask(" + task.id +")'></div>" +
+                                        "<div class='col-xs-1 Header'>" +
+                                            "<input class='TaskSelAll' type='checkbox' onclick='completeTask(" + task.id + ")'>" +
+                                        "</div>" +
                                         "<div id='filteredtext"+i+"' class='col-xs-3 Header'>" + task.name + "</div>" +
                                         "<div class='col-xs-3 Header'>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "</div>" +
                                         "<div class='col-xs-2 Header'>" + task.priority_str + "</div>" +
@@ -237,6 +249,16 @@
                             <a href="/task/create" class="AddTask">
                                 <span class="fui-plus"></span>
                                 Create
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <div class="Item">
+                            <a href="/task/archive" class="AddTask">
+                                <span class="fui-plus"></span>
+                                Archive
                             </a>
                         </div>
                     </li>

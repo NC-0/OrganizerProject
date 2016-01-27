@@ -3,6 +3,7 @@ package organizer.models;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
+import organizer.logic.api.ValidString;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
@@ -13,7 +14,7 @@ import java.util.List;
 public class Task {
 
 	private int id;
-
+	@ValidString
 	@Size(min=1, max=30)
 	private String name;
 

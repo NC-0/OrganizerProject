@@ -62,6 +62,10 @@ public class TaskDaoImpl implements TaskDao {
 			jdbcTemplate.update(UPDATE_SUBTASK_STATUS, task.getId());
 	}
 
+	public void updateStatus(Task task) {
+		jdbcTemplate.update(UPDATE_STATUS, task.isCompleted(), task.getId());
+	}
+
 	public Task get(User user, int taskId) {
 		Task task = jdbcTemplate.queryForObject(
 			SELECT_TASK_BY_ID,

@@ -9,6 +9,7 @@ public interface TaskDao {
 	void create(int userId, Task task);
 	void delete(Task task);
 	void edit(Task task);
+	void updateStatus(Task task);
 	Task get(User user, int id);
 	List<Task> get(final User user);
 	List<Task> getByCat(final User user, Category category);
