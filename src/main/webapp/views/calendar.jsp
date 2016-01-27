@@ -7,6 +7,7 @@
     <link href="/resources/css/flat-ui.css" rel="stylesheet">
     <link href="/resources/css/main.css" rel="stylesheet">
     <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/resources/css/styles.css" rel="stylesheet">
 
     <style>
         body {
@@ -120,10 +121,17 @@
                 eventRender: function(event, element) {
                     element.html('<table style="border: none" class="hovered"><tr>' +
                             '<td onclick="clearPopover()" style=\'cursor: pointer;border: none\' id="task'+event.id+'" class="tasktitle">'+event.title + '</td>' +
-                            '<td style=\'border: none\' width="15px"><a href="task/edit?id='+event.id+'" class="copy"><span style="cursor: pointer" class="fui-gear"></span></a></td>' +
-                            '<td style=\'border: none\' width="15px"><span style=\'cursor: pointer\' class="fui-cross" onclick="deleteTask(' + event.id + ')"></span></td></tr>' +
+                            '<td style=\'border: none\' width="15px"><a href="subtask/create?id='+event.id+'" class="copy">' +
+                            '<span style="cursor: pointer" class="fui-plus"></span>' +
+                            '</a></td>' +
+                            '<td style=\'border: none\' width="15px"><a href="task/edit?id='+event.id+'" class="copy">' +
+                            '<span style="cursor: pointer" class="fui-gear"></span>' +
+                            '</a></td>' +
+                            '<td style=\'border: none\' width="15px"><a class="copy">' +
+                            '<span style=\'cursor: pointer\' class="fui-cross" onclick="deleteTask(' + event.id + ')"></span>' +
+                            '</a></td></tr>' +
                             '</table>');
-                    var subtsk='<table><tr><td colspan="2"><b>Subtasks:</td></tr>';
+                    var subtsk='<table class="table table-data TodoList"><tr><td colspan="4"><b>Subtasks:</td></tr>';
                     $.ajax({
                         type: "GET",
                         url: "subtask/list?id=" + event.id,
@@ -132,7 +140,16 @@
                         dataType: 'json',
                         success: function (data) {
                             for(var i=0;i<data.length;i++){
-                                subtsk=subtsk+'<tr><td><b>'+(i+1)+'.</b></td><td>'+data[i].name+'</td></tr>';
+                                subtsk=subtsk+'<tr>' +
+                                        '<td><b>'+(i+1)+'.</b></td>' +
+                                        '<td>'+data[i].name+'</td>' +
+                                        '<td><a href="subtask/edit?id='+data[i].id+'" class="copy">' +
+                                        '<span style="cursor: pointer;" class="fui-gear"></span>' +
+                                        '</a></td>' +
+                                        '<td><a class="copy">' +
+                                        '<span style="cursor: pointer" class="fui-cross" onclick="deleteSubtask(' + data[i].id +')"></span>' +
+                                        '</a></td>' +
+                                        '</tr>';
                             }
                         }
                     });
@@ -160,6 +177,17 @@
                 url: "task/delete",
                 data: { 'id': id },
                 success: function(){
+                    location.reload();
+                }
+            });
+        }
+
+        function deleteSubtask(id) {
+            $.ajax({
+                type: "post",
+                url: "subtask/delete",
+                data: { 'id': id },
+                success: function() {
                     location.reload();
                 }
             });
