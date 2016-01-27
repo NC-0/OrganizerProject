@@ -30,6 +30,8 @@
             jqXHR.setRequestHeader(header, token);
         });
 
+        var filterids = [];
+
         function deleteCategory(cat) {
             if (cat != 0) {
                 $.ajax({
@@ -61,7 +63,7 @@
                 url: "task/delete",
                 data: { 'id': id },
                 success: function() {
-                    $("#heading"+id).animate({'line-height':0},500).fadeOut(500,function() {
+                    $("#heading"+id).animate({'line-height':0},1000).fadeOut(1000,function() {
                         $("#heading"+id).remove();
                     });
                 }
@@ -74,7 +76,7 @@
                 url: "subtask/delete",
                 data: { 'id': id },
                 success: function() {
-                    $("#subtask"+id).animate({'line-height':0},500).fadeOut(500,function() {
+                    $("#subtask"+id).animate({'line-height':0},1000).fadeOut(1000,function() {
                         $("#subtask"+id).remove();
                     });
                 }
@@ -140,13 +142,14 @@
             $('#taskSize').text(data.length);
             $.each(data, function (i, task) {
                 var date = new Date(task.date);
+                filterids.push('#filtereddiv'+i);
                 $('.table-body').append(
-                        "<div class='panel panel-default'>" +
+                        "<div id='filtereddiv"+i+"' class='panel panel-default'>" +
                             "<div class='panel-heading' role='tab' id='heading" + task.id + "'>" +
                                 "<a class='collapsed' role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + task.id + "' aria-expanded='false' aria-controls='collapse'>" +
                                     "<div class='row'>" +
                                         "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox' onclick='completeTask(" + task.id +")'></div>" +
-                                        "<div class='col-xs-3 Header'>" + task.name + "</div>" +
+                                        "<div id='filteredtext"+i+"' class='col-xs-3 Header'>" + task.name + "</div>" +
                                         "<div class='col-xs-3 Header'>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "</div>" +
                                         "<div class='col-xs-2 Header'>" + task.priority_str + "</div>" +
                                         "<div class='col-xs-3 Header'>" +
@@ -194,6 +197,16 @@
 
         }
 
+        function doFilter(filtertext){
+            for(var i=0;i<filterids.length;i++) {
+                var txt = $('#filteredtext' + i).text().toLowerCase();
+                if (txt.indexOf(filtertext.toLowerCase()) + 1) {
+                    $(filterids[i]).css('display','block');
+                }else{
+                    $(filterids[i]).css('display','none');
+                }
+            }
+        }
     </script>
 </head>
 <body onload="loadData()">
@@ -234,9 +247,8 @@
         </td>
         <td class="Content" rowspan="2" colspan="2">
             <div class="Preambula">
-                You have <span id='taskSize'></span> tasks.
+                You have <span id='taskSize'></span> tasks.&nbsp;&nbsp;Filter: <input id="filterinput" type="text" onkeyup="doFilter(this.value)" size="40">
             </div>
-
             <section id="tasktable" class="table table-data TodoList">
 
                 <div class="data-tasks-js">
