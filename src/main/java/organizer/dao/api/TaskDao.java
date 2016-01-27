@@ -75,7 +75,8 @@ public interface TaskDao {
 				" priority_attr.OBJECT_ID = obj.OBJECT_ID AND" +
 				" category_attr.object_id = obj.OBJECT_ID AND" +
 				" status_attr.object_id = obj.OBJECT_ID AND" +
-				" obj.OBJECT_ID=ref.reference"
+				" obj.OBJECT_ID=ref.reference " +
+				" ORDER BY priority_attr.VALUE"
 	);
 
 	String SELECT_TASK_BY_ID = (
@@ -101,7 +102,8 @@ public interface TaskDao {
 					" priority_attr.OBJECT_ID = obj.OBJECT_ID AND" +
 					" category_attr.object_id = obj.OBJECT_ID AND" +
 					" status_attr.object_id = obj.OBJECT_ID AND" +
-					" obj.OBJECT_ID = ?"
+					" obj.OBJECT_ID = ? " +
+					" ORDER BY priority_attr.VALUE"
 	);
 
 	String SELECT_LIST_OF_USER_TASKS_BY_CAT = " " +
@@ -131,5 +133,6 @@ public interface TaskDao {
 		" category_attr.object_id = obj.OBJECT_ID AND" +
 		" status_attr.object_id = obj.OBJECT_ID AND" +
 		" obj.OBJECT_ID=ref.reference AND" +
-		" category_attr.VALUE = ?";
+		" category_attr.VALUE = ? " +
+		" ORDER BY priority_attr.VALUE";
 }
