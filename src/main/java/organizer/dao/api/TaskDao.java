@@ -11,8 +11,6 @@ import organizer.models.User;
 
 import java.util.List;
 
-@Component
-@Scope("prototype")
 public interface TaskDao {
 	void create(int userId, Task task);
 	void delete(Task task);

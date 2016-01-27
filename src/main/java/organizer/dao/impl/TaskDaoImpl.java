@@ -20,8 +20,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-@Scope("prototype")
 public class TaskDaoImpl implements TaskDao {
 	@Autowired
 	@Qualifier("jdbcTemplate")
