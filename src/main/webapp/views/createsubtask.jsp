@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-  <title>Create task</title>
+  <title>Create subtask</title>
 
   <script src="/resources/js/jquery-1.10.2.min.js"></script>
   <script src="/resources/js/bootstrap.min.js"></script>
@@ -13,11 +13,7 @@
   <script src="/resources/js/flatui-radio.js"></script>
   <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
   <link href="/resources/css/flat-ui.css" rel="stylesheet">
-  <link href="/resources/css/datepicker.css" rel="stylesheet">
   <link href="/resources/css/main.css" rel="stylesheet">
-
-  <%--<link href="/resources/css/bootstrap.min.css" rel="stylesheet">--%>
-  <%--<script src="http://code.jquery.com/jquery-1.10.2.js"></script>--%>
   <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
 

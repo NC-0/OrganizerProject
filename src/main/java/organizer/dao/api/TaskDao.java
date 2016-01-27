@@ -1,18 +1,10 @@
 package organizer.dao.api;
 
 import organizer.models.Category;
-import organizer.models.Subtask;
-
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import organizer.models.Task;
 import organizer.models.User;
-
 import java.util.List;
 
-@Component
-@Scope("prototype")
 public interface TaskDao {
 	void create(int userId, Task task);
 	void delete(Task task);
@@ -20,7 +12,6 @@ public interface TaskDao {
 	Task get(User user, int id);
 	List<Task> get(final User user);
 	List<Task> getByCat(final User user, Category category);
-	List <Subtask> getSubtasks (final Task task);
 
 	int OBJ_TYPE      = 1;
 	int OBJ_TYPE_SUBTASKS = 2;
@@ -112,10 +103,6 @@ public interface TaskDao {
 					" status_attr.object_id = obj.OBJECT_ID AND" +
 					" obj.OBJECT_ID = ?"
 	);
-
-	String SELECT_SUBTASKS_BY_TASK_ID = "SELECT obj.object_id, obj.name, attr.value FROM objects obj "
-		+ "JOIN  ATTRIBUTES attr ON obj.object_id=attr.object_id WHERE obj.object_type_id = "+ OBJ_TYPE_SUBTASKS
-		+ " AND obj.parent_id= ? AND attr.attr_id = "+ SUBTASK_ATTR_TYPE;
 
 	String SELECT_LIST_OF_USER_TASKS_BY_CAT = " " +
 		"SELECT" +

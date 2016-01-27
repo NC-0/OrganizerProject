@@ -12,6 +12,7 @@ public interface SubtaskDao {
 	void delete(Subtask subtask);
 	void update(Subtask subtask);
 	List<Subtask> get(Task task);
+	Subtask get(int id);
 
 	int OBJ_TYPE          = 2;
 	int IS_COMPLETED_ATTR = 5;
@@ -37,7 +38,15 @@ public interface SubtaskDao {
 					" AND attr.attr_id = " + IS_COMPLETED_ATTR
 	);
 
-	String SELECT = "SELECT obj.object_id AS id, obj.name, attr.value AS completed FROM objects obj "
-		+ "JOIN attributes attr ON obj.object_id = attr.object_id WHERE obj.object_type_id = " + OBJ_TYPE
-		+ " AND ob.object_id = ? AND attr.attr_id = " + IS_COMPLETED_ATTR;
+	String SELECT = (
+			"SELECT obj.object_id AS id, " +
+					"obj.name AS name, " +
+					"attr.value AS completed " +
+			"FROM objects obj "
+				+ "JOIN attributes attr ON obj.object_id = attr.object_id " +
+			"WHERE obj.object_type_id = " + OBJ_TYPE
+				+ " AND obj.object_id = ? " +
+					"AND attr.attr_id = " + IS_COMPLETED_ATTR
+	);
+
 }
