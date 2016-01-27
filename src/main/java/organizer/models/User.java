@@ -3,6 +3,8 @@ package organizer.models;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import organizer.logic.api.PasswordMatcher;
+import organizer.logic.api.ValidString;
+import organizer.logic.impl.customvalidators.StringPerformer;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -11,6 +13,7 @@ import java.sql.Date;
 @PasswordMatcher(message = "Passwords don't match")
 public class User {
 	private int id;
+	@ValidString
 	@Email
 	@NotEmpty(message = "Enter email")
 	@Size(min = 6, max = 40)
@@ -19,10 +22,10 @@ public class User {
 	@Size(min = 5, max = 20, message = "Your password must between 5 and 20 characters")
 	private String password;
 	private String matchingPassword;
-	@NotNull
+	@ValidString
 	@Size(min = 1, max = 20)
 	private String name;
-	@NotNull
+	@ValidString
 	@Size(min = 1, max = 20)
 	private String surname;
 	private String role;
@@ -33,10 +36,10 @@ public class User {
 	}
 
 	public User(String email, String password, String name, String surname) {
-		this.email = email;
-		this.password = password;
-		this.name = name;
-		this.surname = surname;
+		this.email = StringPerformer.perform(email);
+		this.password = StringPerformer.perform(password);
+		this.name = StringPerformer.perform(name);
+		this.surname = StringPerformer.perform(surname);
 	}
 
 	public boolean isEnabled() {
@@ -68,7 +71,7 @@ public class User {
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = StringPerformer.perform(email);
 	}
 
 	public String getPassword() {
@@ -76,7 +79,7 @@ public class User {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = StringPerformer.perform(password);
 	}
 
 	public String getName() {
@@ -84,7 +87,7 @@ public class User {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = StringPerformer.perform(name);
 	}
 
 	public String getSurname() {
@@ -92,7 +95,7 @@ public class User {
 	}
 
 	public void setSurname(String surname) {
-		this.surname = surname;
+		this.surname = StringPerformer.perform(surname);
 	}
 
 	public String getMatchingPassword() {
