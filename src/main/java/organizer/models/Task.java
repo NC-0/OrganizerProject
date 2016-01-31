@@ -1,7 +1,6 @@
 package organizer.models;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import organizer.logic.api.ValidString;
 
@@ -19,9 +18,12 @@ public class Task {
 	private String name;
 
 	@NotNull
-	@DateTimeFormat(pattern = "dd-mm-yy")
-	@Future(message = "Date must be greater than current date")
+	@Future
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date date;
+
+//	@NotEmpty
+//	private String date;
 
 	private int priority;
 

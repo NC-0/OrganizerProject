@@ -9,6 +9,7 @@ import organizer.dao.cache.TaskRowMapper;
 import organizer.models.Category;
 import organizer.models.Task;
 import organizer.models.User;
+
 import java.util.List;
 
 public class TaskDaoImpl implements TaskDao {
@@ -26,7 +27,9 @@ public class TaskDaoImpl implements TaskDao {
 		task.setId(taskId);
 
 		// Task Object - Fill all task attributes
-		jdbcTemplate.update(TaskDao.INSERT_DATE, taskId, task.getDate());
+		java.sql.Date sqlDate = new java.sql.Date(task.getDate().getTime());
+		jdbcTemplate.update(TaskDao.INSERT_DATE, taskId, sqlDate);
+
 		jdbcTemplate.update(TaskDao.INSERT_PRIORITY, taskId, task.getPriority());
 		jdbcTemplate.update(TaskDao.INSERT_CATEGORY, taskId, task.getCategory().getId());
 		jdbcTemplate.update(TaskDao.INSERT_STATUS, taskId, task.isCompleted());
@@ -35,7 +38,7 @@ public class TaskDaoImpl implements TaskDao {
 		jdbcTemplate.update(TaskDao.INSERT_REF_USER, taskId, userId);
 
 		// Add reference between Task and Category
-		jdbcTemplate.update(TaskDao.INSERT_REF_CATEGORY, taskId, userId);
+		jdbcTemplate.update(TaskDao.INSERT_REF_CATEGORY, taskId, task.getCategory().getId());
 	}
 
 	public void delete(Task task) {
@@ -75,10 +78,11 @@ public class TaskDaoImpl implements TaskDao {
 		return task;
 	}
 
-	public List <Task> get(final User user) {
+	public List <Task> get(final User user, boolean completed) {
 		List<Task> tasks =  jdbcTemplate.query(
 				SELECT_LIST_OF_USER_TASKS,
 				new TaskRowMapper(user),
+				completed,
 				user.getId()
 		);
 		return tasks;

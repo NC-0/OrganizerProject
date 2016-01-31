@@ -1,11 +1,7 @@
 package organizer.dao.api;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import organizer.logic.impl.email.MailTasks;
 import organizer.models.User;
-
-import java.util.List;
 
 public interface UserDao {
 	boolean exist(String email);

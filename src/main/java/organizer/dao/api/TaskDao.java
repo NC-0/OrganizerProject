@@ -3,6 +3,7 @@ package organizer.dao.api;
 import organizer.models.Category;
 import organizer.models.Task;
 import organizer.models.User;
+
 import java.util.List;
 
 public interface TaskDao {
@@ -11,17 +12,15 @@ public interface TaskDao {
 	void edit(Task task);
 	void updateStatus(Task task);
 	Task get(User user, int id);
-	List<Task> get(final User user);
+	List<Task> get(final User user, boolean completed);
 	List<Task> getByCat(final User user, Category category);
 
 	int OBJ_TYPE      = 1;
-	int OBJ_TYPE_SUBTASKS = 2;
 	int DATE_ATTR     = 1;
 	int PRIORITY_ATTR = 2;
 	int CATEGORY_ATTR = 3;
 	int STATUS_ATTR   = 4;
 	int USER_REF_ATTR = 10;
-	int SUBTASK_ATTR_TYPE = 5;
 	int TASK_REF_CATEGORY = 13;
 
 	// Create Task requests
@@ -70,6 +69,7 @@ public interface TaskDao {
 				" priority_attr.attr_id = " + PRIORITY_ATTR + " AND" +
 				" category_attr.attr_id = " + CATEGORY_ATTR + " AND" +
 				" status_attr.attr_id = " + STATUS_ATTR + " AND" +
+				" status_attr.VALUE = ? AND" +
 				" ref.object_id = ? AND" +
 				" ref.attr_id = " + USER_REF_ATTR + " AND" +
 				" date_attr.object_id = obj.OBJECT_ID AND" +

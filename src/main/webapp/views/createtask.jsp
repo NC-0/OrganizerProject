@@ -13,7 +13,7 @@
 	<script src="/resources/js/flatui-radio.js"></script>
 	<link href="/resources/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/resources/css/flat-ui.css" rel="stylesheet">
-	<link href="/resources/css/datepicker.css" rel="stylesheet">
+	<%--<link href="/resources/css/datepicker.css" rel="stylesheet">--%>
 	<link href="/resources/css/main.css" rel="stylesheet">
 
 	<%--<link href="/resources/css/bootstrap.min.css" rel="stylesheet">--%>
@@ -87,29 +87,40 @@
 
 		<spring:bind path="date">
 			<div class="form-group ${status.error ? 'has-error' : ''}">
-				<form:input path="date"  class="input-lg form-control" type="text" id="dateid" placeholder="Date" />
+				<form:input path="date"  class="input-lg form-control" id="dateid" placeholder="Date" />
 				<form:errors path="date" cssClass="help-block" element="small" />
 			</div>
 		</spring:bind>
 
 		<spring:bind path="priority_str">
 			<div class="form-group ${status.error ? 'has-error' : ''}">
-				<form:select path="priority_str" class="form-control">
-					<option selected>Open to choose priority:</option>
-					<form:options items="${priorities}" />
-				</form:select>
+				<select name="priority_str" class="form-control">
+					<c:forEach  var="prior" items="${priorities}">
+						<option value="${prior}"
+								<c:if test="${prior == priority}">
+									selected="selected"
+								</c:if> >
+								${prior}
+						</option>
+					</c:forEach>
+				</select>
 				<form:errors path="priority_str" cssClass="help-block" element="small" />
 			</div>
 		</spring:bind>
 
-
 		<spring:bind path="category_str">
 			<div class="form-group ${status.error ? 'has-error' : ''}">
-				<form:select path="category_str" class="form-control">
-					<option selected>Choose category:</option>
-					<form:options items="${categories}" />
-				</form:select>
-				<div><form:errors path="category_str" cssClass="help-block" element="small" /></div>
+				<select name="category_str" class="form-control">
+					<c:forEach  var="cat" items="${categories}">
+						<option value="${cat}"
+								<c:if test="${cat == category}">
+									selected="selected"
+								</c:if> >
+								${cat}
+						</option>
+					</c:forEach>
+				</select>
+				<form:errors path="category_str" cssClass="help-block" element="small" />
 			</div>
 		</spring:bind>
 

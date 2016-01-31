@@ -10,9 +10,6 @@ import organizer.logic.impl.MessageContent;
 import organizer.logic.impl.email.MailTasks;
 import organizer.models.User;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class UserDaoImpl implements UserDao {
 	@Autowired
 	@Qualifier("jdbcTemplate")

@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
   <title>Edit task</title>
@@ -12,7 +13,7 @@
   <script src="/resources/js/flatui-radio.js"></script>
   <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
   <link href="/resources/css/flat-ui.css" rel="stylesheet">
-  <link href="/resources/css/datepicker.css" rel="stylesheet">
+  <%--<link href="/resources/css/datepicker.css" rel="stylesheet">--%>
   <link href="/resources/css/main.css" rel="stylesheet">
 
   <%--<link href="/resources/css/bootstrap.min.css" rel="stylesheet">--%>
@@ -45,10 +46,6 @@
       left: 10px;
       top: 10px;
     }
-
-    error {
-      color: red;
-    }
   </style>
 
 </head>
@@ -73,37 +70,51 @@
   </table>
   <hr/>
 
-  <div class="form-group">
-    <form:input path="name" class="input-lg form-control" placeholder="Name" />
-    <form:errors path="name" cssClass="error" />
-  </div>
+  <spring:bind path="name">
+    <div class="form-group ${status.error ? 'has-error' : ''}">
+      <form:input path="name" class="input-lg form-control" placeholder="Name" />
+      <form:errors path="name" cssClass="help-block" element="small" />
+    </div>
+  </spring:bind>
 
-  <div class="form-group">
-    <form:input path="date"  class="input-lg form-control" type="text" id="dateid" placeholder="Date" />
-    <form:errors path="date" cssClass="error" />
-  </div>
+  <spring:bind path="date">
+    <div class="form-group ${status.error ? 'has-error' : ''}">
+      <form:input path="date"  class="input-lg form-control" type="text" id="dateid" placeholder="Date" />
+      <form:errors path="date" cssClass="help-block" element="small" />
+    </div>
+  </spring:bind>
 
-  <div class="form-group">
-    <select name="priority_str" class="form-control">
-      <c:forEach  var="prior" items="${priorities}">
-        <option value="${prior}"
+  <spring:bind path="priority_str">
+    <div class="form-group ${status.error ? 'has-error' : ''}">
+      <select name="priority_str" class="form-control">
+        <c:forEach  var="prior" items="${priorities}">
+          <option value="${prior}"
                 <c:if test="${prior == priority}">
                   selected="selected"
                 </c:if> >
-            ${prior}
-        </option>
-      </c:forEach>
-    </select>
-      <%--<span class="error">--%><form:errors path="priority_str" /><%--</span>--%>
+              ${prior}
+          </option>
+        </c:forEach>
+      </select>
+      <form:errors path="priority_str" cssClass="help-block" element="small" />
+    </div>
+  </spring:bind>
 
-  </div>
-
-  <div class="form-group">
-    <form:select path="category_str" class="form-control" itemValue="category_str">
-      <form:options items="${categories}" />
-    </form:select>
-      <%--<span class="error">--%><form:errors path="category_str" /><%--</span>--%>
-  </div>
+  <spring:bind path="category_str">
+    <div class="form-group ${status.error ? 'has-error' : ''}">
+      <select name="category_str" class="form-control">
+        <c:forEach  var="cat" items="${categories}">
+          <option value="${cat}"
+                  <c:if test="${cat == category}">
+                    selected="selected"
+                  </c:if> >
+              ${cat}
+          </option>
+        </c:forEach>
+      </select>
+      <form:errors path="category_str" cssClass="help-block" element="small" />
+    </div>
+  </spring:bind>
 
   <div class="form-group" style="position: relative; top: 12px; padding-bottom: 12px">
     <input type="submit" value="Submit" class="btn btn-lg btn-info btn-block" />

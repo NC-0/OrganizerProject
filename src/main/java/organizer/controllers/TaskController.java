@@ -17,9 +17,10 @@ import organizer.models.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/task")
@@ -34,34 +35,36 @@ public class TaskController {
 	private CategoryDao categoryDaoImpl;
 
 	/**
-	 * map that contains user categories
+	 * map of user's categories
 	 */
 	private Map<String, Category> categories = new LinkedHashMap<String, Category>();
 
-	/**
-	 * map that contains user priorities
-	 */
-	private static Map<String, Integer> priorities = new LinkedHashMap<String, Integer>();
-	static {
-		priorities.put("Very High", 1);
-		priorities.put("High", 2);
-		priorities.put("Normal", 3);
-		priorities.put("Low", 4);
-		priorities.put("So Low", 5);
+	enum Priority {
+		Very_High,
+		High,
+		Normal,
+		Low,
+		So_Low
 	}
 
-	public static Map<Integer, String> priorities2 = new LinkedHashMap<Integer, String>();
-	static {
-		priorities2.put(1, "Very High");
-		priorities2.put(2, "High");
-		priorities2.put(3, "Normal");
-		priorities2.put(4, "Low");
-		priorities2.put(5, "So Low");
-	}
+	private void initAttributes(User user, Model model) {
+		// fill categories from db to categories and jsp attribute
+		List<Category> categoryList = categoryDaoImpl.get(user);
+		List<String> categoryDisplayList  = new ArrayList<String>();
+		for (Category current : categoryList) {
+			categories.put(current.getName(), current);
+			categoryDisplayList.add(current.getName());
+		}
+		// Init user's categories set in jsp
+		model.addAttribute("categories", categoryDisplayList);
 
-//	enum Priority {
-//		Very_High, High, Normal, Low, So_Low
-//	}
+		// Init list of user priorities
+		List<String> priorityList = new ArrayList<String>();
+		for (Priority prior : Priority.values()) {
+			priorityList.add(prior.name());
+		}
+		model.addAttribute("priorities", priorityList);
+	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String initPage(Model model, Authentication authentication) {
@@ -79,42 +82,6 @@ public class TaskController {
 		return "createtask";
 	}
 
-	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public String editGetTask(Integer id, Model model, Authentication authentication) {
-		// get current user
-		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
-		User user = userDetails.getUser();
-
-		// Get task for binding attributes
-		Task task = taskDaoImpl.get(user, id);
-		model.addAttribute("taskForm", task);
-		initAttributes(user, model);
-		model.addAttribute("priority", priorities2.get(task.getPriority()));
-		// show view
-		return "edittask";
-	}
-
-	private void initAttributes(User user, Model model) {
-		// fill categories from db to categories and jsp attribute
-		List<Category> categoryList = categoryDaoImpl.get(user);
-		List<String> categoryDisplayList  = new ArrayList<String>();
-		for (Category current : categoryList) {
-			categories.put(current.getName(), current);
-			categoryDisplayList.add(current.getName());
-		}
-
-		// add categories to user
-		//user.setCategories(categoryList);
-
-		// Init set of user categories loaded from db
-		model.addAttribute("categories", categoryDisplayList);
-
-		// Init list of user priorities
-		List<String> priorityList = new ArrayList<String>();
-		priorityList.addAll(priorities.keySet());
-		model.addAttribute("priorities", priorityList);
-	}
-
 	/**
 	 * @param task - get information that user had input
 	 * @param result - var that contains binding errors
@@ -122,9 +89,9 @@ public class TaskController {
 	 */
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String createTask(@Valid @ModelAttribute("taskForm") Task task,
-									 BindingResult result,
-									 Authentication authentication,
-									 Model model) {
+							 BindingResult result,
+							 Authentication authentication,
+							 Model model) {
 		// get current user
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
 		User user = userDetails.getUser();
@@ -136,7 +103,7 @@ public class TaskController {
 		}
 
 		// it's ok lets do stuff
-		int priority = priorities.get(task.getPriority_str());
+		int priority = Priority.valueOf(task.getPriority_str()).ordinal();
 		Category category = categories.get(task.getCategory_str());
 		task.setPriority(priority);
 		task.setCategory(category);
@@ -144,6 +111,21 @@ public class TaskController {
 
 		// show success view
 		return "redirect:/";
+	}
+
+	@RequestMapping(value = "/edit", method = RequestMethod.GET)
+	public String editGetTask(Integer id, Model model, Authentication authentication) {
+		// get current user
+		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
+		User user = userDetails.getUser();
+
+		// Get task for binding attributes
+		Task task = taskDaoImpl.get(user, id);
+		model.addAttribute("taskForm", task);
+		initAttributes(user, model);
+		model.addAttribute("priority", Priority.values()[task.getPriority()]);
+		// show view
+		return "edittask";
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
@@ -162,7 +144,7 @@ public class TaskController {
 		}
 
 		// it's ok lets do stuff
-		int priority = priorities.get(task.getPriority_str());
+		int priority = Priority.valueOf(task.getPriority_str()).ordinal();
 		Category category = categories.get(task.getCategory_str());
 		task.setPriority(priority);
 		task.setCategory(category);
@@ -172,32 +154,36 @@ public class TaskController {
 		return "redirect:/";
 	}
 
-	@RequestMapping(value="/list",
-		produces = { MediaType.APPLICATION_JSON_VALUE },
-		method = RequestMethod.GET)
-	public  @ResponseBody
-	List<Task> getTasks(Authentication authentication) {
+	@RequestMapping(value="/list/{status}",
+					produces = { MediaType.APPLICATION_JSON_VALUE },
+					method = RequestMethod.GET)
+	public @ResponseBody List<Task> getTasks(@PathVariable("status") boolean isCompleted, Authentication authentication) {
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
 		User user = userDetails.getUser();
-		List<Task> tasks = taskDaoImpl.get(user);
+		List<Task> tasks = taskDaoImpl.get(user, isCompleted);
 		for (Task task : tasks) {
-			task.setPriority_str(priorities2.get(task.getPriority()));
+			if (task.isCompleted() == isCompleted) {
+				task.setPriority_str(Priority.values()[task.getPriority()].name());
+			} else {
+				tasks.remove(task);
+			}
 		}
 		return tasks;
 	}
 
 	@RequestMapping(value="/listcat/{cat}",
-		produces = { MediaType.APPLICATION_JSON_VALUE },
-		method = RequestMethod.GET)
-	public  @ResponseBody
-	List<Task> getTasksCat(Authentication authentication,@PathVariable("cat") int cat) {
+					produces = { MediaType.APPLICATION_JSON_VALUE },
+					method = RequestMethod.GET)
+	public @ResponseBody List<Task> getTasksCat(boolean isCompleted,
+												Authentication authentication,
+												@PathVariable("cat") int cat) {
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
 		User user = userDetails.getUser();
 		Category category = new Category();
 		category.setId(cat);
 		List<Task> tasks = taskDaoImpl.getByCat(user,category);
 		for (Task task : tasks) {
-			task.setPriority_str(priorities2.get(task.getPriority()));
+			task.setPriority_str(Priority.values()[task.getPriority()].name());
 		}
 		return tasks;
 	}
@@ -208,33 +194,19 @@ public class TaskController {
 		int id = Integer.parseInt(request.getParameter("id"));
 		task.setId(id);
 		taskDaoImpl.delete(task);
-		return "redirect:/protected";
+		return "redirect:/";
 	}
 
 	@RequestMapping(value = "/complete",
 		method = RequestMethod.POST)
 	public String completeTask(HttpServletRequest request) {
 		int id = Integer.parseInt(request.getParameter("id"));
-//		int prior = Integer.parseInt(request.getParameter("priority"));
-//		int catId = Integer.parseInt(request.getParameter("category"));
-//		String name = request.getParameter("name");
-//		boolean status = Boolean.parseBoolean(request.getParameter("completed"));
-//
-//		SimpleDateFormat formatter = new SimpleDateFormat("dd-mm-yy");
-//		Date date = null;
-//		try {
-//			date = formatter.parse(request.getParameter("date"));
-//		} catch (ParseException ex) { return "redirect:/"; } // !!
-//
-//		Category cat = new Category();
-//		cat.setId(catId);
 
 		Task task = new Task(); //name, date, prior, cat, status, null);
 		task.setCompleted(true);
 		task.setId(id);
 
 		taskDaoImpl.updateStatus(task);
-
 		return "redirect:/";
 	}
 }

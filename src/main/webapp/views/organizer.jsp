@@ -63,6 +63,8 @@
             });
         }
 
+
+
         function deleteTask(id) {
             $.ajax({
                 type: "post",
@@ -134,9 +136,8 @@
         }
 
         function selectTasks(cat) {
-            /*$("#tasktable tbody tr").remove();*/
             if (cat == 0) {
-                $.get("task/list", function (data) {
+                $.get("task/list/" + false, function (data) {
                     addRows(data, cat);
                 });
             } else {
@@ -150,7 +151,6 @@
             $(".table-body").empty();
             $('#taskSize').text(data.length);
             $.each(data, function (i, task) {
-                if (task.completed) return;
                 var date = new Date(task.date);
                 filterids.push('#filtereddiv'+i);
                 $('.table-body').append(
