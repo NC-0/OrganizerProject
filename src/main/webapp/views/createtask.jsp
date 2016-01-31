@@ -134,7 +134,7 @@
 	$(document).ready(function() {
 		$(function() {
 			$("#dateid").datepicker({
-				dateFormat: "dd-mm-yy"
+				dateFormat: "dd/mm/yy"
 			});
 		});
 	});
