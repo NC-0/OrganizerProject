@@ -54,6 +54,10 @@
 		.help-block {
 			margin-left: 15px;
 		}
+
+		.has-error {
+			margin-bottom: 0px;
+		}
 	</style>
 
 </head>

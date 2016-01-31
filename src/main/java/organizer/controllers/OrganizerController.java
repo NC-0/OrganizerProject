@@ -42,4 +42,12 @@ public class OrganizerController {
 		request.setAttribute("cat", cat);
 		return "calendar";
 	}
+
+	@RequestMapping(value="/archive", method = RequestMethod.GET)
+	public String showArchive(Authentication authentication,Map<String, Object> model){
+		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
+		model.put("username",authorizedUser.getName());
+		model.put("usersurname",authorizedUser.getSurname());
+		return "archive";
+	}
 }

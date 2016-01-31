@@ -1,5 +1,5 @@
 ﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
+          pageEncoding="UTF-8" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <% request.setCharacterEncoding("UTF-8"); %>
@@ -28,7 +28,7 @@
 </head>
 
 <script>
-    var isArchived = false;
+    var isArchived = true;
 </script>
 
 <body onload="loadData()">
@@ -36,10 +36,10 @@
 <table class="Body">
     <tr>
         <td class="Logo">
-            <a href="">Organizer</a>
+            <a href="">Archive</a>
         </td>
         <td class="Action">
-            Your tasks
+            Your completed tasks
         </td>
         <td class="Login">
             <a href='/calendar?cat=0' class='EditTask'><span style='cursor: pointer' class='fui-calendar-solid'></span></a>
@@ -51,23 +51,13 @@
     <tr>
         <td class="Sidebar">
             <div class="Fix">
-                <div class="Title">Tasks</div>
+                <div class="Title"><br></div>
                 <ul>
                     <li>
                         <div class="Item">
-                            <a href="/task/create" class="AddTask">
-                                <span class="fui-plus"></span>
-                                Create
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-                <ul>
-                    <li>
-                        <div class="Item">
-                            <a href="/archive" class="AddTask">
+                            <a href="/" class="AddTask">
                                 <span class="fui-list"></span>
-                                Archive
+                                Organizer page
                             </a>
                         </div>
                     </li>
