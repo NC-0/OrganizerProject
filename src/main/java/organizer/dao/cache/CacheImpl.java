@@ -25,4 +25,8 @@ public class CacheImpl<T>{
 		return object;
 	}
 
+	public void delete(int id){
+		cache.invalidate(id);
+	}
+
 }

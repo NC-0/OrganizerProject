@@ -44,6 +44,7 @@ public class TaskDaoImpl implements TaskDao {
 
 		// Add reference between Task and Category
 		jdbcTemplate.update(TaskDao.INSERT_REF_CATEGORY, taskId, task.getCategory().getId());
+		cache.add(taskId,task);
 	}
 
 	public void delete(Task task) {
@@ -53,6 +54,7 @@ public class TaskDaoImpl implements TaskDao {
 		jdbcTemplate.update(TaskDao.DELETE_REF_TO_CATEGORY, task.getId());
 		// delete task
 		jdbcTemplate.update(TaskDao.DELETE_OBJECT, task.getId());
+		cache.delete(task.getId());
 	}
 
 	public void edit(Task task) {
@@ -68,10 +70,14 @@ public class TaskDaoImpl implements TaskDao {
 		// update all subtasks
 		if (task.isCompleted())
 			jdbcTemplate.update(UPDATE_SUBTASK_STATUS, task.getId());
+		cache.add(task.getId(),task);
 	}
 
 	public void updateStatus(Task task) {
-		jdbcTemplate.update(UPDATE_STATUS, task.isCompleted(), task.getId());
+		jdbcTemplate.update(UPDATE_STATUS,
+			task.isCompleted(),
+			task.getId());
+		cache.add(task.getId(),task);
 	}
 
 	public Task get(User user, int taskId) {

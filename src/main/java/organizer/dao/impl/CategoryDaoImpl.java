@@ -35,6 +35,7 @@ public class CategoryDaoImpl implements CategoryDao {
 			category.getUser().getId(),
 			objectsCurrentValue
 		);
+		cache.add(objectsCurrentValue,category);
 	}
 
 	public void delete(Category category) {
@@ -46,6 +47,7 @@ public class CategoryDaoImpl implements CategoryDao {
 			DELETE,
 			category.getId()
 		);
+		cache.delete(category.getId());
 	}
 
 	public void update(Category category) {
@@ -54,6 +56,7 @@ public class CategoryDaoImpl implements CategoryDao {
 			category.getName(),
 			category.getId()
 		);
+		cache.add(category.getId(),category);
 	}
 
 	public List<Category> get(User user) {

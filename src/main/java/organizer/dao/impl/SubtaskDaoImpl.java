@@ -39,10 +39,14 @@ public class SubtaskDaoImpl implements SubtaskDao {
 			subtaskId,
 			subtask.isCompleted()
 		);
+		cache.add(subtaskId,subtask);
 	}
 
 	public void delete(Subtask subtask) {
-		jdbcTemplate.update(SubtaskDao.DELETE, subtask.getId());
+		jdbcTemplate.update(
+			SubtaskDao.DELETE,
+			subtask.getId());
+		cache.delete(subtask.getId());
 	}
 
 	public void update(Subtask subtask) {
@@ -57,6 +61,7 @@ public class SubtaskDaoImpl implements SubtaskDao {
 			subtask.isCompleted(),
 			subtask.getId()
 		);
+		cache.add(subtask.getId(),subtask);
 	}
 
 	// Get a list of subtasks of a specific task
