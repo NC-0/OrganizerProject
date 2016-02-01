@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import organizer.dao.api.CategoryDao;
 import organizer.dao.api.UserDao;
-import organizer.dao.cache.CategoryRowMapper;
+import organizer.dao.cache.CacheImpl;
+import organizer.dao.cache.CategoryMapper;
 import organizer.models.Category;
 import organizer.models.User;
 
@@ -17,34 +18,36 @@ public class CategoryDaoImpl implements CategoryDao {
 	@Qualifier("jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
 
+	@Autowired
+	@Qualifier("daoCache")
+	private CacheImpl cache;
+
 	public void create(Category category) {
-		if(category.getUser()== null || category.getUser().getId() <= 0)
-			throw new IllegalArgumentException("Illegal value userId.");
 		jdbcTemplate.update(
-				INSERT_OBJECT,
+			INSERT,
 			category.getName()
 		);
-		category.setId(
-				jdbcTemplate.queryForObject(
-						SELECT_ID, Integer.class
-				)
-		);
+		Integer objectsCurrentValue = jdbcTemplate.queryForObject(
+			UserDao.SELECT_ID,
+			Integer.class);
 		jdbcTemplate.update(
-				INSERT_REF,
-				category.getId(),
-				category.getUser().getId()
+			INSERT_REF,
+			category.getUser().getId(),
+			objectsCurrentValue
 		);
+		cache.add(objectsCurrentValue,category);
 	}
 
 	public void delete(Category category) {
 		jdbcTemplate.update(
-				DELETE_OBJECT,
-				category.getId()
+			DELETE_REF,
+			category.getId()
 		);
 		jdbcTemplate.update(
-				DELETE_REF,
-				category.getId()
+			DELETE,
+			category.getId()
 		);
+		cache.delete(category.getId());
 	}
 
 	public void update(Category category) {
@@ -53,13 +56,24 @@ public class CategoryDaoImpl implements CategoryDao {
 			category.getName(),
 			category.getId()
 		);
+		cache.add(category.getId(),category);
 	}
 
 	public List<Category> get(User user) {
 		return jdbcTemplate.query(
-			SELECT_BY_USER_ID,
-			new CategoryRowMapper(user),
+			SELECT_USER_CATEGORIES,
+			new CategoryMapper(cache),
 			user.getId()
 		);
+	}
+
+	public Category get(int id,User user) {
+		Category category = jdbcTemplate.queryForObject(
+			SELECT_CATEGORY_BY_ID,
+			new CategoryMapper(cache),
+			id,
+			user.getId()
+		);
+		return category;
 	}
 }

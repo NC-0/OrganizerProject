@@ -2,23 +2,31 @@ package organizer.models;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
+import organizer.logic.api.ValidString;
+
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class Task {
+
 	private int id;
-	@Size(min=4, max=20)
+	@ValidString
+	@Size(min=1, max=30)
 	private String name;
 
 	@NotNull
-	@DateTimeFormat(pattern = "yyyy-mm-dd")
+	@Future
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date date;
 
+//	@NotEmpty
+//	private String date;
+
 	private int priority;
+
 	/** String interpretation of number for User */
 	@NotEmpty
 	private String priority_str;
@@ -31,11 +39,11 @@ public class Task {
 
 	private boolean completed;
 	private List<Subtask> subtasks;
-	private User user;
 
 	public Task() {}
 
 	public Task(String name, Date date, int priority, Category category, boolean completed, List<Subtask> subtasks) {
+		//this.id = id;
 		this.name = name;
 		this.date = date;
 		this.priority = priority;
@@ -114,55 +122,5 @@ public class Task {
 
 	public void setPriority_str(String priority_str) {
 		this.priority_str = priority_str;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj instanceof Task) {
-			Task task = (Task) obj;
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd mm yyyy hh:mm:ss", Locale.ENGLISH);
-			return
-					(
-							equals(id, task.getId()) &&
-							equals(name, task.getName()) &&
-							equals(simpleDateFormat.format(date), simpleDateFormat.format(task.getDate())) &&
-							equals(priority, task.getPriority()) &&
-							equals(category, task.getCategory()) &&
-							equals(completed, task.isCompleted()) &&
-							equals(subtasks, task.getSubtasks())
-					);
-		}
-		return false;
-
-	}
-
-	private boolean equals(Object firstObject, Object secondObject) {
-		return (firstObject == secondObject || (firstObject != null && firstObject.equals(secondObject)));
-	}
-
-	@Override
-	public int hashCode() {
-		int hash = 37;
-		hash = hash * 17 + hashCode(id);
-		hash = hash * 17 + hashCode(name);
-		hash = hash * 17 + hashCode(date);
-		hash = hash * 17 + hashCode(priority);
-		hash = hash * 17 + hashCode(category);
-		hash = hash * 17 + hashCode(completed);
-		hash = hash * 17 + hashCode(subtasks);
-		return hash;
-	}
-
-	private int hashCode(Object object){
-		return object !=null? object.hashCode():0;
 	}
 }

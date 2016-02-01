@@ -2,15 +2,12 @@ package organizer.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import organizer.dao.api.UserDao;
-import organizer.dao.cache.CategoryRowMapper;
-import organizer.dao.cache.SubtaskRowMapper;
-import organizer.dao.cache.TaskRowMapper;
-import organizer.dao.cache.UserRowMapper;
+import organizer.dao.rowmappers.MailTaskRowMapper;
+import organizer.dao.rowmappers.UserRowMapper;
 import organizer.logic.impl.MessageContent;
-import organizer.models.Task;
+import organizer.logic.impl.email.MailTasks;
 import organizer.models.User;
 
 public class UserDaoImpl implements UserDao {
@@ -41,7 +38,6 @@ public class UserDaoImpl implements UserDao {
 				user.getName());
 			Integer objectsCurrentValue = jdbcTemplate.queryForObject(
 				SELECT_ID, Integer.class);
-			user.setId(objectsCurrentValue);
 			jdbcTemplate.update(
 				INSERT_EMAIL,
 				objectsCurrentValue,
@@ -58,21 +54,24 @@ public class UserDaoImpl implements UserDao {
 				INSERT_ENABLED,
 				objectsCurrentValue,
 				"FALSE");//TRUE-enabled
+			jdbcTemplate.update(
+				INSERT_VERIFY,
+				objectsCurrentValue,
+				user.getVerify(),
+				user.getRegistrationDate()
+			);
 			return String.format(MessageContent.USER_CREATED, user.getEmail());
 		}
-		throw new DuplicateKeyException("User already exist");
+		throw new UnsupportedOperationException();
 	}
 
-	public void delete(User user) {
+	public void delete(int id) {
 		jdbcTemplate.update(
-				DELETE_OBJECTS_REF_T0_USER,
-				user.getId()
-		);
+			DELETE_OBJECTS_REF_T0_USER,
+			id);
 		jdbcTemplate.update(
-				DELETE_OBJECT,
-				user.getId()
-		);
-
+			DELETE_OBJECT,
+			id);
 	}
 
 	public void edit(User user) {
@@ -97,30 +96,57 @@ public class UserDaoImpl implements UserDao {
 			user.getId());
 	}
 
+	public boolean existVerify(String verificationId) {
+		boolean verify = jdbcTemplate.queryForObject(
+			SELECT_VERIFY,
+			new Object[]{verificationId},
+			Integer.class) != 0;
+		return verify;
+	}
+
+	public User verify(String verificationId){
+		if (existVerify(verificationId)){
+			int userId = jdbcTemplate.queryForObject(
+				SELECT_USER_ID,
+				new Object[]{verificationId},
+				Integer.class);
+			User user = jdbcTemplate.queryForObject(
+				SELECT_USER_BY_ID,
+				new Object[]{userId},
+				new UserRowMapper());
+			return user;
+		}
+		return null;
+	}
+
 	public User get(String email) {
 		if (exist(email)) {
-			return get(SELECT_USER_BY_EMAIL,email);
+			User user = jdbcTemplate.queryForObject(
+				SELECT_USER_BY_EMAIL,
+				new Object[]{email},
+				new UserRowMapper());
+			return user;
 		}
 		return null;
 	}
 
 	public User get(int id) {
 		if (exist(id)) {
-			return get(SELECT_USER_BY_ID,String.valueOf(id));
+			User user = jdbcTemplate.queryForObject(
+				SELECT_USER_BY_ID,
+				new Object[]{id},
+				new UserRowMapper());
+			return user;
 		}
 		return null;
 	}
 
-	private User get(String query,String value){
-		User user = jdbcTemplate.queryForObject(
-				query,
-				new Object[]{value},
-				new UserRowMapper());
-		user.setCategories(jdbcTemplate.query(SELECT_CATEGORIES_BY_USER_ID,new CategoryRowMapper(user),user.getId()));
-		user.setTasks(jdbcTemplate.query(SELECT_TASK_BY_USER_ID, new TaskRowMapper(user),user.getId()));
-		for (Task task : user.getTasks()) {
-			task.setSubtasks(jdbcTemplate.query(SELECT_SUBTASKS_BY_TASK_ID, new SubtaskRowMapper(task),task.getId()));
-		}
-		return user;
+	public MailTasks getTommorowTasks(){
+		MailTasks mailTasks = new MailTasks();
+		jdbcTemplate.query(
+			SELECT_USERS_AND_TASKS,
+			new MailTaskRowMapper(
+				mailTasks.getTaskMultimap()));
+		return mailTasks;
 	}
 }

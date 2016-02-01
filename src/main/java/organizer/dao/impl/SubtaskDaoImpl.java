@@ -2,47 +2,51 @@ package organizer.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import organizer.dao.api.SubtaskDao;
-import organizer.dao.cache.SubtaskRowMapper;
+import organizer.dao.cache.CacheImpl;
+import organizer.dao.cache.SubtaskMapper;
 import organizer.models.Subtask;
 import organizer.models.Task;
 
 import java.util.List;
 
-@Component
-@Scope("prototype")
 public class SubtaskDaoImpl implements SubtaskDao {
 	@Autowired
 	@Qualifier("jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	@Qualifier("daoCache")
+	private CacheImpl cache;
 	
 	public void create(Subtask subtask) {
-		if(subtask.getTask()== null || subtask.getTask().getId() <= 0)
-			throw new IllegalArgumentException("Illegal value taskId.");
 		jdbcTemplate.update(
-			INSERT,
+			SubtaskDao.INSERT,
 			subtask.getTask().getId(),
 			subtask.getName()
 		);
 
 		int subtaskId = jdbcTemplate.queryForObject(
-			SELECT_ID,
+			SubtaskDao.SELECT_ID,
 			Integer.class
 		);
 
 		subtask.setId(subtaskId);
 
 		jdbcTemplate.update(
-			INSERT_COMPLETED,
-			subtaskId
+			SubtaskDao.INSERT_COMPLETED,
+			subtaskId,
+			subtask.isCompleted()
 		);
+		cache.add(subtaskId,subtask);
 	}
 
 	public void delete(Subtask subtask) {
-		jdbcTemplate.update(DELETE, subtask.getId());
+		jdbcTemplate.update(
+			SubtaskDao.DELETE,
+			subtask.getId());
+		cache.delete(subtask.getId());
 	}
 
 	public void update(Subtask subtask) {
@@ -57,23 +61,24 @@ public class SubtaskDaoImpl implements SubtaskDao {
 			subtask.isCompleted(),
 			subtask.getId()
 		);
+		cache.add(subtask.getId(),subtask);
 	}
 
 	// Get a list of subtasks of a specific task
 	public List<Subtask> get(Task task) {
 		return jdbcTemplate.query(
 			SubtaskDao.SELECT_BY_TASK_ID,
-			new SubtaskRowMapper(task),
+			new SubtaskMapper(cache,task),
 			task.getId()
 		);
 	}
 
-	// Get a single subtask by id [NOT IMPLEMENTED]
-//	public Subtask get(int subtaskId) {
-//		return jdbcTemplate.queryForObject(
-//			SubtaskDao.SELECT,
-//			new SubtaskRowMapper(),
-//			subtaskId
-//		);
-//	}
+	// Get a single subtask by id
+	public Subtask get(int id) {
+		return jdbcTemplate.queryForObject(
+			SubtaskDao.SELECT,
+			new SubtaskMapper(cache),
+			id
+		);
+	}
 }

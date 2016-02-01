@@ -1,10 +1,18 @@
 package organizer.models;
 
+import organizer.logic.api.ValidString;
+
+import javax.validation.constraints.Size;
+
 public class Subtask {
 	private int id;
+	@ValidString
+	@Size(min=1, max=30)
 	private String name;
 	private boolean completed;
 	private Task task;
+
+	public Subtask() {}
 
 	public Subtask(int id, String name, boolean completed, Task task) {
 		this.name = name;

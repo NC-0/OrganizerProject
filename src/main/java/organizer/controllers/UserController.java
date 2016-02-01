@@ -4,8 +4,10 @@ import javax.mail.MessagingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
@@ -25,11 +27,15 @@ import organizer.dao.api.UserDao;
 import organizer.logic.impl.MessageContent;
 import organizer.logic.impl.email.MailSender;
 import organizer.logic.impl.security.CustomUserDetails;
+import organizer.logic.impl.security.RestorePasswordMap;
 import organizer.logic.impl.security.UserAuthenticationService;
 import organizer.models.User;
 
+import java.sql.Date;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class UserController {
@@ -41,6 +47,10 @@ public class UserController {
 	@Autowired
 	@Qualifier("mailSender")
 	private MailSender mailSender;
+
+	@Autowired
+	@Qualifier("restorePassMap")
+	private RestorePasswordMap restorePasswordMap;
 
 	@RequestMapping(value="/registration",method=RequestMethod.GET)
 	public String createUserForm(Authentication authentication,Map<String, Object> model){
@@ -54,10 +64,7 @@ public class UserController {
 	@RequestMapping(value="/updateprofile",method=RequestMethod.GET)
 	public String editUserForm(Authentication authentication,Map<String, Object> model){
 		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
-		User user = new User(authorizedUser.getEmail(),
-			authorizedUser.getPassword(),
-			authorizedUser.getName(),
-			authorizedUser.getSurname());
+		User user = authorizedUser.getUser();
 		model.put("userForm",user);
 		return "edituser";
 	}
@@ -71,40 +78,23 @@ public class UserController {
 		}
 		model.setViewName("login");
 		if(authentication!=null) {
-			System.out.println("a"+authentication.getName());
 			model = new ModelAndView("redirect:/protected");
 		}
 		return model;
 	}
 
 	@RequestMapping(value = "/verification",method = RequestMethod.GET)
-	public String validate(HttpServletRequest request,Authentication authentication,
-								  @CookieValue(value = "verificationId",
-									  defaultValue = "undefined") String cookieVerify	){
-		String message=MessageContent.VERIFY_LOGIN;
-		System.out.println(cookieVerify);
-		if(authentication!=null){
-			message = MessageContent.VERIFY_ERROR;
-			if(!cookieVerify.equals("undefined")) {
-				CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
-				message = String.format(MessageContent.VERIFY_ENABLED, authorizedUser.getEmail());
-				if(!authorizedUser.getEnabled()) {
-					String verifyId = request.getParameter("verific");
-					if(verifyId.equals(cookieVerify)) {
-						message = MessageContent.VERIFY_SUCCESSFULL;
-						User user = new User(authorizedUser.getEmail(),
-							authorizedUser.getPassword(),
-							authorizedUser.getName(),
-							authorizedUser.getSurname());
+	public String validate(HttpServletRequest request){
+		String message = MessageContent.VERIFY_ERROR;
+		String verifyId = request.getParameter("verific");
+		if(verifyId!=null) {
+			User user = userDaoImpl.verify(verifyId);
+			if (user != null) {
+				if((System.currentTimeMillis()-user.getRegistrationDate().getTime())<7*24*60*60*1000){
+					if(user.isEnabled()==false) {
 						user.setEnabled(true);
-						user.setRole("USER_ROLE");
-						user.setId(authorizedUser.getId());
-						GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
-						authentication = new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
-							authentication.getCredentials(),
-							Arrays.asList(authority));
-						SecurityContextHolder.getContext().setAuthentication(authentication);
 						userDaoImpl.edit(user);
+						message = MessageContent.VERIFY_SUCCESSFULL;
 					}
 				}
 			}
@@ -114,8 +104,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value="/createuser",method=RequestMethod.POST)
-	public String createUser(HttpServletResponse response,
-									 @Valid @ModelAttribute("userForm") User userForm,
+	public String createUser(@Valid @ModelAttribute("userForm") User userForm,
 									 BindingResult result,
 									 Map<String, Object> model){
 		if (result.hasErrors()) {
@@ -123,16 +112,19 @@ public class UserController {
 		}
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		String hashedPass = bCryptPasswordEncoder.encode(userForm.getPassword());
+		String verificationId = bCryptPasswordEncoder.encode(userForm.getEmail()+MessageContent.MAIL+userForm.getName()+userForm.getSurname());
+		java.sql.Date timeNow = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
+		userForm.setVerify(verificationId);
 		userForm.setPassword(hashedPass);
+		userForm.setRegistrationDate(timeNow);
 		String message;
 		try{
 			message = userDaoImpl.create(userForm);
-			String verificationId = bCryptPasswordEncoder.encode(userForm.getEmail()+MessageContent.MAIL+userForm.getName()+userForm.getSurname());
-			Cookie cookieVerify = new Cookie("verificationId", verificationId);
-			cookieVerify.setMaxAge(7*24*60*60);
-			response.addCookie(cookieVerify);
 			try {
-				mailSender.sendMail(userForm,verificationId);
+				mailSender.sendMail(userForm.getEmail(),
+					verificationId,
+					MessageContent.MAIL_SUBJECT_VERIFICATION,
+					MessageContent.MAIL_TEXT_VERIFICATION);
 			}catch (MessagingException e) {
 				model.put("message",message);
 				return "createuser";
@@ -141,28 +133,40 @@ public class UserController {
 			model.put("message",String.format(MessageContent.USER_ALREADY_EXIST, userForm.getEmail()));
 			return "createuser";
 		}
-		return "redirect:/";
+		model.put("message",String.format(MessageContent.USER_CREATED, userForm.getEmail()));
+		return "hello";
 	}
 
 	@RequestMapping(value="/edituser",method=RequestMethod.POST)
-	public String editUser(HttpServletResponse response,
-								  @Valid @ModelAttribute("userForm") User userForm,
-								  BindingResult result, Map<String, Object> model,
-								  Authentication authentication){
-		if (result.hasErrors()) {
-			return "edituser";
-		}
+	public String editUser(@Valid @ModelAttribute("userForm") User userForm,
+								  BindingResult result,
+								  Authentication authentication,
+								  @RequestParam(value = "editecheckbox", required = false) boolean checkEdit,
+								  HttpServletRequest request){
+		request.setAttribute("checkedpass",checkEdit);
 		CustomUserDetails authorizedUser = (CustomUserDetails)authentication.getPrincipal();
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		String hashedPass = bCryptPasswordEncoder.encode(userForm.getPassword());
-		userForm.setPassword(hashedPass);
-		userForm.setId(authorizedUser.getId());
-		userForm.setEnabled(true);
-		authorizedUser.setName(userForm.getName());
-		authorizedUser.setSurname(userForm.getSurname());
-		userDaoImpl.edit(userForm);
-		userDaoImpl.editPassword(userForm);
-		return "edituser";
+		if (result.hasErrors()) {
+			if(result.hasFieldErrors("password") && !result.hasFieldErrors("name") && !result.hasFieldErrors("surname")){
+				userForm.setId(authorizedUser.getId());
+				userForm.setEnabled(true);
+				authorizedUser.setName(userForm.getName());
+				authorizedUser.setSurname(userForm.getSurname());
+				userDaoImpl.edit(userForm);
+			}
+			else
+				return "edituser";
+		}
+		if(checkEdit){
+			if (result.hasFieldErrors("password")) {
+				return "edituser";
+			}
+			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+			String hashedPass = bCryptPasswordEncoder.encode(userForm.getPassword());
+			userForm.setId(authorizedUser.getId());
+			userForm.setPassword(hashedPass);
+			userDaoImpl.editPassword(userForm);
+		}
+		return "redirect:/updateprofile";
 	}
 
 	@RequestMapping(value = "/deleteuser",method = RequestMethod.POST)
@@ -178,5 +182,56 @@ public class UserController {
 			userDaoImpl.delete(user);
 			return "redirect:/j_spring_security_logout";
 		}
+	}
+
+	@RequestMapping(value = "/restore",method = RequestMethod.GET)
+	public String restore(Authentication authentication){
+		if(authentication!=null)
+			return "redirect:/";
+		return "restore";
+	}
+
+	@RequestMapping(value = "/restorepass",method = RequestMethod.POST)
+	public String restorePassword(HttpServletRequest request){
+		String email = request.getParameter("email");
+		if(userDaoImpl.exist(email)){
+			String generatedString = RandomStringUtils.randomAlphanumeric(10);
+			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+			String hashedPass = bCryptPasswordEncoder.encode(generatedString);
+			String verificationId = bCryptPasswordEncoder.encode(email+new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+			User user = userDaoImpl.get(email);
+			user.setPassword(hashedPass);
+			user.setVerify(verificationId);
+			restorePasswordMap.addRestore(verificationId,user);
+			try {
+				mailSender.sendMail(email,
+					generatedString,
+					MessageContent.MAIL_SUBJECT_FORGET_PASS,
+					MessageContent.MAIL_TEXT_FORGET+
+						String.format(
+						MessageContent.MAIL_PASS_CONFIRMATION,
+						verificationId,
+						verificationId));
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+			request.setAttribute("message",MessageContent.EMAIL_PASS);
+		}else {
+			request.setAttribute("message",String.format(MessageContent.USER_NOT_EXIST,email));
+		}
+		return "restore";
+	}
+
+	@RequestMapping(value = "restoreverify",method = RequestMethod.GET)
+	public String restoreVerification(HttpServletRequest request){
+		String message = MessageContent.VERIFY_ERROR;
+		String restore = request.getParameter("restore");
+		User user = restorePasswordMap.verify(restore);
+		if(user!=null){
+			userDaoImpl.editPassword(user);
+			message = MessageContent.VERIFY_SUCCESSFULL;
+		}
+		request.setAttribute("message",message);
+		return "hello";
 	}
 }

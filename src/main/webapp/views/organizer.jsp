@@ -1,64 +1,118 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8" %>
 <% request.setCharacterEncoding("UTF-8"); %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Organizer</title>
-    <style>
-        .error {
-            color: red; font-weight: bold;
-        }
-    </style>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
+
+    <script src="/resources/js/jquery-1.10.2.min.js"></script>
+    <script src="/resources/js/bootstrap.min.js"></script>
+    <script src="/resources/js/bootstrap-select.js"></script>
+    <script src="/resources/js/bootstrap-switch.js"></script>
+    <script src="/resources/js/flatui-checkbox.js"></script>
+    <script src="/resources/js/flatui-radio.js"></script>
+    <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/resources/css/flat-ui.css" rel="stylesheet">
+    <link href="/resources/css/main.css" rel="stylesheet">
+    <link href="/resources/css/style.css" rel="stylesheet">
+    <link href="/resources/css/styles.css" rel="stylesheet">
+    <script src="/resources/js/app/organizer.js"></script>
 
 </head>
-<body>
-<a class="btn btn-primary btn-lg" href="/categorylist" >Мои категории</a>
-<a class="btn btn-primary btn-lg" href="/createtask">Создание задачи</a>
-<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">Новая категория</button>
 
-<table>
-    <form:form action="createcategory" commandName="categoryForm">
+<script>
+    var isArchived = false;
+</script>
+
+<body onload="loadData()">
+
+<table class="Body">
     <tr>
-        <td colspan="3" align="left"><form:errors path="name" cssClass="error"/></td>
+        <td class="Logo">
+            <a href="">Organizer</a>
+        </td>
+        <td class="Action" onmousedown="return false" onselectstart="return false">
+            Your tasks
+        </td>
+        <td class="Login">
+            <a href='/calendar?cat=0' class='EditTask'><span style='cursor: pointer' class='fui-calendar-solid'></span></a>
+            <a href='/updateprofile' class='EditTask'><span style='cursor: pointer' class='fui-gear'></span></a>
+            ${username}&nbsp;${usersurname}<br/>
+            <a href="j_spring_security_logout" class="Logout">Logout</a>
+        </td>
     </tr>
     <tr>
-        <td width="20%">Category title: </td>
-        <td width="40%"><form:input path="name" size="30"/></td>
-        <td><input type="submit" value="Add"/></td>
+        <td class="Sidebar">
+            <div class="Fix">
+                <div class="Title" onmousedown="return false" onselectstart="return false">Tasks</div>
+                <ul>
+                    <li>
+                        <div class="Item">
+                            <a href="/task/create" class="AddTask">
+                                <span class="fui-plus"></span>
+                                Create
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <div class="Item">
+                            <a href="/archive" class="AddTask">
+                                <span class="fui-list"></span>
+                                Archive
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="Title" onmousedown="return false" onselectstart="return false">Categories</div>
+                <ul>
+                    <li>
+                        <div class="Item">
+                            <a href="/addcategory" class="EditTask">
+                                <span class="fui-plus"></span>Create
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <ul id="elements"></ul>
+            </div>
+        </td>
+        <td class="Content" rowspan="2" colspan="2">
+            <div class="Preambula">
+                You have <span id='taskSize'></span> tasks.&nbsp;&nbsp;Filter: <input id="filterinput" type="text" onkeyup="doFilter(this.value)" size="40">
+            </div>
+            <section id="tasktable" class="table table-data TodoList">
+
+                <div class="data-tasks-js">
+                    <!-- заголовочные столбцы таблицы, - неизменяемая строка таблицы -->
+                    <div class="row table-header">
+                        <div class="col-xs-1 Header"><input class='TaskSelAll' type='checkbox' disabled="true"></div>
+                        <div class="col-xs-3 Header">Task name</div>
+                        <div class="col-xs-3 Header">Date</div>
+                        <div class="col-xs-2 Header">Priority</div>
+                        <div class="col-xs-3 Header">Operations</div>
+                    </div>
+                    <div class='row table-body'>
+                        <div class='panel-group accordion' id='accordion' role='tablist' aria-multiselectable='true'>  <!-- accordion begin  -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </td>
     </tr>
-    </form:form>
+    <tr>
+        <td class="Footer">
+            &copy;&nbsp;Organizer Team, 2016
+        </td>
+    </tr>
 </table>
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add category</h4>
-            </div>
-            <div class="modal-body">
-                <table>
-                    <form:form action="createcategory" commandName="categoryForm">
-                        <tr>
-                            <td colspan="3" align="left"><form:errors path="name" cssClass="error"/></td>
-                        </tr>
-                        <tr>
-                            <td width="20%">Category title: </td>
-                            <td width="40%"><form:input path="name" class="form-control" size="30"/></td>
-                            <td><input class="btn btn-primary" type="submit" value="Add"/></td>
-                        </tr>
-                    </form:form>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+
 </body>
 </html>
+

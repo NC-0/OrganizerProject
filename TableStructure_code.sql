@@ -1,4 +1,4 @@
-﻿-- Create tables
+﻿﻿-- Create tables
 CREATE TABLE OBJTYPE
   (
     OBJECT_TYPE_ID NUMBER(20) NOT NULL ENABLE,
@@ -89,6 +89,8 @@ INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
 INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
   VALUES(8, 3, NULL,'Surname','Фамилия');
 INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
+  VALUES(9, 3, NULL,'Verify','Код подтверждения');
+INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
   VALUES(11, 3, NULL,'Enabled','Подтвержден');
   
 -- Add References
@@ -97,7 +99,7 @@ INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
 INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
   VALUES (12, 1, 4,'Assign Category','Присвоение категории');  
 INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
-  VALUES (13, 1, 4,'Task ref to category','Ссылка задачи на категорию');  
+  VALUES (13, 1, 4,'Task ref to category','Ссылка задачи на категорию'); 
 
 -- Objects trigger
 CREATE OR REPLACE TRIGGER object_id_generate_trigger
@@ -116,4 +118,45 @@ begin
   EXECUTE IMMEDIATE 'ALTER SESSION SET NLS_Language=''||american';
   EXECUTE IMMEDIATE 'SELECT my_sequence.nextval FROM dual';
 end;
+/
+
+
+--Delete noverified user procedure
+--plsql>grant create job to organizer;
+CREATE OR REPLACE PROCEDURE delete_noverified_users 
+AS BEGIN
+  EXECUTE IMMEDIATE q'[DELETE 
+FROM 
+objects usrs
+WHERE
+usrs.OBJECT_TYPE_ID=3 AND 
+usrs.OBJECT_ID IN 
+(SELECT 
+enabled_attr.object_id 
+FROM 
+attributes enabled_attr,
+attributes reg_date_attr
+WHERE 
+enabled_attr.ATTR_ID=11 AND
+lower(enabled_attr.VALUE)='false' AND
+reg_date_attr.ATTR_ID=9 AND
+sysdate>reg_date_attr.DATE_VALUE+7 AND
+reg_date_attr.OBJECT_ID=enabled_attr.OBJECT_ID)]';
+END;
+/
+
+
+--Delete noverified user job
+BEGIN
+  DBMS_SCHEDULER.CREATE_JOB (
+   job_name           =>  'delete_job',
+   job_type           =>  'STORED_PROCEDURE',
+   job_action         =>  'delete_noverified_users',
+   enabled            =>  TRUE,
+   start_date         =>   sysdate,
+   repeat_interval    =>  'FREQ=DAILY;INTERVAL=7',
+   end_date           =>   sysdate+365,
+   auto_drop          =>   FALSE,
+   comments           =>  'Delete not verified users every 7 days');
+END;
 /
