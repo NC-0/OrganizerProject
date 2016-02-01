@@ -1,4 +1,4 @@
-package organizer.dao.cache;
+package organizer.dao.rowmappers;
 
 
 import com.google.common.collect.ArrayListMultimap;

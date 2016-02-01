@@ -16,10 +16,10 @@ public class Logging {
 	}
 
 	public void logBefore(JoinPoint joinPoint){
-		log.info("-------------------------------------");
+		log.debug("-------------------------------------");
 		Object[] signatureArgs = joinPoint.getArgs();
 		for (Object signatureArg: signatureArgs) {
-			log.info(joinPoint.getSignature().getName()+";arg: " + signatureArg);
+			log.debug(joinPoint.getSignature().getName()+";arg: " + signatureArg);
 		}
 	}
 }

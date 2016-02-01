@@ -68,7 +68,7 @@
             if(cat==0){
                 $.ajax({
                     type: "GET",
-                    url: "task/list",
+                    url: "task/list/false",
                     cache: false,
                     async: false,
                     dataType: 'json',
@@ -219,7 +219,7 @@
                             break;
                     }
                     userEvents=userEvents+"{\"title\":\""+data[i].name+
-                            "\",\"start\":\""+date.getFullYear()+"-"+date.getMonth()+1+"-"+date.getDate()+
+                            "\",\"start\":\""+date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+
                             "\",\"color\":\""+clr+
                             "\",\"textColor\":\""+'#000000'+
                             "\",\"level\":\""+data[i].priority+

@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import organizer.dao.api.CategoryDao;
 import organizer.dao.api.UserDao;
-import organizer.dao.cache.CategoryRowMapper;
+import organizer.dao.cache.CacheImpl;
+import organizer.dao.cache.CategoryMapper;
 import organizer.models.Category;
 import organizer.models.User;
 
@@ -16,6 +17,10 @@ public class CategoryDaoImpl implements CategoryDao {
 	@Autowired
 	@Qualifier("jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	@Qualifier("daoCache")
+	private CacheImpl cache;
 
 	public void create(Category category) {
 		jdbcTemplate.update(
@@ -54,7 +59,7 @@ public class CategoryDaoImpl implements CategoryDao {
 	public List<Category> get(User user) {
 		return jdbcTemplate.query(
 			SELECT_USER_CATEGORIES,
-			new CategoryRowMapper(),
+			new CategoryMapper(cache),
 			user.getId()
 		);
 	}
@@ -62,7 +67,7 @@ public class CategoryDaoImpl implements CategoryDao {
 	public Category get(int id,User user) {
 		Category category = jdbcTemplate.queryForObject(
 			SELECT_CATEGORY_BY_ID,
-			new CategoryRowMapper(),
+			new CategoryMapper(cache),
 			id,
 			user.getId()
 		);

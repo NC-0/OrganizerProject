@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import organizer.dao.api.TaskDao;
 import organizer.dao.api.UserDao;
-import organizer.dao.cache.TaskRowMapper;
+import organizer.dao.cache.CacheImpl;
+import organizer.dao.cache.TaskMapper;
 import organizer.models.Category;
 import organizer.models.Task;
 import organizer.models.User;
@@ -16,6 +17,10 @@ public class TaskDaoImpl implements TaskDao {
 	@Autowired
 	@Qualifier("jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	@Qualifier("daoCache")
+	private CacheImpl cache;
 
 	public void create(int userId, Task task) {
 		task.getName();
@@ -72,7 +77,7 @@ public class TaskDaoImpl implements TaskDao {
 	public Task get(User user, int taskId) {
 		Task task = jdbcTemplate.queryForObject(
 			SELECT_TASK_BY_ID,
-			new TaskRowMapper(user),
+			new TaskMapper(cache),
 			taskId
 		);
 		return task;
@@ -81,7 +86,7 @@ public class TaskDaoImpl implements TaskDao {
 	public List <Task> get(final User user, boolean completed) {
 		List<Task> tasks =  jdbcTemplate.query(
 				SELECT_LIST_OF_USER_TASKS,
-				new TaskRowMapper(user),
+				new TaskMapper(cache),
 				completed,
 				user.getId()
 		);
@@ -90,7 +95,8 @@ public class TaskDaoImpl implements TaskDao {
 	public List <Task> getByCat(final User user, Category category) {
 		List<Task> tasks =  jdbcTemplate.query(
 				SELECT_LIST_OF_USER_TASKS_BY_CAT,
-				new TaskRowMapper(user), user.getId(),
+				new TaskMapper(cache),
+				user.getId(),
 				String.valueOf(category.getId())
 		);
 		return tasks;

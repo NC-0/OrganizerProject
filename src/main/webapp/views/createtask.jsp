@@ -76,7 +76,7 @@
 					<h3>Create task</h3>
 				</td>
 				<td align="right">
-					<a href="/protected" type="button" class="btn btn-info btn-lg">Back</a>
+					<a href="${redir}" type="button" class="btn btn-info btn-lg">Back</a>
 				</td>
 			</tr>
 		</table>

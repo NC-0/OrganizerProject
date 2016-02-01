@@ -96,6 +96,8 @@
 
         <bean id="logging" class="organizer.logic.impl.Logging"></bean>
 
-	<bean id="restorePassMap" class="organizer.logic.impl.security.RestorePasswordMap"></bean>
+	    <bean id="restorePassMap" class="organizer.logic.impl.security.RestorePasswordMap"></bean>
+
+        <bean id="daoCache" class="organizer.dao.cache.CacheImpl"></bean>
 
         </beans>

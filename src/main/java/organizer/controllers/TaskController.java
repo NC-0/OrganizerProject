@@ -67,7 +67,11 @@ public class TaskController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public String initPage(Model model, Authentication authentication) {
+	public String initPage(Model model, Authentication authentication,HttpServletRequest request) {
+		String requestUri =  request.getHeader("Referer");
+		requestUri=requestUri.replace("http://localhost:8081","");
+		request.getSession().setAttribute("redir",requestUri);
+		request.setAttribute("redir",requestUri);
 		// Add task for binding attributes
 		Task task = new Task();
 		task.setCompleted(false);
@@ -91,7 +95,8 @@ public class TaskController {
 	public String createTask(@Valid @ModelAttribute("taskForm") Task task,
 							 BindingResult result,
 							 Authentication authentication,
-							 Model model) {
+							 Model model,
+							 HttpServletRequest request) {
 		// get current user
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
 		User user = userDetails.getUser();
@@ -110,11 +115,15 @@ public class TaskController {
 		taskDaoImpl.create(user.getId(), task);
 
 		// show success view
-		return "redirect:/";
+		return "redirect:"+request.getSession().getAttribute("redir");
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public String editGetTask(Integer id, Model model, Authentication authentication) {
+	public String editGetTask(Integer id, Model model, Authentication authentication,HttpServletRequest request) {
+		String requestUri =  request.getHeader("Referer");
+		requestUri=requestUri.replace("http://localhost:8081","");
+		request.getSession().setAttribute("redir",requestUri);
+		request.setAttribute("redir",requestUri);
 		// get current user
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
 		User user = userDetails.getUser();
@@ -132,7 +141,8 @@ public class TaskController {
 	public String editTask(@Valid @ModelAttribute("taskForm") Task task,
 							 BindingResult result,
 							 Authentication authentication,
-							 Model model) {
+							 Model model,
+							 HttpServletRequest request) {
 		// get current user
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
 		User user = userDetails.getUser();
@@ -151,7 +161,7 @@ public class TaskController {
 		taskDaoImpl.edit(task);
 
 		// show success view
-		return "redirect:/";
+		return "redirect:"+request.getSession().getAttribute("redir");
 	}
 
 	@RequestMapping(value="/list/{status}",

@@ -31,7 +31,11 @@ public class SubtaskController {
     private SubtaskDao subtaskDaoImpl;
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
-    public String initPage(int id, Model model, Authentication authentication) {
+    public String initPage(int id, Model model, Authentication authentication,HttpServletRequest request) {
+		 String requestUri =  request.getHeader("Referer");
+		 requestUri=requestUri.replace("http://localhost:8081","");
+		 request.getSession().setAttribute("redir",requestUri);
+		 request.setAttribute("redir",requestUri);
         // Add subtask for binding attributes
         Subtask subtask = new Subtask();
         subtask.setCompleted(false);
@@ -48,7 +52,8 @@ public class SubtaskController {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public String createTask(@Valid @ModelAttribute("subtaskForm") Subtask subtask,
                              BindingResult result,
-                             Authentication authentication) {
+                             Authentication authentication,
+									  HttpServletRequest request) {
         // get current user
         CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
         User user = userDetails.getUser();
@@ -65,7 +70,7 @@ public class SubtaskController {
         subtaskDaoImpl.create(subtask);
 
         // show success view
-        return "redirect:/";
+		 return "redirect:"+request.getSession().getAttribute("redir");
     }
 
     @RequestMapping(value="/list",
@@ -88,7 +93,11 @@ public class SubtaskController {
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
-    public String editGetTask(Integer id, Model model) {
+    public String editGetTask(Integer id, Model model,HttpServletRequest request) {
+		 String requestUri =  request.getHeader("Referer");
+		 requestUri=requestUri.replace("http://localhost:8081","");
+		 request.getSession().setAttribute("redir",requestUri);
+		 request.setAttribute("redir",requestUri);
         // Get task for binding attributes
         Subtask subtask = subtaskDaoImpl.get(id);
         model.addAttribute("subtaskForm", subtask);
@@ -98,12 +107,13 @@ public class SubtaskController {
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public String editTask(@Valid @ModelAttribute("subtaskForm") Subtask subtask,
-                           BindingResult result) {
+                           BindingResult result,
+									HttpServletRequest request) {
         // checking errors
         if (result.hasErrors()) {
             return "edittask";
         }
         subtaskDaoImpl.update(subtask);
-        return "redirect:/";
+		 return "redirect:"+request.getSession().getAttribute("redir");
     }
 }

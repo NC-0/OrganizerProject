@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import organizer.dao.api.SubtaskDao;
-import organizer.dao.cache.SubtaskRowMapper;
+import organizer.dao.cache.CacheImpl;
+import organizer.dao.cache.SubtaskMapper;
 import organizer.models.Subtask;
 import organizer.models.Task;
 
@@ -14,6 +15,10 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	@Autowired
 	@Qualifier("jdbcTemplate")
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	@Qualifier("daoCache")
+	private CacheImpl cache;
 	
 	public void create(Subtask subtask) {
 		jdbcTemplate.update(
@@ -58,7 +63,7 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	public List<Subtask> get(Task task) {
 		return jdbcTemplate.query(
 			SubtaskDao.SELECT_BY_TASK_ID,
-			new SubtaskRowMapper(task),
+			new SubtaskMapper(cache,task),
 			task.getId()
 		);
 	}
@@ -67,7 +72,7 @@ public class SubtaskDaoImpl implements SubtaskDao {
 	public Subtask get(int id) {
 		return jdbcTemplate.queryForObject(
 			SubtaskDao.SELECT,
-			new SubtaskRowMapper(),
+			new SubtaskMapper(cache),
 			id
 		);
 	}
