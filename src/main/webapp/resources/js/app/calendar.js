@@ -18,7 +18,7 @@ $(document).ready(function() {
     if(cat==0){
         $.ajax({
             type: "GET",
-            url: "task/list/false",
+            url: "task/list?status=false",
             cache: false,
             async: false,
             dataType: 'json',
