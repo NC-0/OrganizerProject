@@ -1,7 +1,5 @@
 ﻿﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <% request.setCharacterEncoding("UTF-8"); %>
 
 <!DOCTYPE html>
@@ -38,7 +36,7 @@
         <td class="Logo">
             <a href="">Organizer</a>
         </td>
-        <td class="Action">
+        <td class="Action" onmousedown="return false" onselectstart="return false">
             Your tasks
         </td>
         <td class="Login">
@@ -51,7 +49,7 @@
     <tr>
         <td class="Sidebar">
             <div class="Fix">
-                <div class="Title">Tasks</div>
+                <div class="Title" onmousedown="return false" onselectstart="return false">Tasks</div>
                 <ul>
                     <li>
                         <div class="Item">
@@ -72,7 +70,16 @@
                         </div>
                     </li>
                 </ul>
-                <div class="Title">Categories</div>
+                <div class="Title" onmousedown="return false" onselectstart="return false">Categories</div>
+                <ul>
+                    <li>
+                        <div class="Item">
+                            <a href="/addcategory" class="EditTask">
+                                <span class="fui-plus"></span>Create
+                            </a>
+                        </div>
+                    </li>
+                </ul>
                 <ul id="elements"></ul>
             </div>
         </td>

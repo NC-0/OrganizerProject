@@ -24,7 +24,8 @@ function completeTask(id) {
         type: "post",
         url: "task/complete",
         data: {
-            'id': id
+            'id': id,
+            'completed': isArchived
         },
         success: function() {
             $("#collapse"+id).animate({'line-height':0},1000).fadeOut(1000,function() {
@@ -70,9 +71,9 @@ function deleteSubtask(id) {
 
 function makeCategory(data) {
     $('#elements').empty();
-    $('#elements').append('<li><div class="Item">' +
-    '<a href="/addcategory" class="EditTask">' +
-    '<span class="fui-plus"></span>Create</a></div></li>');
+    //$('#elements').append('<li><div class="Item">' +
+    //'<a href="/addcategory" class="EditTask">' +
+    //'<span class="fui-plus"></span>Create</a></div></li>');
 
     $('#elements').append("<div class=\"Categories\">");
     $('#elements .Categories').append("<li><div class=\"Item\"><a style=\"cursor: pointer\" onclick='selectTasks(0)'><span class=\"fui-list\"></span>All</a></div></li>");
@@ -126,6 +127,8 @@ function addRows(data, sort) {
     $('#taskSize').text(data.length);
     $.each(data, function (i, task) {
         var date = new Date(task.date);
+        var checked = "";
+        if (task.completed) checked = "checked"
         filterids.push('#filtereddiv'+i);
         $('.table-body').append(
             "<div id='filtereddiv"+i+"' class='panel panel-default'>" +
@@ -133,7 +136,7 @@ function addRows(data, sort) {
             "<a class='collapsed' role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + task.id + "' aria-expanded='false' aria-controls='collapse'>" +
             "<div class='row'>" +
             "<div class='col-xs-1 Header'>" +
-            "<input class='TaskSelAll' type='checkbox' onclick='completeTask(" + task.id + ")'>" +
+            "<input class='TaskSelAll' type='checkbox' onclick='completeTask(" + task.id + ")'" + checked +">" +
             "</div>" +
             "<div id='filteredtext"+i+"' class='col-xs-3 Header'>" + task.name + "</div>" +
             "<div class='col-xs-3 Header'>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "</div>" +

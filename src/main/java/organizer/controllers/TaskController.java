@@ -201,9 +201,10 @@ public class TaskController {
 		method = RequestMethod.POST)
 	public String completeTask(HttpServletRequest request) {
 		int id = Integer.parseInt(request.getParameter("id"));
+		boolean completed = Boolean.parseBoolean(request.getParameter("completed"));
 
 		Task task = new Task(); //name, date, prior, cat, status, null);
-		task.setCompleted(true);
+		task.setCompleted(!completed);
 		task.setId(id);
 
 		taskDaoImpl.updateStatus(task);
