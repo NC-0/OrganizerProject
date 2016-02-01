@@ -92,10 +92,11 @@ public class TaskDaoImpl implements TaskDao {
 		);
 		return tasks;
 	}
-	public List <Task> getByCat(final User user, Category category) {
+	public List <Task> getByCat(final User user, Category category, boolean completed) {
 		List<Task> tasks =  jdbcTemplate.query(
 				SELECT_LIST_OF_USER_TASKS_BY_CAT,
 				new TaskMapper(cache),
+				completed,
 				user.getId(),
 				String.valueOf(category.getId())
 		);

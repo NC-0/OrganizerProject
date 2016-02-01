@@ -112,11 +112,11 @@ function loadData() {
 
 function selectTasks(cat) {
     if (cat == 0) {
-        $.get("task/list/" + isArchived, function (data) {
+        $.get("task/list?status="+isArchived, function (data) {
             addRows(data, cat);
         });
     } else {
-        $.get("task/listcat/" + cat, function (data) {
+        $.get("task/listcat?status="+isArchived + "&cat=" + cat, function (data) {
             addRows(data, cat);
         });
     }

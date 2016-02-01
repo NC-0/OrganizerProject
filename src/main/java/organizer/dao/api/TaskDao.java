@@ -13,7 +13,7 @@ public interface TaskDao {
 	void updateStatus(Task task);
 	Task get(User user, int id);
 	List<Task> get(final User user, boolean completed);
-	List<Task> getByCat(final User user, Category category);
+	List<Task> getByCat(final User user, Category category, boolean completed);
 
 	int OBJ_TYPE      = 1;
 	int DATE_ATTR     = 1;
@@ -127,6 +127,7 @@ public interface TaskDao {
 		" priority_attr.attr_id = " + PRIORITY_ATTR + " AND" +
 		" category_attr.attr_id = " + CATEGORY_ATTR + " AND" +
 		" status_attr.attr_id = " + STATUS_ATTR + " AND" +
+		" status_attr.VALUE = ? AND" +
 		" ref.object_id = ? AND" +
 		" ref.attr_id = " + USER_REF_ATTR + " AND" +
 		" date_attr.object_id = obj.OBJECT_ID AND" +

@@ -164,12 +164,13 @@ public class TaskController {
 		return "redirect:"+request.getSession().getAttribute("redir");
 	}
 
-	@RequestMapping(value="/list/{status}",
+	@RequestMapping(value="/list",
 					produces = { MediaType.APPLICATION_JSON_VALUE },
 					method = RequestMethod.GET)
-	public @ResponseBody List<Task> getTasks(@PathVariable("status") boolean isCompleted, Authentication authentication) {
+	public @ResponseBody List<Task> getTasks(HttpServletRequest request, Authentication authentication) {
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
 		User user = userDetails.getUser();
+		boolean isCompleted = Boolean.parseBoolean(request.getParameter("status"));
 		List<Task> tasks = taskDaoImpl.get(user, isCompleted);
 		for (Task task : tasks) {
 			if (task.isCompleted() == isCompleted) {
@@ -181,17 +182,17 @@ public class TaskController {
 		return tasks;
 	}
 
-	@RequestMapping(value="/listcat/{cat}",
+	@RequestMapping(value="/listcat",
 					produces = { MediaType.APPLICATION_JSON_VALUE },
 					method = RequestMethod.GET)
-	public @ResponseBody List<Task> getTasksCat(boolean isCompleted,
-												Authentication authentication,
-												@PathVariable("cat") int cat) {
+	public @ResponseBody List<Task> getTasksCat(HttpServletRequest request, Authentication authentication) {
 		CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
 		User user = userDetails.getUser();
 		Category category = new Category();
+		boolean isCompleted = Boolean.parseBoolean(request.getParameter("status"));
+		int cat = Integer.parseInt(request.getParameter("cat"));
 		category.setId(cat);
-		List<Task> tasks = taskDaoImpl.getByCat(user,category);
+		List<Task> tasks = taskDaoImpl.getByCat(user, category, isCompleted);
 		for (Task task : tasks) {
 			task.setPriority_str(Priority.values()[task.getPriority()].name());
 		}
