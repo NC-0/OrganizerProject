@@ -1,24 +1,15 @@
 package organizer.controllers;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.comparator.BooleanComparator;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,15 +18,10 @@ import organizer.dao.api.UserDao;
 import organizer.logic.impl.MessageContent;
 import organizer.logic.impl.email.MailSender;
 import organizer.logic.impl.security.CustomUserDetails;
-import organizer.logic.impl.security.RestorePasswordMap;
-import organizer.logic.impl.security.UserAuthenticationService;
 import organizer.models.User;
 
-import java.sql.Date;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Map;
-import java.util.UUID;
 
 @Controller
 public class UserController {
@@ -47,10 +33,6 @@ public class UserController {
 	@Autowired
 	@Qualifier("mailSender")
 	private MailSender mailSender;
-
-	@Autowired
-	@Qualifier("restorePassMap")
-	private RestorePasswordMap restorePasswordMap;
 
 	@RequestMapping(value="/registration",method=RequestMethod.GET)
 	public String createUserForm(Authentication authentication,Map<String, Object> model){
@@ -200,7 +182,6 @@ public class UserController {
 			User user = userDaoImpl.get(email);
 			user.setTmpPass(hashedPass);
 			user.setVerify(verificationId);
-//			restorePasswordMap.addRestore(verificationId,user);
 			userDaoImpl.editTmpPassword(user);
 			try {
 				mailSender.sendMail(email,
@@ -225,7 +206,6 @@ public class UserController {
 	public String restoreVerification(HttpServletRequest request){
 		String message = MessageContent.VERIFY_ERROR;
 		String restore = request.getParameter("restore");
-//		User user = restorePasswordMap.verify(restore);
 		if(restore!=null){
 			User user = userDaoImpl.verify(restore);
 			if(user!=null){

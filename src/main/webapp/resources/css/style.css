@@ -1,21 +1,21 @@
 
 .accordion {
-	/*width: 400px;
-	margin: 100px auto;*/
+    /*width: 400px;
+    margin: 100px auto;*/
 }
 .accordion a {
-	display: block;
-	/*padding: 10px 15px;*/
-	text-decoration: none;
-	z-index: 1;
+    display: block;
+    /*padding: 10px 15px;*/
+    text-decoration: none;
+    z-index: 1;
 }
 .accordion .panel-heading {
-	padding: 0;
-	border-bottom: 0;
+    padding: 0;
+    border-bottom: 0;
 }
 
 /*.accordion .panel-default>.panel-heading {*/
-	/*background color: #FFFFFF;*/
+/*background color: #FFFFFF;*/
 /*}*/
 /*
 .btns a {

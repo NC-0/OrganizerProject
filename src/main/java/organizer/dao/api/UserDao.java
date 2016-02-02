@@ -12,9 +12,7 @@ public interface UserDao {
 	void editPassword(User user);
 	void editTmpPassword(User user);
 	boolean existVerify(String verificationId);
-	//	boolean existTmpPass(String tmpPass);
 	User verify(String verificationId);
-	//	User verifyTmpPass(String tmpPass);
 	User get(String email);
 	User get(int id);
 	MailTasks getTommorowTasks();
@@ -31,9 +29,7 @@ public interface UserDao {
 	String SELECT_COUNT_ID 	   = "SELECT COUNT(*) FROM objects usr_obj WHERE usr_obj.object_id = ? AND usr_obj.object_type_id=" + OBJ_TYPE;
 	String SELECT_ID       		= "SELECT object_id.CURRVAL FROM dual";
 	String SELECT_VERIFY			= "SELECT COUNT(*) FROM attributes usr_attr WHERE usr_attr.attr_id = " + VERIFY_ATTR + " AND usr_attr.value =?";
-	//	String SELECT_VERIFY_TMP_PASS	= "SELECT COUNT(*) FROM attributes usr_attr WHERE usr_attr.attr_id = " + TMP_PASSWORD_ATTR + " AND usr_attr.value =?";
 	String SELECT_USER_ID		= "SELECT usr_attr.OBJECT_ID FROM attributes usr_attr WHERE usr_attr.attr_id = " + VERIFY_ATTR + " AND usr_attr.value =?";
-//	String SELECT_USER_ID_BY_TMP = "SELECT usr_attr.OBJECT_ID FROM attributes usr_attr WHERE usr_attr.attr_id = " + TMP_PASSWORD_ATTR + " AND usr_attr.value =?";
 
 	String INSERT          	= "INSERT INTO objects (parent_id, object_type_id, name, description) VALUES (NULL, " + OBJ_TYPE + ", ?,NULL)";
 	String INSERT_EMAIL    	= "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + EMAIL_ATTR + ", ?, ?, NULL)";

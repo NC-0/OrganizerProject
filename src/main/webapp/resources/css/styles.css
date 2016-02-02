@@ -1,65 +1,65 @@
 /*стили для таблицы*/
 .table-data {
-	width: 100%;
-	padding: 0 15px;
-	/*border: 1px solid #ccc;*/
-	/*border-radius: 5px;*/
-	overflow: hidden;
+    width: 100%;
+    padding: 0 15px;
+    /*border: 1px solid #ccc;*/
+    /*border-radius: 5px;*/
+    overflow: hidden;
 }
 .table-data .table-header {
-	padding: 15px 0;
-	/*background-color: #F0F0F0;*/
-	border-bottom: 1px solid #ccc;
+    padding: 15px 0;
+    /*background-color: #F0F0F0;*/
+    border-bottom: 1px solid #ccc;
 }
 .table-data .table-body {
-	/*background-color: #F0F0F0;*/
+    /*background-color: #F0F0F0;*/
 }
 .table-data .table-body .panel-group {
-	margin-bottom: 0;
-	border-radius: 5px;
-	/*background-color: #fff;*/
+    margin-bottom: 0;
+    border-radius: 5px;
+    /*background-color: #fff;*/
 }
 .table-data .table-body .panel {
-	border: none;
-	/*border-bottom: 1px solid #E4E4E4;*/
-	margin-bottom: 0;
+    border: none;
+    /*border-bottom: 1px solid #E4E4E4;*/
+    margin-bottom: 0;
 }
 .table-data .table-body .panel:last-child {
-	border-bottom: none;
-	margin-bottom: 15px;
+    border-bottom: none;
+    margin-bottom: 15px;
 }
 .table-data .table-body .panel-heading {
-	background-color: #fff;
+    background-color: #fff;
 }
 
 .panel-body {
-	padding: 0px;
+    padding: 0px;
 }
 
 .panel-collapse .row {
-	/*padding-left: 15px;padding-right: 15px;*/
-	background: #f7f7f7;
-	margin-left: 0px;
-	margin-right: 0px;
-	border-bottom: 1px solid #dddddd;
+    /*padding-left: 15px;padding-right: 15px;*/
+    background: #f7f7f7;
+    margin-left: 0px;
+    margin-right: 0px;
+    border-bottom: 1px solid #dddddd;
 }
 
 .panel-body .row {
-	/*padding-left: 15px;*/
-	/*padding-right: 15px;*/
-	/*padding-bottom: 15px;*/
-	/*padding-top: -15px;*/
-	padding-left: 15px;padding-right: 15px;
-	background: #f7f7f7;
-	margin-left: 0px;
-	margin-right: 0px;
-	border-bottom: 1px solid #dddddd;
+    /*padding-left: 15px;*/
+    /*padding-right: 15px;*/
+    /*padding-bottom: 15px;*/
+    /*padding-top: -15px;*/
+    padding-left: 15px;padding-right: 15px;
+    background: #f7f7f7;
+    margin-left: 0px;
+    margin-right: 0px;
+    border-bottom: 1px solid #dddddd;
 }
 
 .panel-default > .panel-heading {
-	color: #16a085;
-	/*text-decoration: none;*/
-	/*-webkit-transition: 0.25s;*/
-	/*transition: 0.25s;*/
+    color: #16a085;
+    /*text-decoration: none;*/
+    /*-webkit-transition: 0.25s;*/
+    /*transition: 0.25s;*/
 }
 

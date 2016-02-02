@@ -119,14 +119,6 @@ public class UserDaoImpl implements UserDao {
 		return verify;
 	}
 
-//	public boolean existTmpPass(String tmpPass) {
-//		boolean verify = jdbcTemplate.queryForObject(
-//			SELECT_VERIFY_TMP_PASS,
-//			new Object[]{tmpPass},
-//			Integer.class) != 0;
-//		return verify;
-//	}
-
 	public User verify(String verificationId){
 		if (existVerify(verificationId)){
 			int userId = jdbcTemplate.queryForObject(
@@ -141,21 +133,6 @@ public class UserDaoImpl implements UserDao {
 		}
 		return null;
 	}
-
-//	public User verifyTmpPass(String tmpPass){
-//		if (existTmpPass(tmpPass)){
-//			int userId = jdbcTemplate.queryForObject(
-//				SELECT_USER_ID_BY_TMP,
-//				new Object[]{tmpPass},
-//				Integer.class);
-//			User user = jdbcTemplate.queryForObject(
-//				SELECT_USER_BY_ID,
-//				new Object[]{userId},
-//				new UserRowMapper());
-//			return user;
-//		}
-//		return null;
-//	}
 
 	public User get(String email) {
 		if (exist(email)) {

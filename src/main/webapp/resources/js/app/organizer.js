@@ -79,11 +79,11 @@ function makeCategory(data) {
     $('#elements .Categories').append("<li><div class=\"Item\"><a style=\"cursor: pointer\" onclick='selectTasks(0)'><span class=\"fui-list\"></span>All</a></div></li>");
     for (var i = 0; i < data.length; i++) {
         $('#elements .Categories').append("<li><div class=\"Item\">" +
-        "<a href='/calendar?cat=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-calendar-solid'></span></a>"+
-        "<a href='/updatecategory?categoryid=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-gear'></span></a>" +
-        "<span style='cursor: pointer' class='fui-cross' onclick='deleteCategory(" + data[i].id + ")'></span>" +
-        "<a style=\"cursor: pointer\" onclick='selectTasks(" + data[i].id + ")' id=" + data[i].id + ">" + data[i].name + "</a>" +
-        "</div></li>");
+            "<a href='/calendar?cat=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-calendar-solid'></span></a>"+
+            "<a href='/updatecategory?categoryid=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-gear'></span></a>" +
+            "<span style='cursor: pointer' class='fui-cross' onclick='deleteCategory(" + data[i].id + ")'></span>" +
+            "<a style=\"cursor: pointer\" onclick='selectTasks(" + data[i].id + ")' id=" + data[i].id + ">" + data[i].name + "</a>" +
+            "</div></li>");
         $('.clicktr').click(
             $(function () {
                 $('#elements .Categories').on('click', 'li', function () {
