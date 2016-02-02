@@ -10,8 +10,11 @@ public interface UserDao {
 	void delete(int id);
 	void edit(User user);
 	void editPassword(User user);
+	void editTmpPassword(User user);
 	boolean existVerify(String verificationId);
+	//	boolean existTmpPass(String tmpPass);
 	User verify(String verificationId);
+	//	User verifyTmpPass(String tmpPass);
 	User get(String email);
 	User get(int id);
 	MailTasks getTommorowTasks();
@@ -20,6 +23,7 @@ public interface UserDao {
 	int EMAIL_ATTR    = 6;
 	int ENABLED_ATTR  = 11;
 	int PASSWORD_ATTR = 7;
+	int TMP_PASSWORD_ATTR = 14;
 	int SURNAME_ATTR  = 8;
 	int VERIFY_ATTR = 9;
 
@@ -27,18 +31,23 @@ public interface UserDao {
 	String SELECT_COUNT_ID 	   = "SELECT COUNT(*) FROM objects usr_obj WHERE usr_obj.object_id = ? AND usr_obj.object_type_id=" + OBJ_TYPE;
 	String SELECT_ID       		= "SELECT object_id.CURRVAL FROM dual";
 	String SELECT_VERIFY			= "SELECT COUNT(*) FROM attributes usr_attr WHERE usr_attr.attr_id = " + VERIFY_ATTR + " AND usr_attr.value =?";
+	//	String SELECT_VERIFY_TMP_PASS	= "SELECT COUNT(*) FROM attributes usr_attr WHERE usr_attr.attr_id = " + TMP_PASSWORD_ATTR + " AND usr_attr.value =?";
 	String SELECT_USER_ID		= "SELECT usr_attr.OBJECT_ID FROM attributes usr_attr WHERE usr_attr.attr_id = " + VERIFY_ATTR + " AND usr_attr.value =?";
+//	String SELECT_USER_ID_BY_TMP = "SELECT usr_attr.OBJECT_ID FROM attributes usr_attr WHERE usr_attr.attr_id = " + TMP_PASSWORD_ATTR + " AND usr_attr.value =?";
 
 	String INSERT          	= "INSERT INTO objects (parent_id, object_type_id, name, description) VALUES (NULL, " + OBJ_TYPE + ", ?,NULL)";
 	String INSERT_EMAIL    	= "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + EMAIL_ATTR + ", ?, ?, NULL)";
 	String INSERT_ENABLED  	= "INSERT INTO attributes (attr_id,object_id,value,date_value) VALUES (" + ENABLED_ATTR + ", ?, ?, NULL)";
 	String INSERT_PASSWORD 	= "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + PASSWORD_ATTR + ", ?, ?, NULL)";
 	String INSERT_SURNAME  	= "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + SURNAME_ATTR + ", ?, ?, NULL)";
+	String INSERT_TMP_PASS 	= "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + TMP_PASSWORD_ATTR + ", ?,'', NULL)";
 	String INSERT_VERIFY  	= "INSERT INTO attributes (attr_id, object_id, value, date_value) VALUES (" + VERIFY_ATTR + ", ?, ?, ?)";
 
 	String UPDATE_NAME		= "UPDATE objects usr_obj SET usr_obj.name = ? WHERE usr_obj.object_id = ?";
 	String UPDATE_SURNAME 	= "UPDATE attributes usr_attr SET usr_attr.value = ? WHERE usr_attr.attr_id = " + SURNAME_ATTR + "  and usr_attr.object_id = ?";
 	String UPDATE_PASSWORD 	= "UPDATE attributes usr_attr SET usr_attr.value = ? WHERE usr_attr.attr_id = " + PASSWORD_ATTR + "  and usr_attr.object_id = ?";
+	String UPDATE_TMP_PASSWORD = "UPDATE attributes usr_attr SET usr_attr.value = ? WHERE usr_attr.attr_id = " + TMP_PASSWORD_ATTR + "  and usr_attr.object_id = ?";
+	String UPDATE_VERIFY 	= "UPDATE attributes usr_attr SET usr_attr.value = ? WHERE usr_attr.attr_id = " + VERIFY_ATTR + "  and usr_attr.object_id = ?";
 	String UPDATE_ENABLED	= "UPDATE attributes usr_attr SET usr_attr.value = ? WHERE usr_attr.attr_id = " + ENABLED_ATTR + "  and usr_attr.object_id = ?";
 
 	String DELETE_OBJECT 					= "DELETE FROM objects WHERE object_id = ? AND object_type_id = " + OBJ_TYPE;
@@ -52,6 +61,7 @@ public interface UserDao {
 		"pass_attr.VALUE as password, " +
 		"email_attr.VALUE as email, " +
 		"surname_attr.VALUE as surname, " +
+		"tmp_pass_attr.VALUE as tmppass, " +
 		"enable_attr.VALUE as enabled " +
 		"FROM  " +
 		"attributes verify_attr," +
@@ -59,6 +69,7 @@ public interface UserDao {
 		"attributes pass_attr, " +
 		"attributes surname_attr, " +
 		"attributes enable_attr, " +
+		"attributes tmp_pass_attr, " +
 		"objects obj " +
 		"WHERE " +
 		"verify_attr.attr_id=" + VERIFY_ATTR + " AND " +
@@ -66,11 +77,13 @@ public interface UserDao {
 		"pass_attr.attr_id = " + PASSWORD_ATTR + " AND " +
 		"surname_attr.attr_id = " + SURNAME_ATTR + " AND " +
 		"enable_attr.attr_id = " + ENABLED_ATTR + " AND " +
+		"tmp_pass_attr.attr_id = " + TMP_PASSWORD_ATTR + " AND " +
 		"email_attr.value = ? AND " +
 		"obj.object_id = email_attr.OBJECT_ID AND " +
 		"pass_attr.OBJECT_ID = email_attr.OBJECT_ID " +
 		"AND surname_attr.object_id = email_attr.OBJECT_ID AND " +
 		"enable_attr.object_id = email_attr.OBJECT_ID AND " +
+		"tmp_pass_attr.object_id = email_attr.OBJECT_ID AND " +
 		"verify_attr.OBJECT_ID=email_attr.OBJECT_ID";
 
 	String SELECT_USER_BY_ID = "SELECT " +
@@ -81,12 +94,14 @@ public interface UserDao {
 		"pass_attr.VALUE as password, " +
 		"email_attr.VALUE as email, " +
 		"surname_attr.VALUE as surname, " +
+		"tmp_pass_attr.VALUE as tmppass, " +
 		"enable_attr.VALUE as enabled " +
 		"FROM  " +
 		"attributes verify_attr," +
 		"attributes email_attr, " +
 		"attributes pass_attr, " +
 		"attributes surname_attr, " +
+		"attributes tmp_pass_attr, " +
 		"attributes enable_attr, " +
 		"objects obj " +
 		"WHERE " +
@@ -95,11 +110,13 @@ public interface UserDao {
 		"pass_attr.attr_id = " + PASSWORD_ATTR + " AND " +
 		"surname_attr.attr_id = " + SURNAME_ATTR + " AND " +
 		"enable_attr.attr_id = " + ENABLED_ATTR + " AND " +
+		"tmp_pass_attr.attr_id = " + TMP_PASSWORD_ATTR + " AND " +
 		"obj.object_id = ? AND " +
 		"obj.object_id = email_attr.OBJECT_ID AND " +
 		"pass_attr.OBJECT_ID = email_attr.OBJECT_ID " +
 		"AND surname_attr.object_id = email_attr.OBJECT_ID AND " +
 		"enable_attr.object_id = email_attr.OBJECT_ID AND " +
+		"tmp_pass_attr.object_id = email_attr.OBJECT_ID AND " +
 		"verify_attr.OBJECT_ID=email_attr.OBJECT_ID";
 
 	String SELECT_USERS_AND_TASKS ="SELECT " +

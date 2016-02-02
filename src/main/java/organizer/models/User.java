@@ -31,6 +31,7 @@ public class User {
 	private String role;
 	private boolean enabled;
 	private String verify;
+	private String tmpPass;
 	private java.sql.Date registrationDate;
 	public User() {
 	}
@@ -120,5 +121,13 @@ public class User {
 
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+
+	public String getTmpPass() {
+		return tmpPass;
+	}
+
+	public void setTmpPass(String tmpPass) {
+		this.tmpPass = tmpPass;
 	}
 }

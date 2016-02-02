@@ -51,6 +51,9 @@ public class UserDaoImpl implements UserDao {
 				objectsCurrentValue,
 				user.getSurname());
 			jdbcTemplate.update(
+				INSERT_TMP_PASS,
+				objectsCurrentValue);
+			jdbcTemplate.update(
 				INSERT_ENABLED,
 				objectsCurrentValue,
 				"FALSE");//TRUE-enabled
@@ -96,6 +99,18 @@ public class UserDaoImpl implements UserDao {
 			user.getId());
 	}
 
+	public void editTmpPassword(User user) {
+		jdbcTemplate.update(
+			UPDATE_TMP_PASSWORD,
+			user.getTmpPass(),
+			user.getId());
+		jdbcTemplate.update(
+			UPDATE_VERIFY,
+			user.getVerify(),
+			user.getId()
+		);
+	}
+
 	public boolean existVerify(String verificationId) {
 		boolean verify = jdbcTemplate.queryForObject(
 			SELECT_VERIFY,
@@ -103,6 +118,14 @@ public class UserDaoImpl implements UserDao {
 			Integer.class) != 0;
 		return verify;
 	}
+
+//	public boolean existTmpPass(String tmpPass) {
+//		boolean verify = jdbcTemplate.queryForObject(
+//			SELECT_VERIFY_TMP_PASS,
+//			new Object[]{tmpPass},
+//			Integer.class) != 0;
+//		return verify;
+//	}
 
 	public User verify(String verificationId){
 		if (existVerify(verificationId)){
@@ -118,6 +141,21 @@ public class UserDaoImpl implements UserDao {
 		}
 		return null;
 	}
+
+//	public User verifyTmpPass(String tmpPass){
+//		if (existTmpPass(tmpPass)){
+//			int userId = jdbcTemplate.queryForObject(
+//				SELECT_USER_ID_BY_TMP,
+//				new Object[]{tmpPass},
+//				Integer.class);
+//			User user = jdbcTemplate.queryForObject(
+//				SELECT_USER_BY_ID,
+//				new Object[]{userId},
+//				new UserRowMapper());
+//			return user;
+//		}
+//		return null;
+//	}
 
 	public User get(String email) {
 		if (exist(email)) {

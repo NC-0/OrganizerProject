@@ -35,6 +35,7 @@ public class CategoryDaoImpl implements CategoryDao {
 			category.getUser().getId(),
 			objectsCurrentValue
 		);
+		category.setId(objectsCurrentValue);
 		cache.add(objectsCurrentValue,category);
 	}
 

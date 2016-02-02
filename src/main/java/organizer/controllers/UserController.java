@@ -177,9 +177,7 @@ public class UserController {
 		if(!checkDelete)
 			return "redirect:/updateprofile";
 		else {
-			User user = new User();
-			user.setId(authorizedUser.getId());
-			userDaoImpl.delete(user);
+			userDaoImpl.delete(authorizedUser.getId());
 			return "redirect:/j_spring_security_logout";
 		}
 	}
@@ -200,18 +198,19 @@ public class UserController {
 			String hashedPass = bCryptPasswordEncoder.encode(generatedString);
 			String verificationId = bCryptPasswordEncoder.encode(email+new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
 			User user = userDaoImpl.get(email);
-			user.setPassword(hashedPass);
+			user.setTmpPass(hashedPass);
 			user.setVerify(verificationId);
-			restorePasswordMap.addRestore(verificationId,user);
+//			restorePasswordMap.addRestore(verificationId,user);
+			userDaoImpl.editTmpPassword(user);
 			try {
 				mailSender.sendMail(email,
 					generatedString,
 					MessageContent.MAIL_SUBJECT_FORGET_PASS,
 					MessageContent.MAIL_TEXT_FORGET+
 						String.format(
-						MessageContent.MAIL_PASS_CONFIRMATION,
-						verificationId,
-						verificationId));
+							MessageContent.MAIL_PASS_CONFIRMATION,
+							verificationId,
+							verificationId));
 			} catch (MessagingException e) {
 				e.printStackTrace();
 			}
@@ -226,10 +225,14 @@ public class UserController {
 	public String restoreVerification(HttpServletRequest request){
 		String message = MessageContent.VERIFY_ERROR;
 		String restore = request.getParameter("restore");
-		User user = restorePasswordMap.verify(restore);
-		if(user!=null){
-			userDaoImpl.editPassword(user);
-			message = MessageContent.VERIFY_SUCCESSFULL;
+//		User user = restorePasswordMap.verify(restore);
+		if(restore!=null){
+			User user = userDaoImpl.verify(restore);
+			if(user!=null){
+				user.setPassword(user.getTmpPass());
+				userDaoImpl.editPassword(user);
+				message = MessageContent.VERIFY_SUCCESSFULL;
+			}
 		}
 		request.setAttribute("message",message);
 		return "hello";

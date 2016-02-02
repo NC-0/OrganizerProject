@@ -20,6 +20,7 @@ public class UserRowMapper implements RowMapper<User> {
 		user.setRole("USER_ROLE");
 		user.setId(Integer.valueOf(resultSet.getString("id")));
 		user.setEnabled(Boolean.valueOf(resultSet.getString("enabled")));
+		user.setTmpPass(resultSet.getString("tmppass"));
 		return user;
 	}
 }
