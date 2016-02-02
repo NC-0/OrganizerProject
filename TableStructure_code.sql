@@ -93,7 +93,7 @@ INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
 INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
   VALUES(11, 3, NULL,'Enabled','Подтвержден');
 INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
-  VALUES(9, 3, NULL,'Verify','Код подтверждения');
+  VALUES(14, 3, NULL,'TMPPASS','Временный пароль');
   
 -- Add References
 INSERT INTO attrtype (attr_id,object_type_id,object_type_id_ref,code,name)
