@@ -1,14 +1,11 @@
 package organizer.dao.rowmappers;
 
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import org.springframework.jdbc.core.RowMapper;
 import organizer.models.Task;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class MailTaskRowMapper implements RowMapper {
 	private Multimap<String,Task> taskMultimap;

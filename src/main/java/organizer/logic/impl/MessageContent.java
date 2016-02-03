@@ -37,7 +37,7 @@ public class MessageContent {
 
 	public final static String VERIFY_ERROR = "Unrecognize verification id";
 
-	public final static String VERIFY_SUCCESSFULL = "Verification successfull";
+	public final static String VERIFY_SUCCESSFULL = "Verification successful";
 
 	public final static String EMAIL_TASK_NOTIFY = "<html><body><b>Hello, %s!<br> You tasks on tomorrow:<br><table>%s</table></body></html>";
 
