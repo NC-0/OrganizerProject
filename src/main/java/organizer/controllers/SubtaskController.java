@@ -116,4 +116,18 @@ public class SubtaskController {
         subtaskDaoImpl.update(subtask);
 		 return "redirect:"+request.getSession().getAttribute("redir");
     }
+
+    @RequestMapping(value = "/complete",
+            method = RequestMethod.POST)
+    public String completeTask(HttpServletRequest request) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String name = request.getParameter("name");
+        String status = request.getParameter("completed");
+        boolean completed = false;
+        if ("checked".equals(status))
+            completed = true;
+        Subtask subtask = new Subtask(id, name, !completed, null);
+        subtaskDaoImpl.update(subtask);
+        return "redirect:/";
+    }
 }

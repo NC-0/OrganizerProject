@@ -1,4 +1,4 @@
-﻿﻿-- Create tables
+﻿-- Create tables
 CREATE TABLE OBJTYPE
   (
     OBJECT_TYPE_ID NUMBER(20) NOT NULL ENABLE,
@@ -147,7 +147,6 @@ reg_date_attr.OBJECT_ID=enabled_attr.OBJECT_ID)]';
 END;
 /
 
-
 --Delete noverified user job
 BEGIN
   DBMS_SCHEDULER.CREATE_JOB (
@@ -160,5 +159,28 @@ BEGIN
    end_date           =>   sysdate+365,
    auto_drop          =>   FALSE,
    comments           =>  'Delete not verified users every 7 days');
+END;
+/
+
+-- check that all the subtasks completed
+CREATE OR REPLACE FUNCTION checkComplete(ID IN NUMBER) RETURN NUMBER
+IS
+	TYPE Status IS TABLE OF NUMBER;
+	status_list Status;
+BEGIN
+	SELECT attr.value BULK COLLECT INTO status_list
+	FROM objects obj
+		JOIN attributes attr ON obj.object_id = attr.object_id
+	WHERE obj.object_type_id = 2 -- subtask type
+		AND obj.parent_id = ID
+		AND attr.attr_id = 5;      -- subtask completed attribute
+
+	FOR i IN 1..status_list.count LOOP
+		if status_list(i) = 0 then
+			RETURN 0;
+		end if;
+	END LOOP;
+
+	RETURN 1;
 END;
 /

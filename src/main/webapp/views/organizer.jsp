@@ -49,43 +49,45 @@
     <tr>
         <td class="Sidebar">
             <div class="Fix">
-                <div class="Title" onmousedown="return false" onselectstart="return false">Tasks</div>
-                <ul>
-                    <li>
-                        <div class="Item">
-                            <a href="/task/create" class="AddTask">
-                                <span class="fui-plus"></span>
-                                Create
-                            </a>
-                        </div>
-                    </li>
-                </ul>
+                <div class="Title" onmousedown="return false" onselectstart="return false">Menu</div>
                 <ul>
                     <li>
                         <div class="Item">
                             <a href="/archive" class="AddTask">
                                 <span class="fui-list"></span>
-                                Archive
+                                Archive of tasks
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <div class="Item">
+                            <a href="/task/create" class="AddTask">
+                                <span class="fui-plus"></span>
+                                <span>Create task</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <div class="Item">
+                            <a href="/addcategory" class="EditTask">
+                                <span class="fui-plus"></span>
+                                <span>Create category</span>
                             </a>
                         </div>
                     </li>
                 </ul>
                 <div class="Title" onmousedown="return false" onselectstart="return false">Categories</div>
-                <ul>
-                    <li>
-                        <div class="Item">
-                            <a href="/addcategory" class="EditTask">
-                                <span class="fui-plus"></span>Create
-                            </a>
-                        </div>
-                    </li>
-                </ul>
                 <ul id="elements"></ul>
             </div>
         </td>
         <td class="Content" rowspan="2" colspan="2">
             <div class="Preambula">
-                You have <span id='taskSize'></span> tasks.&nbsp;&nbsp;Filter: <input id="filterinput" type="text" onkeyup="doFilter(this.value)" size="40">
+                <div>You have <span id='taskSize'></span> tasks.</div>
+                <input id="filterinput" type="text" onkeyup="doFilter(this.value)" size="40" class="input-lg form-control" placeholder="Filter">
             </div>
             <section id="tasktable" class="table table-data TodoList">
 

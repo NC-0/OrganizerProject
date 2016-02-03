@@ -29,7 +29,7 @@ $(document).ready(function() {
     }else{
         $.ajax({
             type: "GET",
-            url: "task/listcat/" + cat,
+            url: "task/listcat?status=false&cat=" + cat,
             cache: false,
             async: false,
             dataType: 'json',

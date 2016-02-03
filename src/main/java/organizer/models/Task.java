@@ -14,7 +14,7 @@ public class Task {
 
 	private int id;
 	@ValidString
-	@Size(min=1, max=30)
+	@Size(min=1, max=255)
 	private String name;
 
 	@NotNull

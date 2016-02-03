@@ -221,6 +221,15 @@ public class TaskController {
 		taskDaoImpl.updateStatus(task);
 		return "redirect:/";
 	}
+
+	@RequestMapping(value = "/complete/subtasks",
+			method = RequestMethod.POST)
+	public @ResponseBody boolean completeTaskBySubtasks(HttpServletRequest request) {
+		int id = Integer.parseInt(request.getParameter("id"));
+		Task task = new Task();
+		task.setId(id);
+		return taskDaoImpl.checkChilds(task);
+	}
 }
 
 

@@ -51,33 +51,25 @@
     <tr>
         <td class="Sidebar">
             <div class="Fix">
-                <div class="Title"><br></div>
+                <div class="Title" onmousedown="return false" onselectstart="return false">Menu</div>
                 <ul>
                     <li>
                         <div class="Item">
                             <a href="/" class="AddTask">
                                 <span class="fui-list"></span>
-                                Organizer page
+                                Main page
                             </a>
                         </div>
                     </li>
                 </ul>
                 <div class="Title" onmousedown="return false" onselectstart="return false">Categories</div>
-                <ul>
-                    <li>
-                        <div class="Item">
-                            <a href="/addcategory" class="EditTask">
-                                <span class="fui-plus"></span>Create
-                            </a>
-                        </div>
-                    </li>
-                </ul>
                 <ul id="elements"></ul>
             </div>
         </td>
         <td class="Content" rowspan="2" colspan="2">
             <div class="Preambula" onmousedown="return false" onselectstart="return false">
-                You have <span id='taskSize'></span> tasks.&nbsp;&nbsp;Filter: <input id="filterinput" type="text" onkeyup="doFilter(this.value)" size="40">
+                <div>You have <span id='taskSize'></span> tasks.</div>
+                <input id="filterinput" type="text" onkeyup="doFilter(this.value)" size="40" class="input-lg form-control" placeholder="Filter">
             </div>
             <section id="tasktable" class="table table-data TodoList">
 

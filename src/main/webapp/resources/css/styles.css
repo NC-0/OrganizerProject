@@ -36,6 +36,10 @@
     padding: 0px;
 }
 
+.input-lg {
+    margin-top: 10px;
+}
+
 .panel-collapse .row {
     /*padding-left: 15px;padding-right: 15px;*/
     background: #f7f7f7;

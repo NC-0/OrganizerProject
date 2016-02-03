@@ -38,7 +38,32 @@ function completeTask(id) {
     });
 }
 
+function completeSubtask(id, name, pid) {
 
+    $.ajax({
+        type: "post",
+        url: "subtask/complete",
+        data: {
+            'id': id,
+            'completed': $("#cb"+id).attr("checked"),
+            'name': name
+        },
+        success: function() {
+            //if (isArchived == $("#cb"+id).attr("checked")) {
+                $.ajax({
+                    type: "post",
+                    url: "task/complete/subtasks",
+                    data: {
+                        'id': pid
+                    },
+                    success: function (status) {
+                        if (status == !isArchived) completeTask(pid);
+                    }
+                });
+            //}
+        }
+    });
+}
 
 function deleteTask(id) {
     $.ajax({
@@ -76,7 +101,7 @@ function makeCategory(data) {
     //'<span class="fui-plus"></span>Create</a></div></li>');
 
     $('#elements').append("<div class=\"Categories\">");
-    $('#elements .Categories').append("<li><div class=\"Item\"><a style=\"cursor: pointer\" onclick='selectTasks(0)'><span class=\"fui-list\"></span>All</a></div></li>");
+    $('#elements .Categories').append("<li><div class=\"Item\"><a style=\"cursor: pointer\" onclick='selectTasks(0)'><span class=\"fui-list\"></span>All categories</a></div></li>");
     for (var i = 0; i < data.length; i++) {
         $('#elements .Categories').append("<li><div class=\"Item\">" +
             "<a href='/calendar?cat=" + data[i].id + "' class='EditTask'><span style='cursor: pointer' class='fui-calendar-solid'></span></a>"+
@@ -132,50 +157,55 @@ function addRows(data, sort) {
         filterids.push('#filtereddiv'+i);
         $('.table-body').append(
             "<div id='filtereddiv"+i+"' class='panel panel-default'>" +
-            "<div class='panel-heading' role='tab' id='heading" + task.id + "'>" +
-            "<a class='collapsed' role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + task.id + "' aria-expanded='false' aria-controls='collapse'>" +
-            "<div class='row'>" +
-            "<div class='col-xs-1 Header'>" +
-            "<input class='TaskSelAll' type='checkbox' onclick='completeTask(" + task.id + ")'" + checked +">" +
-            "</div>" +
-            "<div id='filteredtext"+i+"' class='col-xs-3 Header'>" + task.name + "</div>" +
-            "<div class='col-xs-3 Header'>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "</div>" +
-            "<div class='col-xs-2 Header'>" + task.priority_str + "</div>" +
-            "<div class='col-xs-3 Header'>" +
-            "<a href='subtask/create?id="+task.id+"' class='copy'>" +
-            "<span style='cursor: pointer' class='fui-plus'></span>" +
-            "</a>" +
-            "<a href='task/edit?id="+task.id+"' class='copy'>" +
-            "<span style='cursor: pointer' class='fui-gear'></span>" +
-            "</a>" +
-            "<a class='copy'>" +
-            "<span style='cursor: pointer' class='fui-cross' onclick='deleteTask(" + task.id + ")' ></span>" +
-            "</a>" +
-            "</div>" +
-            "</div>" +
-            "</a>" +
-            "</div>" +
-            "<div id='collapse"+task.id+"' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading'>" +
-            "</div>"
+                "<div class='panel-heading' role='tab' id='heading" + task.id + "'>" +
+                    "<a class='collapsed' role='button' data-toggle='collapse' data-parent='#accordion' href='#collapse" + task.id + "' aria-expanded='false' aria-controls='collapse'>" +
+                        "<div class='row'>" +
+                            "<div class='col-xs-1 Header'>" +
+                                "<input class='TaskSelAll' type='checkbox' onclick='completeTask(" + task.id + ")'" + checked +">" +
+                            "</div>" +
+                            "<div id='filteredtext"+i+"' class='col-xs-3 Header'>" + task.name + "</div>" +
+                            "<div class='col-xs-3 Header'>" + date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "</div>" +
+                            "<div class='col-xs-2 Header'>" + task.priority_str + "</div>" +
+                            "<div class='col-xs-3 Header'>" +
+                                "<a href='subtask/create?id="+task.id+"' class='copy'>" +
+                                    "<span style='cursor: pointer' class='fui-plus'></span>" +
+                                "</a>" +
+                                "<a href='task/edit?id="+task.id+"' class='copy'>" +
+                                    "<span style='cursor: pointer' class='fui-gear'></span>" +
+                                "</a>" +
+                                "<a class='copy'>" +
+                                    "<span style='cursor: pointer' class='fui-cross' onclick='deleteTask(" + task.id + ")' ></span>" +
+                                "</a>" +
+                            "</div>" +
+                        "</div>" +
+                    "</a>" +
+                "</div>" +
+                "<div id='collapse"+task.id+"' class='panel-collapse collapse' role='tabpanel' aria-labelledby='heading'>" +
+                "</div>"
         );
 
         $("#collapse"+task.id).append("<div class='panel-body'>");
         $.get('subtask/list?id='+task.id, function (subtasks) {
             $.each(subtasks, function (i, subtask) {
+                if (subtask.completed) checked = "checked";
+                else checked = "";
                 $("#collapse"+task.id).append(
                     "<div class='row' id='subtask"+subtask.id+"'>" +
-                    "<div class='col-xs-1 Header'><input class='TaskSelAll' type='checkbox'></div>" +
-                    "<div class='col-xs-3 Header'>"+subtask.name+"</div>" +
-                    "<div class='col-xs-3 Header'></div>" +
-                    "<div class='col-xs-2 Header'></div>" +
-                    "<div class='col-xs-3 Header'>" +
-                    "<a href='subtask/edit?id="+subtask.id+"' class='copy'>" +
-                    "<span style='cursor: pointer; margin-left: 18px' class='fui-gear'></span>" +
-                    "</a>" +
-                    "<a class='copy'>" +
-                    "<span style='cursor: pointer' class='fui-cross' onclick='deleteSubtask(" + subtask.id +")'></span>" +
-                    "</a>" +
-                    "</div>" +
+                        "<div class='col-xs-1 Header'>" +
+                            "<input class='TaskSelAll' type='checkbox' " + checked +
+                                " onclick='completeSubtask("+subtask.id+", \""+subtask.name+"\""+","+task.id+")' id=cb" + subtask.id + ">" +
+                        "</div>" +
+                        "<div class='col-xs-3 Header'>"+subtask.name+"</div>" +
+                        "<div class='col-xs-3 Header'></div>" +
+                        "<div class='col-xs-2 Header'></div>" +
+                        "<div class='col-xs-3 Header'>" +
+                            "<a href='subtask/edit?id="+subtask.id+"' class='copy'>" +
+                                "<span style='cursor: pointer; margin-left: 18px' class='fui-gear'></span>" +
+                            "</a>" +
+                            "<a class='copy'>" +
+                                "<span style='cursor: pointer' class='fui-cross' onclick='deleteSubtask(" + subtask.id +")'></span>" +
+                            "</a>" +
+                        "</div>" +
                     "</div>"
                 );
             });

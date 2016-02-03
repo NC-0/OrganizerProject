@@ -81,7 +81,7 @@ public class UserController {
 				}
 			}
 		}
-		request.setAttribute("message",message);
+		request.setAttribute("message", message);
 		return "hello";
 	}
 

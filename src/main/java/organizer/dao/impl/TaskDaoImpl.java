@@ -74,10 +74,14 @@ public class TaskDaoImpl implements TaskDao {
 	}
 
 	public void updateStatus(Task task) {
-		jdbcTemplate.update(UPDATE_STATUS,
+		jdbcTemplate.update(
+			UPDATE_STATUS,
 			task.isCompleted(),
-			task.getId());
-		cache.add(task.getId(),task);
+			task.getId()
+		);
+		if (task.isCompleted()) // update all subtasks as completed
+			jdbcTemplate.update(UPDATE_SUBTASK_STATUS, task.getId());
+		cache.delete(task.getId());
 	}
 
 	public Task get(User user, int taskId) {
@@ -89,7 +93,7 @@ public class TaskDaoImpl implements TaskDao {
 		return task;
 	}
 
-	public List <Task> get(final User user, boolean completed) {
+	public List <Task> get(User user, boolean completed) {
 		List<Task> tasks =  jdbcTemplate.query(
 				SELECT_LIST_OF_USER_TASKS,
 				new TaskMapper(cache),
@@ -98,7 +102,7 @@ public class TaskDaoImpl implements TaskDao {
 		);
 		return tasks;
 	}
-	public List <Task> getByCat(final User user, Category category, boolean completed) {
+	public List <Task> getByCat(User user, Category category, boolean completed) {
 		List<Task> tasks =  jdbcTemplate.query(
 				SELECT_LIST_OF_USER_TASKS_BY_CAT,
 				new TaskMapper(cache),
@@ -107,5 +111,13 @@ public class TaskDaoImpl implements TaskDao {
 				String.valueOf(category.getId())
 		);
 		return tasks;
+	}
+
+	public boolean checkChilds(Task task) {
+		return jdbcTemplate.queryForObject(
+				SELECT_CHECKED_CHILDS,
+				new Object[]{task.getId()},
+				Integer.class
+		) == 1;
 	}
 }

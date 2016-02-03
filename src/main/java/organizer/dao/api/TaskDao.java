@@ -12,10 +12,13 @@ public interface TaskDao {
 	void edit(Task task);
 	void updateStatus(Task task);
 	Task get(User user, int id);
-	List<Task> get(final User user, boolean completed);
-	List<Task> getByCat(final User user, Category category, boolean completed);
+	List<Task> get(User user, boolean completed);
+	List<Task> getByCat(User user, Category category, boolean completed);
+	boolean checkChilds(Task task);
 
 	int OBJ_TYPE      = 1;
+	int OBJE_TYPE_SUBTASK = 2;
+
 	int DATE_ATTR     = 1;
 	int PRIORITY_ATTR = 2;
 	int CATEGORY_ATTR = 3;
@@ -137,4 +140,8 @@ public interface TaskDao {
 		" obj.OBJECT_ID=ref.reference AND" +
 		" category_attr.VALUE = ? " +
 		" ORDER BY priority_attr.VALUE";
+
+	String SELECT_CHECKED_CHILDS = (
+		"select checkComplete(?) from dual"
+	);
 }
