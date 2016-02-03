@@ -48,7 +48,16 @@
           action="<c:url value='/j_spring_security_check' />"
           method="post">
 
-        <h3>Sign in</h3>
+        <table width="100%">
+            <tr>
+                <td>
+                    <h3>Sign in</h3>
+                </td>
+                <td align="right">
+                    <a href="/" type="button" class="btn btn-info btn-lg">Back</a>
+                </td>
+            </tr>
+        </table>
         <hr/>
 
         <c:if test="${not empty error}">
