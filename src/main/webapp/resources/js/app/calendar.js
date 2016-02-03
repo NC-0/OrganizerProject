@@ -11,6 +11,7 @@ $(document).click(function(event){
 });
 
 $(document).ready(function() {
+    var today = new Date();
     if(title=="")
         title='All tasks';
     else
@@ -63,7 +64,7 @@ $(document).ready(function() {
             right: 'backCustomButton'
         },
         titleFormat: '['+title+']',
-        defaultDate: '2016-01-12',
+        defaultDate: ''+today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDay(),
         editable: false,
         eventLimit: true,
         eventSources:tmp,
@@ -149,19 +150,19 @@ function parseDate(data){
             var date = new Date(data[i].date);
             var clr;
             switch(data[i].priority){
-                case 1:
+                case 0:
                     clr = '#fe5537';
                     break;
-                case 2:
+                case 1:
                     clr = '#FF9933';
                     break;
-                case 3:
+                case 2:
                     clr = '#fedf38';
                     break;
-                case 4:
+                case 3:
                     clr = '#1CE333';
                     break;
-                case 5:
+                case 4:
                     clr = '#33CCFF';
                     break;
                 default:

@@ -82,7 +82,7 @@
        <div class="mesg"><c:if test="${not empty message}"><span class='fui-chat'> ${message}</span></c:if></div>
        <a style="color: #ffffff" href="/registration"><span class='fui-user'> Registration</span></a>&nbsp;&nbsp;&nbsp;
        <a style="color: #ffffff" href="/login"><span class='fui-check'> Sign in</span></a>&nbsp;&nbsp;&nbsp;
-       <a style="color: #ffffff" href="/restore"><span class='fui-new'> Forget password?</span></a>
+       <a style="color: #ffffff" href="/restore"><span class='fui-new'> Forgot password?</span></a>
    </div>
 </div>
 
