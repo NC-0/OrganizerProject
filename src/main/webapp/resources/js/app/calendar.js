@@ -170,7 +170,7 @@ function parseDate(data){
                     break;
             }
             userEvents=userEvents+"{\"title\":\""+data[i].name+
-                "\",\"start\":\""+date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+
+                "\",\"start\":\""+date.getFullYear()+"-"+(date.getMonth()+1)+"-"+(date.getDate()+1)+
                 "\",\"color\":\""+clr+
                 "\",\"textColor\":\""+'#000000'+
                 "\",\"level\":\""+data[i].priority+

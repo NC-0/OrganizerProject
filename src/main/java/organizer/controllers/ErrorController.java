@@ -18,12 +18,7 @@ public class ErrorController {
 			request.setAttribute("code",String.valueOf(statusCode));
 		if(throwable!=null)
 			request.setAttribute("message",Throwables.getRootCause(throwable).getMessage());
-		String backUrl = requestUri;
-		if(requestUri.equals("/error"))
-			backUrl = "/";
-		if(statusCode==404)
-			backUrl = "/";
-		request.setAttribute("url",backUrl);
+		request.setAttribute("url","/");
 		return "error";
 	}
 }
